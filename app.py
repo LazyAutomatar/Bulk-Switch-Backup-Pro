@@ -10,30 +10,44 @@ from customtkinter import filedialog
 from netmiko import ConnectHandler
 from netmiko.exceptions import NetmikoTimeoutException, NetmikoAuthenticationException
 
-backup_commands = [
-    "show running-config",
-    "show vlan",
-    "show vlan bri",
-    "show cdp ne",
-    "show cdp ne de",
-    "show lldp ne",
-    "show version",
-    "show inventory",
-    "show post",
-    "show power inline",
-    "show env all",
-    "show switch",
-    "show ip int bri",
-    "show int desc",
-    "show int stat",
-    "show int trunk",
-    "show vtp status",
-    "show spanning-tree active",
-    "show spanning-tree summ",
-    "show clock",
-    "show ntp status",
-    "show ntp association"
-]
+# Device Profiles Commands
+COMMAND_PROFILES = {
+    "Cisco Switch": [
+        "terminal length 0", "show clock", "show version", "show inventory",
+        "show switch", "show switch stack-ring speed", "show switch virtual",
+        "show environment", "show environment all", "show environment temperature",
+        "show env power", "show env fan", "show power inline", "show post",
+        "show processes cpu | include CPU", "show processes memory", "show ip interface brief",
+        "show interfaces description", "show interfaces status", "show interfaces counters errors",
+        "show interfaces trunk", "show vlan", "show vlan brief", "show mac address-table",
+        "show ip arp", "show ip route", "show ip route summary", "show ip protocols",
+        "show spanning-tree", "show spanning-tree active", "show spanning-tree root",
+        "show spanning-tree summary", "show vtp status", "show etherchannel summary",
+        "show cdp neighbors", "show cdp neighbors detail", "show lldp neighbors",
+        "show lldp neighbors detail", "show port-security", "show port-security address",
+        "show ip dhcp snooping", "show ip source binding", "show access-lists", "show logging",
+        "show log | include Interface", "show license", "show license usage", "show standby brief",
+        "show standby all", "show vrrp brief", "show vrrp all", "show ip sla summary",
+        "show ip sla statistics", "show ntp status", "show ntp associations",
+        "show running-config", "show startup-config"
+    ],
+    "Cisco Nexus Switch": [
+        "terminal length 0", "show clock", "show version", "show inventory", "show license usage",
+        "show system resources", "show processes cpu", "show processes memory", "show environment",
+        "show environment temperature", "show environment power", "show environment fan",
+        "show interface status", "show interface counters errors", "show interface description",
+        "show vlan brief", "show mac address-table", "show ip arp", "show ip route",
+        "show ip route summary", "show ip protocols", "show spanning-tree", "show spanning-tree root",
+        "show port-channel summary", "show port-channel usage", "show cdp neighbors detail",
+        "show lldp neighbors detail", "show hsrp brief", "show hsrp all", "show vrrp brief",
+        "show vrrp all", "show ip sla summary", "show ip sla statistics", "show logging",
+        "show logging logfile", "show ntp peers", "show ntp status", "show running-config",
+        "show startup-config"
+    ],
+    "Custom": [
+        "! Enter your custom commands here"
+    ]
+}
 
 def enable_ssh(net_connect, domain_name, log_callback, ip):
     """Configures domain name, generates RSA keys, and enables SSH on VTY lines."""
@@ -67,7 +81,7 @@ def enable_ssh(net_connect, domain_name, log_callback, ip):
     net_connect.exit_config_mode()
     log_callback(ip, "SSH config block completed.")
 
-def perform_backup(ip, credentials, domain_name, backup_dir, log_callback):
+def perform_backup(ip, credentials, domain_name, backup_dir, log_callback, custom_commands, write_config):
     log_callback(ip, "Starting backup process...")
     today_date = datetime.now().strftime("%Y-%m-%d")
     filename = f"{backup_dir}/{ip}_backup_{today_date}.txt"
@@ -108,17 +122,21 @@ def perform_backup(ip, credentials, domain_name, backup_dir, log_callback):
             backup_file.write(f"Protocol: {protocol_used}\n")
             backup_file.write("=" * 50 + "\n")
 
-            for i, cmd in enumerate(backup_commands):
-                progress = int(((i+1) / len(backup_commands)) * 100)
+            for i, cmd in enumerate(custom_commands):
+                progress = int(((i+1) / len(custom_commands)) * 100)
                 log_callback(ip, f"[{progress}%] Running: {cmd}")
                 output = net_connect.send_command(cmd)
                 
                 backup_file.write(f"\n\n{'='*30}\nCommand: {cmd}\n{'='*30}\n")
                 backup_file.write(output)
 
-        log_callback(ip, "Saving configuration (wr)...")
-        net_connect.save_config()
-        log_callback(ip, f"✅ Backup complete! Saved to {filename}")
+        if write_config:
+            log_callback(ip, "Saving configuration (write memory)...")
+            net_connect.save_config()
+        else:
+            log_callback(ip, "Skipping configuration save (disabled).")
+            
+        log_callback(ip, f"✅ Backup complete! Temp file created.")
 
     except NetmikoAuthenticationException:
         log_callback(ip, f"Authentication failed via {protocol_used}.")
@@ -142,61 +160,81 @@ class App(ctk.CTk):
         self.grid_columnconfigure(1, weight=2)
         self.grid_rowconfigure(0, weight=1)
 
-        # Left Panel (Settings)
+        # Left Panel
         self.left_frame = ctk.CTkFrame(self, corner_radius=15)
         self.left_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
         self.logo_label = ctk.CTkLabel(self.left_frame, text="Backup Settings", font=ctk.CTkFont(size=24, weight="bold"))
         self.logo_label.pack(pady=(20, 10), padx=10)
 
-        # Credentials Section
-        self.cred_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
-        self.cred_frame.pack(fill="x", padx=20, pady=10)
-        
-        self.cred_label = ctk.CTkLabel(self.cred_frame, text="Credentials", font=ctk.CTkFont(size=16, weight="bold"))
-        self.cred_label.pack(anchor="w", pady=(0, 5))
+        # TABVIEW
+        self.tabview = ctk.CTkTabview(self.left_frame, height=350)
+        self.tabview.pack(fill="both", expand=True, padx=10, pady=5)
+        self.tab_general = self.tabview.add("General")
+        self.tab_commands = self.tabview.add("Commands")
 
-        self.username_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Username", height=35)
+        # ---- GENERAL TAB ----
+        self.cred_frame = ctk.CTkFrame(self.tab_general, fg_color="transparent")
+        self.cred_frame.pack(fill="x", padx=10, pady=5)
+        
+        self.username_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Username", height=30)
         self.username_entry.pack(pady=5, fill="x")
 
-        self.password_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Password", show="*", height=35)
+        self.password_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Password", show="*", height=30)
         self.password_entry.pack(pady=5, fill="x")
 
-        self.secret_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Enable Secret (Optional)", show="*", height=35)
+        self.secret_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Enable Secret (Optional)", show="*", height=30)
         self.secret_entry.pack(pady=5, fill="x")
 
-        self.domain_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Domain Name (e.g. abc.com)", height=35)
+        self.domain_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Domain Name (e.g. abc.com)", height=30)
         self.domain_entry.pack(pady=5, fill="x")
 
-        # Targets Section
-        self.targets_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
-        self.targets_frame.pack(fill="both", expand=True, padx=20, pady=10)
+        self.write_config_var = ctk.BooleanVar(value=True)
+        self.write_checkbox = ctk.CTkCheckBox(self.cred_frame, text="Save Configuration (write memory)", variable=self.write_config_var)
+        self.write_checkbox.pack(pady=(10, 5), anchor="w")
 
-        self.targets_label = ctk.CTkLabel(self.targets_frame, text="Target Devices (IPs)", font=ctk.CTkFont(size=16, weight="bold"))
+        self.targets_frame = ctk.CTkFrame(self.tab_general, fg_color="transparent")
+        self.targets_frame.pack(fill="both", expand=True, padx=10, pady=5)
+
+        self.targets_label = ctk.CTkLabel(self.targets_frame, text="Target Devices (IPs)", font=ctk.CTkFont(size=14, weight="bold"))
         self.targets_label.pack(anchor="w", pady=(0, 5))
 
-        self.ip_textbox = ctk.CTkTextbox(self.targets_frame, height=120)
+        self.ip_textbox = ctk.CTkTextbox(self.targets_frame, height=80)
         self.ip_textbox.pack(pady=5, fill="both", expand=True)
 
-        self.file_btn = ctk.CTkButton(self.targets_frame, text="Import Devices from File...", command=self.load_ips, height=35)
-        self.file_btn.pack(pady=10, fill="x")
+        self.file_btn = ctk.CTkButton(self.targets_frame, text="Import Devices from File...", command=self.load_ips, height=30)
+        self.file_btn.pack(pady=5, fill="x")
 
-        # Action Section
+        # ---- COMMANDS TAB ----
+        self.profile_label = ctk.CTkLabel(self.tab_commands, text="Device Profile:")
+        self.profile_label.pack(anchor="w", padx=10, pady=(5, 0))
+
+        self.profile_var = ctk.StringVar(value="Cisco Switch")
+        self.profile_menu = ctk.CTkOptionMenu(self.tab_commands, variable=self.profile_var, 
+                                              values=["Cisco Switch", "Cisco Nexus Switch", "Custom"],
+                                              command=self.load_profile_commands)
+        self.profile_menu.pack(fill="x", padx=10, pady=5)
+
+        self.cmd_textbox = ctk.CTkTextbox(self.tab_commands)
+        self.cmd_textbox.pack(fill="both", expand=True, padx=10, pady=10)
+        self.load_profile_commands("Cisco Switch")
+
+        # Action Section (Below Tabs)
         self.start_btn = ctk.CTkButton(self.left_frame, text="START BULK BACKUP", command=self.start_backup_thread, 
-                                       fg_color="#2FA572", hover_color="#107C4F", height=45, font=ctk.CTkFont(size=16, weight="bold"))
+                                       fg_color="#2FA572", hover_color="#107C4F", height=40, font=ctk.CTkFont(size=14, weight="bold"))
         self.start_btn.pack(pady=(10, 5), padx=20, fill="x")
 
         self.download_frame = ctk.CTkFrame(self.left_frame, fg_color="transparent")
-        self.download_frame.pack(pady=(5, 20), padx=20, fill="x")
+        self.download_frame.pack(pady=(5, 10), padx=20, fill="x")
         self.download_frame.grid_columnconfigure(0, weight=1)
         self.download_frame.grid_columnconfigure(1, weight=1)
 
         self.download_btn = ctk.CTkButton(self.download_frame, text="SAVE AS ZIP", command=self.download_zip, 
-                                       state="disabled", height=45, font=ctk.CTkFont(size=14, weight="bold"))
+                                       state="disabled", height=35, font=ctk.CTkFont(size=12, weight="bold"))
         self.download_btn.grid(row=0, column=0, padx=(0, 5), sticky="ew")
 
         self.download_files_btn = ctk.CTkButton(self.download_frame, text="SAVE AS FILES", command=self.download_files, 
-                                       state="disabled", height=45, font=ctk.CTkFont(size=14, weight="bold"))
+                                       state="disabled", height=35, font=ctk.CTkFont(size=12, weight="bold"))
         self.download_files_btn.grid(row=0, column=1, padx=(5, 0), sticky="ew")
         
         self.current_temp_dir = None
@@ -212,6 +250,11 @@ class App(ctk.CTk):
 
         self.log_textbox = ctk.CTkTextbox(self.right_frame, state="disabled", font=ctk.CTkFont(family="Consolas", size=13))
         self.log_textbox.grid(row=1, column=0, padx=20, pady=(0, 20), sticky="nsew")
+
+    def load_profile_commands(self, profile_name):
+        commands = COMMAND_PROFILES.get(profile_name, [])
+        self.cmd_textbox.delete("1.0", ctk.END)
+        self.cmd_textbox.insert("1.0", "\n".join(commands))
 
     def load_ips(self):
         file_path = filedialog.askopenfilename(
@@ -267,6 +310,7 @@ class App(ctk.CTk):
         password = self.password_entry.get().strip()
         secret = self.secret_entry.get().strip()
         domain = self.domain_entry.get().strip()
+        write_config = self.write_config_var.get()
 
         if not username or not password:
             self.show_error("Username and Password are required.")
@@ -277,6 +321,13 @@ class App(ctk.CTk):
 
         if not ip_list:
             self.show_error("No valid IP addresses provided.")
+            return
+
+        raw_cmds = self.cmd_textbox.get("1.0", ctk.END).strip().split('\n')
+        cmd_list = [c.strip() for c in raw_cmds if c.strip()]
+        
+        if not cmd_list:
+            self.show_error("No commands specified in the Commands tab.")
             return
 
         self.start_btn.configure(state="disabled", text="RUNNING...")
@@ -292,11 +343,15 @@ class App(ctk.CTk):
         backup_dir = self.current_temp_dir
 
         self.append_log("System", f"Starting backups for {len(ip_list)} devices using 5 concurrent threads.")
+        if write_config:
+            self.append_log("System", "Configuration Save (wr) is ENABLED.")
+        else:
+            self.append_log("System", "Configuration Save (wr) is DISABLED.")
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             futures = []
             for ip in ip_list:
-                futures.append(executor.submit(perform_backup, ip, credentials, domain, backup_dir, self.append_log))
+                futures.append(executor.submit(perform_backup, ip, credentials, domain, backup_dir, self.append_log, cmd_list, write_config))
             
             concurrent.futures.wait(futures)
 
@@ -319,7 +374,6 @@ class App(ctk.CTk):
 
         if save_path:
             try:
-                # shutil.make_archive adds the .zip extension automatically, so we remove it from the save path if present
                 base_name = save_path
                 if save_path.endswith('.zip'):
                     base_name = save_path[:-4]
@@ -327,7 +381,6 @@ class App(ctk.CTk):
                 shutil.make_archive(base_name, 'zip', self.current_temp_dir)
                 self.append_log("System", f"Successfully saved backups to {save_path}")
                 
-                # Clean up the temp directory after successful download
                 shutil.rmtree(self.current_temp_dir, ignore_errors=True)
                 self.current_temp_dir = None
                 self.download_btn.configure(state="disabled")
@@ -344,7 +397,6 @@ class App(ctk.CTk):
 
         if dest_dir:
             try:
-                # Copy contents from temp dir to selected destination
                 for item in os.listdir(self.current_temp_dir):
                     s = os.path.join(self.current_temp_dir, item)
                     d = os.path.join(dest_dir, item)
@@ -355,7 +407,6 @@ class App(ctk.CTk):
                         
                 self.append_log("System", f"Successfully saved raw backup files to {dest_dir}")
                 
-                # Clean up the temp directory after successful download
                 shutil.rmtree(self.current_temp_dir, ignore_errors=True)
                 self.current_temp_dir = None
                 self.download_btn.configure(state="disabled")
