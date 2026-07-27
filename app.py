@@ -49,39 +49,8 @@ COMMAND_PROFILES = {
     ]
 }
 
-def enable_ssh(net_connect, domain_name, log_callback, ip):
-    """Configures domain name, generates RSA keys, and enables SSH on VTY lines."""
-    log_callback(ip, "Telnet used. Configuring and enabling SSH...")
-    
-    ssh_configs = [
-        f"ip domain-name {domain_name}", 
-        "ip ssh version 2",
-        "line vty 0 15",
-        "transport input telnet ssh",   
-        "exit"
-    ]
-    net_connect.send_config_set(ssh_configs)
-    net_connect.config_mode()
-    
-    key_prompt = net_connect.send_command_timing("crypto key generate rsa")
-    
-    if "replace" in key_prompt.lower():
-        net_connect.send_command_timing("no")
-        log_callback(ip, "RSA keys already exist. Kept existing keys.")
-    elif "modulus" in key_prompt.lower() or "bits" in key_prompt.lower():
-        net_connect.send_command_timing("2048")
-        log_callback(ip, "RSA keys generated successfully (2048-bit).")
-    elif "hostname" in key_prompt.lower() or "name" in key_prompt.lower():
-        log_callback(ip, "Failed: The switch is still using the default hostname ('Switch').")
-    elif "invalid input" in key_prompt.lower():
-        log_callback(ip, "Failed: Switch does not support the 'crypto' command.")
-    else:
-        log_callback(ip, f"Unexpected response from switch: {key_prompt.strip()}")
-        
-    net_connect.exit_config_mode()
-    log_callback(ip, "SSH config block completed.")
-
-def perform_backup(ip, credentials, domain_name, backup_dir, log_callback, custom_commands, write_config):
+def perform_backup(ip, credentials, backup_dir, log_callback, progress_callback, custom_commands, write_config):
+    progress_callback(ip, 5, "Initializing...", "Connecting...")
     log_callback(ip, "Starting backup process...")
     today_date = datetime.now().strftime("%Y-%m-%d")
     filename = f"{backup_dir}/{ip}_backup_{today_date}.txt"
@@ -95,25 +64,26 @@ def perform_backup(ip, credentials, domain_name, backup_dir, log_callback, custo
     # Connection Logic
     try:
         current_device['device_type'] = 'cisco_ios'
+        progress_callback(ip, 10, "Attempting SSH connection...", "Connecting...")
         log_callback(ip, "Attempting SSH connection...")
         net_connect = ConnectHandler(**current_device)
         protocol_used = "SSH"
     except Exception as e:
+        progress_callback(ip, 10, "SSH Failed. Attempting Telnet...", "Connecting...")
         log_callback(ip, "SSH failed. Attempting Telnet fallback...")
         try:
             current_device['device_type'] = 'cisco_ios_telnet'
             net_connect = ConnectHandler(**current_device)
             protocol_used = "Telnet"
         except Exception as e2:
+            progress_callback(ip, 0, "Connection Failed.", "Failed")
             log_callback(ip, f"Both SSH and Telnet failed. Skipping.")
             return
 
     try:
+        progress_callback(ip, 20, f"Connected successfully.", protocol_used)
         log_callback(ip, f"Connected successfully via {protocol_used}.")
         net_connect.enable() 
-        
-        if protocol_used == "Telnet":
-            enable_ssh(net_connect, domain_name, log_callback, ip)
         
         log_callback(ip, "Running backup commands...")
         with open(filename, "w") as backup_file:
@@ -123,24 +93,29 @@ def perform_backup(ip, credentials, domain_name, backup_dir, log_callback, custo
             backup_file.write("=" * 50 + "\n")
 
             for i, cmd in enumerate(custom_commands):
-                progress = int(((i+1) / len(custom_commands)) * 100)
-                log_callback(ip, f"[{progress}%] Running: {cmd}")
+                progress_val = int(20 + ((i+1) / len(custom_commands)) * 70)
+                progress_callback(ip, progress_val, f"Running: {cmd}", protocol_used)
+                log_callback(ip, f"[{progress_val}%] Running: {cmd}")
                 output = net_connect.send_command(cmd)
                 
                 backup_file.write(f"\n\n{'='*30}\nCommand: {cmd}\n{'='*30}\n")
                 backup_file.write(output)
 
         if write_config:
+            progress_callback(ip, 95, "Saving configuration...", protocol_used)
             log_callback(ip, "Saving configuration (write memory)...")
             net_connect.save_config()
         else:
             log_callback(ip, "Skipping configuration save (disabled).")
             
+        progress_callback(ip, 100, "Backup Complete!", protocol_used)
         log_callback(ip, f"✅ Backup complete! Temp file created.")
 
     except NetmikoAuthenticationException:
+        progress_callback(ip, 0, "Authentication Failed.", "Failed")
         log_callback(ip, f"Authentication failed via {protocol_used}.")
     except Exception as e:
+        progress_callback(ip, 0, f"Error: {str(e)[:20]}...", "Failed")
         log_callback(ip, f"An unexpected error occurred: {e}")
     finally:
         if net_connect:
@@ -152,15 +127,15 @@ class App(ctk.CTk):
         super().__init__()
 
         self.title("Bulk Switch Backup Pro")
-        self.geometry("1200x750")
+        self.geometry("1400x800")
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("blue")
 
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=2)
+        self.grid_columnconfigure(1, weight=3)
         self.grid_rowconfigure(0, weight=1)
 
-        # Left Panel
+        # ---- LEFT PANEL (Settings) ----
         self.left_frame = ctk.CTkFrame(self, corner_radius=15)
         self.left_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
@@ -185,9 +160,6 @@ class App(ctk.CTk):
 
         self.secret_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Enable Secret (Optional)", show="*", height=30)
         self.secret_entry.pack(pady=5, fill="x")
-
-        self.domain_entry = ctk.CTkEntry(self.cred_frame, placeholder_text="Domain Name (e.g. abc.com)", height=30)
-        self.domain_entry.pack(pady=5, fill="x")
 
         self.write_config_var = ctk.BooleanVar(value=True)
         self.write_checkbox = ctk.CTkCheckBox(self.cred_frame, text="Save Configuration (write memory)", variable=self.write_config_var)
@@ -238,18 +210,48 @@ class App(ctk.CTk):
         self.download_files_btn.grid(row=0, column=1, padx=(5, 0), sticky="ew")
         
         self.current_temp_dir = None
+        self.ip_status_widgets = {}
 
-        # Right Panel (Logs)
-        self.right_frame = ctk.CTkFrame(self, corner_radius=15)
+        # ---- RIGHT PANEL (Dashboard & Logs) ----
+        self.right_frame = ctk.CTkFrame(self, corner_radius=15, fg_color="transparent")
         self.right_frame.grid(row=0, column=1, padx=(0, 20), pady=20, sticky="nsew")
+        
+        # Split 50/50
+        self.right_frame.grid_rowconfigure(0, weight=1)
         self.right_frame.grid_rowconfigure(1, weight=1)
         self.right_frame.grid_columnconfigure(0, weight=1)
 
-        self.log_label = ctk.CTkLabel(self.right_frame, text="Execution Logs", font=ctk.CTkFont(size=24, weight="bold"))
-        self.log_label.grid(row=0, column=0, pady=(20, 10), padx=20, sticky="w")
+        # TOP 50%: Dashboard Frame
+        self.dashboard_container = ctk.CTkFrame(self.right_frame, corner_radius=15)
+        self.dashboard_container.grid(row=0, column=0, pady=(0, 10), sticky="nsew")
+        self.dashboard_container.grid_rowconfigure(1, weight=1)
+        self.dashboard_container.grid_columnconfigure(0, weight=1)
 
-        self.log_textbox = ctk.CTkTextbox(self.right_frame, state="disabled", font=ctk.CTkFont(family="Consolas", size=13))
+        self.dash_label = ctk.CTkLabel(self.dashboard_container, text="Live Device Dashboard", font=ctk.CTkFont(size=20, weight="bold"))
+        self.dash_label.grid(row=0, column=0, pady=(15, 5), padx=20, sticky="w")
+
+        self.dashboard_frame = ctk.CTkScrollableFrame(self.dashboard_container, fg_color="transparent")
+        self.dashboard_frame.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")
+        try:
+            self.dashboard_frame._scrollbar.grid_remove()
+        except Exception:
+            pass
+
+        # BOTTOM 50%: Log Frame
+        self.log_container = ctk.CTkFrame(self.right_frame, corner_radius=15)
+        self.log_container.grid(row=1, column=0, pady=(10, 0), sticky="nsew")
+        self.log_container.grid_rowconfigure(1, weight=1)
+        self.log_container.grid_columnconfigure(0, weight=1)
+
+        self.log_label = ctk.CTkLabel(self.log_container, text="Execution Logs", font=ctk.CTkFont(size=20, weight="bold"))
+        self.log_label.grid(row=0, column=0, pady=(15, 5), padx=20, sticky="w")
+
+        self.log_textbox = ctk.CTkTextbox(self.log_container, state="disabled", font=ctk.CTkFont(family="Consolas", size=13))
         self.log_textbox.grid(row=1, column=0, padx=20, pady=(0, 20), sticky="nsew")
+        try:
+            self.log_textbox._scrollbar.grid_remove()
+        except Exception:
+            pass
 
     def load_profile_commands(self, profile_name):
         commands = COMMAND_PROFILES.get(profile_name, [])
@@ -267,7 +269,6 @@ class App(ctk.CTk):
                 with open(file_path, "r") as file:
                     content = file.read()
                 
-                # Basic IP extraction/validation
                 ips = re.findall(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', content)
                 
                 if not ips:
@@ -300,6 +301,76 @@ class App(ctk.CTk):
             self.log_textbox.insert(ctk.END, f"[{timestamp}] [{source}] {message}\n")
             self.log_textbox.see(ctk.END)
             self.log_textbox.configure(state="disabled")
+            
+            try:
+                if self.log_textbox._textbox.yview() == (0.0, 1.0):
+                    self.log_textbox._scrollbar.grid_remove()
+                else:
+                    self.log_textbox._scrollbar.grid()
+            except Exception:
+                pass
+                
+        self.after(0, update)
+
+    def init_dashboard_cards(self, ip_list):
+        for widget in self.dashboard_frame.winfo_children():
+            widget.destroy()
+        self.ip_status_widgets.clear()
+        
+        for ip in ip_list:
+            card = ctk.CTkFrame(self.dashboard_frame, corner_radius=10)
+            card.pack(fill="x", pady=5, padx=10)
+            
+            header_frame = ctk.CTkFrame(card, fg_color="transparent")
+            header_frame.pack(fill="x", padx=10, pady=(10, 5))
+            
+            ip_label = ctk.CTkLabel(header_frame, text=ip, font=ctk.CTkFont(size=14, weight="bold"))
+            ip_label.pack(side="left")
+            
+            proto_label = ctk.CTkLabel(header_frame, text="Waiting...", font=ctk.CTkFont(size=12))
+            proto_label.pack(side="right")
+            
+            progress = ctk.CTkProgressBar(card)
+            progress.pack(fill="x", padx=10, pady=5)
+            progress.set(0)
+            
+            status_label = ctk.CTkLabel(card, text="Pending", font=ctk.CTkFont(size=12))
+            status_label.pack(fill="x", padx=10, pady=(0, 10), anchor="w")
+            
+            self.ip_status_widgets[ip] = {
+                'card': card,
+                'proto_label': proto_label,
+                'progress': progress,
+                'status_label': status_label
+            }
+
+        def check_scroll():
+            try:
+                if self.dashboard_frame._parent_canvas.yview() == (0.0, 1.0):
+                    self.dashboard_frame._scrollbar.grid_remove()
+                else:
+                    self.dashboard_frame._scrollbar.grid()
+            except Exception:
+                pass
+                
+        self.after(100, check_scroll)
+
+    def update_dashboard(self, ip, percentage, status_text, protocol="Unknown"):
+        def update():
+            if ip in self.ip_status_widgets:
+                widgets = self.ip_status_widgets[ip]
+                widgets['progress'].set(percentage / 100.0)
+                widgets['status_label'].configure(text=status_text)
+                
+                if protocol != "Unknown":
+                    widgets['proto_label'].configure(text=f"[{protocol}]")
+                    if protocol == "SSH":
+                        widgets['proto_label'].configure(text_color="#2FA572")
+                    elif protocol == "Telnet":
+                        widgets['proto_label'].configure(text_color="#F39C12")
+                    elif protocol == "Failed":
+                        widgets['proto_label'].configure(text_color="#E74C3C")
+
         self.after(0, update)
 
     def start_backup_thread(self):
@@ -309,7 +380,6 @@ class App(ctk.CTk):
         username = self.username_entry.get().strip()
         password = self.password_entry.get().strip()
         secret = self.secret_entry.get().strip()
-        domain = self.domain_entry.get().strip()
         write_config = self.write_config_var.get()
 
         if not username or not password:
@@ -332,6 +402,8 @@ class App(ctk.CTk):
 
         self.start_btn.configure(state="disabled", text="RUNNING...")
         
+        self.init_dashboard_cards(ip_list)
+        
         credentials = {
             'username': username,
             'password': password,
@@ -343,15 +415,14 @@ class App(ctk.CTk):
         backup_dir = self.current_temp_dir
 
         self.append_log("System", f"Starting backups for {len(ip_list)} devices using 5 concurrent threads.")
-        if write_config:
-            self.append_log("System", "Configuration Save (wr) is ENABLED.")
-        else:
-            self.append_log("System", "Configuration Save (wr) is DISABLED.")
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             futures = []
             for ip in ip_list:
-                futures.append(executor.submit(perform_backup, ip, credentials, domain, backup_dir, self.append_log, cmd_list, write_config))
+                futures.append(executor.submit(
+                    perform_backup, ip, credentials, backup_dir, 
+                    self.append_log, self.update_dashboard, cmd_list, write_config
+                ))
             
             concurrent.futures.wait(futures)
 
