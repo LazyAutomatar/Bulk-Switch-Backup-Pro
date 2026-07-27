@@ -1,0 +1,3 @@
+netmiko
+customtkinter
+pyinstaller

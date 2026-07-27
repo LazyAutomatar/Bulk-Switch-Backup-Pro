@@ -1,0 +1,4004 @@
+('C:\\Users\\Yash Nalawde\\OneDrive - M s Conventus Technologies Pvt. '
+ 'Ltd\\Documents\\GitHub\\Bulk Switch Backup\\build\\app\\PYZ-00.pyz',
+ [('PIL',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\__init__.py',
+   'PYMODULE'),
+  ('PIL.AvifImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\AvifImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.BlpImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\BlpImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.BmpImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\BmpImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.BufrStubImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\BufrStubImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.CurImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\CurImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.DcxImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\DcxImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.DdsImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\DdsImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.EpsImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\EpsImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.ExifTags',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ExifTags.py',
+   'PYMODULE'),
+  ('PIL.FitsImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\FitsImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.FliImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\FliImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.FpxImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\FpxImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.FtexImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\FtexImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.GbrImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\GbrImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.GifImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\GifImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.GimpGradientFile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\GimpGradientFile.py',
+   'PYMODULE'),
+  ('PIL.GimpPaletteFile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\GimpPaletteFile.py',
+   'PYMODULE'),
+  ('PIL.GribStubImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\GribStubImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.Hdf5StubImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\Hdf5StubImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.IcnsImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\IcnsImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.IcoImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\IcoImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.ImImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.Image',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\Image.py',
+   'PYMODULE'),
+  ('PIL.ImageChops',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageChops.py',
+   'PYMODULE'),
+  ('PIL.ImageCms',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageCms.py',
+   'PYMODULE'),
+  ('PIL.ImageColor',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageColor.py',
+   'PYMODULE'),
+  ('PIL.ImageFile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageFile.py',
+   'PYMODULE'),
+  ('PIL.ImageFilter',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageFilter.py',
+   'PYMODULE'),
+  ('PIL.ImageMath',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageMath.py',
+   'PYMODULE'),
+  ('PIL.ImageMode',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageMode.py',
+   'PYMODULE'),
+  ('PIL.ImageOps',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageOps.py',
+   'PYMODULE'),
+  ('PIL.ImagePalette',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImagePalette.py',
+   'PYMODULE'),
+  ('PIL.ImageQt',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageQt.py',
+   'PYMODULE'),
+  ('PIL.ImageSequence',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageSequence.py',
+   'PYMODULE'),
+  ('PIL.ImageShow',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageShow.py',
+   'PYMODULE'),
+  ('PIL.ImageTk',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageTk.py',
+   'PYMODULE'),
+  ('PIL.ImageWin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImageWin.py',
+   'PYMODULE'),
+  ('PIL.ImtImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\ImtImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.IptcImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\IptcImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.Jpeg2KImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\Jpeg2KImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.JpegImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\JpegImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.JpegPresets',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\JpegPresets.py',
+   'PYMODULE'),
+  ('PIL.McIdasImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\McIdasImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.MicImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\MicImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.MpegImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\MpegImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.MpoImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\MpoImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.MspImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\MspImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.PaletteFile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PaletteFile.py',
+   'PYMODULE'),
+  ('PIL.PalmImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PalmImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.PcdImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PcdImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.PcxImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PcxImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.PdfImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PdfImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.PdfParser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PdfParser.py',
+   'PYMODULE'),
+  ('PIL.PixarImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PixarImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.PngImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PngImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.PpmImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PpmImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.PsdImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\PsdImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.QoiImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\QoiImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.SgiImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\SgiImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.SpiderImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\SpiderImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.SunImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\SunImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.TgaImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\TgaImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.TiffImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\TiffImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.TiffTags',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\TiffTags.py',
+   'PYMODULE'),
+  ('PIL.WebPImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\WebPImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.WmfImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\WmfImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.XVThumbImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\XVThumbImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.XbmImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\XbmImagePlugin.py',
+   'PYMODULE'),
+  ('PIL.XpmImagePlugin',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\XpmImagePlugin.py',
+   'PYMODULE'),
+  ('PIL._binary',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\_binary.py',
+   'PYMODULE'),
+  ('PIL._deprecate',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\_deprecate.py',
+   'PYMODULE'),
+  ('PIL._typing',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\_typing.py',
+   'PYMODULE'),
+  ('PIL._util',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\_util.py',
+   'PYMODULE'),
+  ('PIL._version',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\_version.py',
+   'PYMODULE'),
+  ('PIL.features',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\features.py',
+   'PYMODULE'),
+  ('__future__',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\__future__.py',
+   'PYMODULE'),
+  ('_aix_support',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_aix_support.py',
+   'PYMODULE'),
+  ('_ast_unparse',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_ast_unparse.py',
+   'PYMODULE'),
+  ('_colorize',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_colorize.py',
+   'PYMODULE'),
+  ('_compat_pickle',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_compat_pickle.py',
+   'PYMODULE'),
+  ('_opcode_metadata',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_opcode_metadata.py',
+   'PYMODULE'),
+  ('_py_abc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_py_abc.py',
+   'PYMODULE'),
+  ('_py_warnings',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_py_warnings.py',
+   'PYMODULE'),
+  ('_pydatetime',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_pydatetime.py',
+   'PYMODULE'),
+  ('_pydecimal',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_pydecimal.py',
+   'PYMODULE'),
+  ('_pyrepl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_pyrepl\\__init__.py',
+   'PYMODULE'),
+  ('_pyrepl.pager',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_pyrepl\\pager.py',
+   'PYMODULE'),
+  ('_pyrepl.trace',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_pyrepl\\trace.py',
+   'PYMODULE'),
+  ('_pyrepl.types',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_pyrepl\\types.py',
+   'PYMODULE'),
+  ('_pyrepl.utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_pyrepl\\utils.py',
+   'PYMODULE'),
+  ('_strptime',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_strptime.py',
+   'PYMODULE'),
+  ('_threading_local',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\_threading_local.py',
+   'PYMODULE'),
+  ('annotationlib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\annotationlib.py',
+   'PYMODULE'),
+  ('argparse',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\argparse.py',
+   'PYMODULE'),
+  ('ast',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ast.py',
+   'PYMODULE'),
+  ('asyncio',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\__init__.py',
+   'PYMODULE'),
+  ('asyncio.base_events',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\base_events.py',
+   'PYMODULE'),
+  ('asyncio.base_futures',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\base_futures.py',
+   'PYMODULE'),
+  ('asyncio.base_subprocess',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\base_subprocess.py',
+   'PYMODULE'),
+  ('asyncio.base_tasks',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\base_tasks.py',
+   'PYMODULE'),
+  ('asyncio.constants',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\constants.py',
+   'PYMODULE'),
+  ('asyncio.coroutines',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\coroutines.py',
+   'PYMODULE'),
+  ('asyncio.events',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\events.py',
+   'PYMODULE'),
+  ('asyncio.exceptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\exceptions.py',
+   'PYMODULE'),
+  ('asyncio.format_helpers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\format_helpers.py',
+   'PYMODULE'),
+  ('asyncio.futures',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\futures.py',
+   'PYMODULE'),
+  ('asyncio.graph',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\graph.py',
+   'PYMODULE'),
+  ('asyncio.locks',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\locks.py',
+   'PYMODULE'),
+  ('asyncio.log',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\log.py',
+   'PYMODULE'),
+  ('asyncio.mixins',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\mixins.py',
+   'PYMODULE'),
+  ('asyncio.proactor_events',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\proactor_events.py',
+   'PYMODULE'),
+  ('asyncio.protocols',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\protocols.py',
+   'PYMODULE'),
+  ('asyncio.queues',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\queues.py',
+   'PYMODULE'),
+  ('asyncio.runners',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\runners.py',
+   'PYMODULE'),
+  ('asyncio.selector_events',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\selector_events.py',
+   'PYMODULE'),
+  ('asyncio.sslproto',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\sslproto.py',
+   'PYMODULE'),
+  ('asyncio.staggered',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\staggered.py',
+   'PYMODULE'),
+  ('asyncio.streams',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\streams.py',
+   'PYMODULE'),
+  ('asyncio.subprocess',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\subprocess.py',
+   'PYMODULE'),
+  ('asyncio.taskgroups',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\taskgroups.py',
+   'PYMODULE'),
+  ('asyncio.tasks',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\tasks.py',
+   'PYMODULE'),
+  ('asyncio.threads',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\threads.py',
+   'PYMODULE'),
+  ('asyncio.timeouts',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\timeouts.py',
+   'PYMODULE'),
+  ('asyncio.transports',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\transports.py',
+   'PYMODULE'),
+  ('asyncio.trsock',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\trsock.py',
+   'PYMODULE'),
+  ('asyncio.unix_events',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\unix_events.py',
+   'PYMODULE'),
+  ('asyncio.windows_events',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\windows_events.py',
+   'PYMODULE'),
+  ('asyncio.windows_utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\asyncio\\windows_utils.py',
+   'PYMODULE'),
+  ('base64',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\base64.py',
+   'PYMODULE'),
+  ('bcrypt',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\bcrypt\\__init__.py',
+   'PYMODULE'),
+  ('bdb',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\bdb.py',
+   'PYMODULE'),
+  ('bisect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\bisect.py',
+   'PYMODULE'),
+  ('bz2',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\bz2.py',
+   'PYMODULE'),
+  ('calendar',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\calendar.py',
+   'PYMODULE'),
+  ('charset_normalizer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\charset_normalizer\\__init__.py',
+   'PYMODULE'),
+  ('charset_normalizer.api',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\charset_normalizer\\api.py',
+   'PYMODULE'),
+  ('charset_normalizer.constant',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\charset_normalizer\\constant.py',
+   'PYMODULE'),
+  ('charset_normalizer.legacy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\charset_normalizer\\legacy.py',
+   'PYMODULE'),
+  ('charset_normalizer.models',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\charset_normalizer\\models.py',
+   'PYMODULE'),
+  ('charset_normalizer.utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\charset_normalizer\\utils.py',
+   'PYMODULE'),
+  ('charset_normalizer.version',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\charset_normalizer\\version.py',
+   'PYMODULE'),
+  ('cmd',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\cmd.py',
+   'PYMODULE'),
+  ('code',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\code.py',
+   'PYMODULE'),
+  ('codeop',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\codeop.py',
+   'PYMODULE'),
+  ('colorsys',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\colorsys.py',
+   'PYMODULE'),
+  ('compression',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\compression\\__init__.py',
+   'PYMODULE'),
+  ('compression._common',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\compression\\_common\\__init__.py',
+   'PYMODULE'),
+  ('compression._common._streams',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\compression\\_common\\_streams.py',
+   'PYMODULE'),
+  ('compression.zstd',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\compression\\zstd\\__init__.py',
+   'PYMODULE'),
+  ('compression.zstd._zstdfile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\compression\\zstd\\_zstdfile.py',
+   'PYMODULE'),
+  ('concurrent',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\__init__.py',
+   'PYMODULE'),
+  ('concurrent.futures',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\futures\\__init__.py',
+   'PYMODULE'),
+  ('concurrent.futures._base',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\futures\\_base.py',
+   'PYMODULE'),
+  ('concurrent.futures.interpreter',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\futures\\interpreter.py',
+   'PYMODULE'),
+  ('concurrent.futures.process',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\futures\\process.py',
+   'PYMODULE'),
+  ('concurrent.futures.thread',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\futures\\thread.py',
+   'PYMODULE'),
+  ('concurrent.interpreters',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\interpreters\\__init__.py',
+   'PYMODULE'),
+  ('concurrent.interpreters._crossinterp',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\interpreters\\_crossinterp.py',
+   'PYMODULE'),
+  ('concurrent.interpreters._queues',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\concurrent\\interpreters\\_queues.py',
+   'PYMODULE'),
+  ('contextlib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\contextlib.py',
+   'PYMODULE'),
+  ('contextvars',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\contextvars.py',
+   'PYMODULE'),
+  ('copy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\copy.py',
+   'PYMODULE'),
+  ('cryptography',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.__about__',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\__about__.py',
+   'PYMODULE'),
+  ('cryptography.exceptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\exceptions.py',
+   'PYMODULE'),
+  ('cryptography.hazmat',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat._oid',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\_oid.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\backends\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.backends.openssl.backend',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\backends\\openssl\\backend.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.bindings',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.bindings.openssl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.bindings.openssl._conditional',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\_conditional.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.bindings.openssl.binding',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\bindings\\openssl\\binding.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.decrepit',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.decrepit.ciphers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.decrepit.ciphers.algorithms',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\algorithms.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.decrepit.ciphers.modes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\decrepit\\ciphers\\modes.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives._asymmetric',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_asymmetric.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives._cipheralgorithm',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_cipheralgorithm.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives._modes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_modes.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives._serialization',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\_serialization.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.dsa',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\dsa.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.ec',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ec.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.ed25519',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\ed25519.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.padding',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\padding.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.rsa',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\rsa.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\utils.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.asymmetric.x25519',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\asymmetric\\x25519.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.ciphers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.ciphers.aead',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\aead.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.ciphers.algorithms',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\algorithms.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.ciphers.base',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\base.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.ciphers.modes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\ciphers\\modes.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.constant_time',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\constant_time.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.hashes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\hashes.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.padding',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\padding.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.serialization',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\__init__.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.serialization.base',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\base.py',
+   'PYMODULE'),
+  ('cryptography.hazmat.primitives.serialization.ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\hazmat\\primitives\\serialization\\ssh.py',
+   'PYMODULE'),
+  ('cryptography.utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\cryptography\\utils.py',
+   'PYMODULE'),
+  ('csv',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\csv.py',
+   'PYMODULE'),
+  ('ctypes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\__init__.py',
+   'PYMODULE'),
+  ('ctypes._aix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\_aix.py',
+   'PYMODULE'),
+  ('ctypes._endian',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\_endian.py',
+   'PYMODULE'),
+  ('ctypes._layout',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\_layout.py',
+   'PYMODULE'),
+  ('ctypes.macholib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\macholib\\__init__.py',
+   'PYMODULE'),
+  ('ctypes.macholib.dyld',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\macholib\\dyld.py',
+   'PYMODULE'),
+  ('ctypes.macholib.dylib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\macholib\\dylib.py',
+   'PYMODULE'),
+  ('ctypes.macholib.framework',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\macholib\\framework.py',
+   'PYMODULE'),
+  ('ctypes.util',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\util.py',
+   'PYMODULE'),
+  ('ctypes.wintypes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ctypes\\wintypes.py',
+   'PYMODULE'),
+  ('customtkinter',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.ctk_input_dialog',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\ctk_input_dialog.py',
+   'PYMODULE'),
+  ('customtkinter.windows.ctk_tk',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\ctk_tk.py',
+   'PYMODULE'),
+  ('customtkinter.windows.ctk_toplevel',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\ctk_toplevel.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.appearance_mode',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\appearance_mode\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.appearance_mode.appearance_mode_base_class',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\appearance_mode\\appearance_mode_base_class.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.appearance_mode.appearance_mode_tracker',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\appearance_mode\\appearance_mode_tracker.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.core_rendering',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\core_rendering\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.core_rendering.ctk_canvas',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\core_rendering\\ctk_canvas.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.core_rendering.draw_engine',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\core_rendering\\draw_engine.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.core_widget_classes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\core_widget_classes\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.core_widget_classes.ctk_base_class',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\core_widget_classes\\ctk_base_class.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.core_widget_classes.dropdown_menu',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\core_widget_classes\\dropdown_menu.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_button',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_button.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_checkbox',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_checkbox.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_combobox',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_combobox.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_entry',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_entry.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_frame',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_frame.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_label',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_label.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_optionmenu',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_optionmenu.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_progressbar',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_progressbar.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_radiobutton',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_radiobutton.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_scrollable_frame',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_scrollable_frame.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_scrollbar',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_scrollbar.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_segmented_button',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_segmented_button.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_slider',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_slider.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_switch',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_switch.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_tabview',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_tabview.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.ctk_textbox',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\ctk_textbox.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.font',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\font\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.font.ctk_font',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\font\\ctk_font.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.font.font_manager',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\font\\font_manager.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.image',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\image\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.image.ctk_image',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\image\\ctk_image.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.scaling',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\scaling\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.scaling.scaling_base_class',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\scaling\\scaling_base_class.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.scaling.scaling_tracker',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\scaling\\scaling_tracker.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.theme',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\theme\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.theme.theme_manager',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\theme\\theme_manager.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.utility',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\utility\\__init__.py',
+   'PYMODULE'),
+  ('customtkinter.windows.widgets.utility.utility_functions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\customtkinter\\windows\\widgets\\utility\\utility_functions.py',
+   'PYMODULE'),
+  ('darkdetect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\darkdetect\\__init__.py',
+   'PYMODULE'),
+  ('darkdetect._dummy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\darkdetect\\_dummy.py',
+   'PYMODULE'),
+  ('darkdetect._linux_detect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\darkdetect\\_linux_detect.py',
+   'PYMODULE'),
+  ('darkdetect._mac_detect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\darkdetect\\_mac_detect.py',
+   'PYMODULE'),
+  ('darkdetect._windows_detect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\darkdetect\\_windows_detect.py',
+   'PYMODULE'),
+  ('dataclasses',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\dataclasses.py',
+   'PYMODULE'),
+  ('datetime',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\datetime.py',
+   'PYMODULE'),
+  ('decimal',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\decimal.py',
+   'PYMODULE'),
+  ('difflib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\difflib.py',
+   'PYMODULE'),
+  ('dis',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\dis.py',
+   'PYMODULE'),
+  ('doctest',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\doctest.py',
+   'PYMODULE'),
+  ('email',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\__init__.py',
+   'PYMODULE'),
+  ('email._encoded_words',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\_encoded_words.py',
+   'PYMODULE'),
+  ('email._header_value_parser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\_header_value_parser.py',
+   'PYMODULE'),
+  ('email._parseaddr',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\_parseaddr.py',
+   'PYMODULE'),
+  ('email._policybase',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\_policybase.py',
+   'PYMODULE'),
+  ('email.base64mime',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\base64mime.py',
+   'PYMODULE'),
+  ('email.charset',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\charset.py',
+   'PYMODULE'),
+  ('email.contentmanager',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\contentmanager.py',
+   'PYMODULE'),
+  ('email.encoders',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\encoders.py',
+   'PYMODULE'),
+  ('email.errors',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\errors.py',
+   'PYMODULE'),
+  ('email.feedparser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\feedparser.py',
+   'PYMODULE'),
+  ('email.generator',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\generator.py',
+   'PYMODULE'),
+  ('email.header',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\header.py',
+   'PYMODULE'),
+  ('email.headerregistry',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\headerregistry.py',
+   'PYMODULE'),
+  ('email.iterators',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\iterators.py',
+   'PYMODULE'),
+  ('email.message',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\message.py',
+   'PYMODULE'),
+  ('email.parser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\parser.py',
+   'PYMODULE'),
+  ('email.policy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\policy.py',
+   'PYMODULE'),
+  ('email.quoprimime',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\quoprimime.py',
+   'PYMODULE'),
+  ('email.utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\email\\utils.py',
+   'PYMODULE'),
+  ('fileinput',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\fileinput.py',
+   'PYMODULE'),
+  ('fnmatch',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\fnmatch.py',
+   'PYMODULE'),
+  ('fractions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\fractions.py',
+   'PYMODULE'),
+  ('ftplib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ftplib.py',
+   'PYMODULE'),
+  ('getopt',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\getopt.py',
+   'PYMODULE'),
+  ('getpass',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\getpass.py',
+   'PYMODULE'),
+  ('gettext',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\gettext.py',
+   'PYMODULE'),
+  ('glob',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\glob.py',
+   'PYMODULE'),
+  ('gzip',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\gzip.py',
+   'PYMODULE'),
+  ('hashlib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\hashlib.py',
+   'PYMODULE'),
+  ('hmac',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\hmac.py',
+   'PYMODULE'),
+  ('html',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\html\\__init__.py',
+   'PYMODULE'),
+  ('html.entities',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\html\\entities.py',
+   'PYMODULE'),
+  ('http',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\http\\__init__.py',
+   'PYMODULE'),
+  ('http.client',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\http\\client.py',
+   'PYMODULE'),
+  ('http.cookiejar',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\http\\cookiejar.py',
+   'PYMODULE'),
+  ('http.server',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\http\\server.py',
+   'PYMODULE'),
+  ('importlib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\__init__.py',
+   'PYMODULE'),
+  ('importlib._abc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\_abc.py',
+   'PYMODULE'),
+  ('importlib._bootstrap',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\_bootstrap.py',
+   'PYMODULE'),
+  ('importlib._bootstrap_external',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\_bootstrap_external.py',
+   'PYMODULE'),
+  ('importlib.abc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\abc.py',
+   'PYMODULE'),
+  ('importlib.machinery',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\machinery.py',
+   'PYMODULE'),
+  ('importlib.metadata',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\metadata\\__init__.py',
+   'PYMODULE'),
+  ('importlib.metadata._adapters',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\metadata\\_adapters.py',
+   'PYMODULE'),
+  ('importlib.metadata._collections',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\metadata\\_collections.py',
+   'PYMODULE'),
+  ('importlib.metadata._functools',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\metadata\\_functools.py',
+   'PYMODULE'),
+  ('importlib.metadata._itertools',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\metadata\\_itertools.py',
+   'PYMODULE'),
+  ('importlib.metadata._meta',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\metadata\\_meta.py',
+   'PYMODULE'),
+  ('importlib.metadata._text',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\metadata\\_text.py',
+   'PYMODULE'),
+  ('importlib.readers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\readers.py',
+   'PYMODULE'),
+  ('importlib.resources',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\resources\\__init__.py',
+   'PYMODULE'),
+  ('importlib.resources._adapters',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\resources\\_adapters.py',
+   'PYMODULE'),
+  ('importlib.resources._common',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\resources\\_common.py',
+   'PYMODULE'),
+  ('importlib.resources._functional',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\resources\\_functional.py',
+   'PYMODULE'),
+  ('importlib.resources._itertools',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\resources\\_itertools.py',
+   'PYMODULE'),
+  ('importlib.resources.abc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\resources\\abc.py',
+   'PYMODULE'),
+  ('importlib.resources.readers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\resources\\readers.py',
+   'PYMODULE'),
+  ('importlib.util',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\importlib\\util.py',
+   'PYMODULE'),
+  ('inspect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\inspect.py',
+   'PYMODULE'),
+  ('invoke',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\__init__.py',
+   'PYMODULE'),
+  ('invoke.collection',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\collection.py',
+   'PYMODULE'),
+  ('invoke.completion',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\completion\\__init__.py',
+   'PYMODULE'),
+  ('invoke.completion.complete',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\completion\\complete.py',
+   'PYMODULE'),
+  ('invoke.config',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\config.py',
+   'PYMODULE'),
+  ('invoke.context',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\context.py',
+   'PYMODULE'),
+  ('invoke.env',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\env.py',
+   'PYMODULE'),
+  ('invoke.exceptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\exceptions.py',
+   'PYMODULE'),
+  ('invoke.executor',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\executor.py',
+   'PYMODULE'),
+  ('invoke.loader',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\loader.py',
+   'PYMODULE'),
+  ('invoke.parser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\parser\\__init__.py',
+   'PYMODULE'),
+  ('invoke.parser.argument',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\parser\\argument.py',
+   'PYMODULE'),
+  ('invoke.parser.context',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\parser\\context.py',
+   'PYMODULE'),
+  ('invoke.parser.parser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\parser\\parser.py',
+   'PYMODULE'),
+  ('invoke.program',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\program.py',
+   'PYMODULE'),
+  ('invoke.runners',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\runners.py',
+   'PYMODULE'),
+  ('invoke.tasks',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\tasks.py',
+   'PYMODULE'),
+  ('invoke.terminals',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\terminals.py',
+   'PYMODULE'),
+  ('invoke.util',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\util.py',
+   'PYMODULE'),
+  ('invoke.vendor',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\__init__.py',
+   'PYMODULE'),
+  ('invoke.vendor.fluidity',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\fluidity\\__init__.py',
+   'PYMODULE'),
+  ('invoke.vendor.fluidity.backwardscompat',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\fluidity\\backwardscompat.py',
+   'PYMODULE'),
+  ('invoke.vendor.fluidity.machine',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\fluidity\\machine.py',
+   'PYMODULE'),
+  ('invoke.vendor.lexicon',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\lexicon\\__init__.py',
+   'PYMODULE'),
+  ('invoke.vendor.lexicon._version',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\lexicon\\_version.py',
+   'PYMODULE'),
+  ('invoke.vendor.lexicon.alias_dict',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\lexicon\\alias_dict.py',
+   'PYMODULE'),
+  ('invoke.vendor.lexicon.attribute_dict',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\lexicon\\attribute_dict.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\__init__.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.composer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\composer.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.constructor',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\constructor.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.cyaml',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\cyaml.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.dumper',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\dumper.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.emitter',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\emitter.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.error',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\error.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.events',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\events.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.loader',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\loader.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.nodes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\nodes.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.parser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\parser.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.reader',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\reader.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.representer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\representer.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.resolver',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\resolver.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.scanner',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\scanner.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.serializer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\serializer.py',
+   'PYMODULE'),
+  ('invoke.vendor.yaml.tokens',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\vendor\\yaml\\tokens.py',
+   'PYMODULE'),
+  ('invoke.watchers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\invoke\\watchers.py',
+   'PYMODULE'),
+  ('ipaddress',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ipaddress.py',
+   'PYMODULE'),
+  ('json',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\json\\__init__.py',
+   'PYMODULE'),
+  ('json.decoder',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\json\\decoder.py',
+   'PYMODULE'),
+  ('json.encoder',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\json\\encoder.py',
+   'PYMODULE'),
+  ('json.scanner',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\json\\scanner.py',
+   'PYMODULE'),
+  ('logging',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\logging\\__init__.py',
+   'PYMODULE'),
+  ('lzma',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\lzma.py',
+   'PYMODULE'),
+  ('mimetypes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\mimetypes.py',
+   'PYMODULE'),
+  ('multiprocessing',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\__init__.py',
+   'PYMODULE'),
+  ('multiprocessing.connection',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\connection.py',
+   'PYMODULE'),
+  ('multiprocessing.context',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\context.py',
+   'PYMODULE'),
+  ('multiprocessing.dummy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\dummy\\__init__.py',
+   'PYMODULE'),
+  ('multiprocessing.dummy.connection',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\dummy\\connection.py',
+   'PYMODULE'),
+  ('multiprocessing.forkserver',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\forkserver.py',
+   'PYMODULE'),
+  ('multiprocessing.heap',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\heap.py',
+   'PYMODULE'),
+  ('multiprocessing.managers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\managers.py',
+   'PYMODULE'),
+  ('multiprocessing.pool',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\pool.py',
+   'PYMODULE'),
+  ('multiprocessing.popen_fork',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\popen_fork.py',
+   'PYMODULE'),
+  ('multiprocessing.popen_forkserver',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\popen_forkserver.py',
+   'PYMODULE'),
+  ('multiprocessing.popen_spawn_posix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\popen_spawn_posix.py',
+   'PYMODULE'),
+  ('multiprocessing.popen_spawn_win32',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\popen_spawn_win32.py',
+   'PYMODULE'),
+  ('multiprocessing.process',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\process.py',
+   'PYMODULE'),
+  ('multiprocessing.queues',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\queues.py',
+   'PYMODULE'),
+  ('multiprocessing.reduction',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\reduction.py',
+   'PYMODULE'),
+  ('multiprocessing.resource_sharer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\resource_sharer.py',
+   'PYMODULE'),
+  ('multiprocessing.resource_tracker',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\resource_tracker.py',
+   'PYMODULE'),
+  ('multiprocessing.shared_memory',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\shared_memory.py',
+   'PYMODULE'),
+  ('multiprocessing.sharedctypes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\sharedctypes.py',
+   'PYMODULE'),
+  ('multiprocessing.spawn',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\spawn.py',
+   'PYMODULE'),
+  ('multiprocessing.synchronize',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\synchronize.py',
+   'PYMODULE'),
+  ('multiprocessing.util',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\multiprocessing\\util.py',
+   'PYMODULE'),
+  ('nacl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\__init__.py',
+   'PYMODULE'),
+  ('nacl.bindings',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\__init__.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_aead',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_aead.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_box',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_box.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_core',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_core.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_generichash',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_generichash.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_hash',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_hash.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_kx',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_kx.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_pwhash',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_pwhash.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_scalarmult',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_scalarmult.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_secretbox',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_secretbox.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_secretstream',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_secretstream.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_shorthash',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_shorthash.py',
+   'PYMODULE'),
+  ('nacl.bindings.crypto_sign',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\crypto_sign.py',
+   'PYMODULE'),
+  ('nacl.bindings.randombytes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\randombytes.py',
+   'PYMODULE'),
+  ('nacl.bindings.sodium_core',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\sodium_core.py',
+   'PYMODULE'),
+  ('nacl.bindings.utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\bindings\\utils.py',
+   'PYMODULE'),
+  ('nacl.encoding',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\encoding.py',
+   'PYMODULE'),
+  ('nacl.exceptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\exceptions.py',
+   'PYMODULE'),
+  ('nacl.public',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\public.py',
+   'PYMODULE'),
+  ('nacl.signing',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\signing.py',
+   'PYMODULE'),
+  ('nacl.utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\nacl\\utils.py',
+   'PYMODULE'),
+  ('netmiko',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\__init__.py',
+   'PYMODULE'),
+  ('netmiko._telnetlib', '-', 'PYMODULE'),
+  ('netmiko._telnetlib.telnetlib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\_telnetlib\\telnetlib.py',
+   'PYMODULE'),
+  ('netmiko.a10',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\a10\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.a10.a10_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\a10\\a10_ssh.py',
+   'PYMODULE'),
+  ('netmiko.accedian',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\accedian\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.accedian.accedian_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\accedian\\accedian_ssh.py',
+   'PYMODULE'),
+  ('netmiko.adtran',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\adtran\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.adtran.adtran',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\adtran\\adtran.py',
+   'PYMODULE'),
+  ('netmiko.adva',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\adva\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.adva.adva_aos_fsp_150_f2',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\adva\\adva_aos_fsp_150_f2.py',
+   'PYMODULE'),
+  ('netmiko.adva.adva_aos_fsp_150_f3',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\adva\\adva_aos_fsp_150_f3.py',
+   'PYMODULE'),
+  ('netmiko.alaxala',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\alaxala\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.alaxala.alaxala_ax36s',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\alaxala\\alaxala_ax36s.py',
+   'PYMODULE'),
+  ('netmiko.alcatel',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\alcatel\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.alcatel.alcatel_aos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\alcatel\\alcatel_aos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.allied_telesis',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\allied_telesis\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.allied_telesis.allied_telesis_awplus',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\allied_telesis\\allied_telesis_awplus.py',
+   'PYMODULE'),
+  ('netmiko.apc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\apc\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.apc.aos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\apc\\aos.py',
+   'PYMODULE'),
+  ('netmiko.apresia',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\apresia\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.apresia.apresia_aeos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\apresia\\apresia_aeos.py',
+   'PYMODULE'),
+  ('netmiko.arista',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\arista\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.arista.arista',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\arista\\arista.py',
+   'PYMODULE'),
+  ('netmiko.arris',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\arris\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.arris.arris_cer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\arris\\arris_cer.py',
+   'PYMODULE'),
+  ('netmiko.aruba',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\aruba\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.aruba.aruba_aoscx',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\aruba\\aruba_aoscx.py',
+   'PYMODULE'),
+  ('netmiko.aruba.aruba_os',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\aruba\\aruba_os.py',
+   'PYMODULE'),
+  ('netmiko.asterfusion',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\asterfusion\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.asterfusion.asterfusion',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\asterfusion\\asterfusion.py',
+   'PYMODULE'),
+  ('netmiko.audiocode',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\audiocode\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.audiocode.audiocode_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\audiocode\\audiocode_ssh.py',
+   'PYMODULE'),
+  ('netmiko.avara',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\avara\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.avara.avara_aos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\avara\\avara_aos.py',
+   'PYMODULE'),
+  ('netmiko.aviat',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\aviat\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.aviat.aviat_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\aviat\\aviat_ssh.py',
+   'PYMODULE'),
+  ('netmiko.base_connection',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\base_connection.py',
+   'PYMODULE'),
+  ('netmiko.bintec',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\bintec\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.bintec.bintec_boss',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\bintec\\bintec_boss.py',
+   'PYMODULE'),
+  ('netmiko.broadcom',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\broadcom\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.broadcom.broadcom_icos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\broadcom\\broadcom_icos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.brocade',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\brocade\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.brocade.brocade_fos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\brocade\\brocade_fos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.calix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\calix\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.calix.calix_b6',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\calix\\calix_b6.py',
+   'PYMODULE'),
+  ('netmiko.calix.calix_exa',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\calix\\calix_exa.py',
+   'PYMODULE'),
+  ('netmiko.casa',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\casa\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.casa.casa_cmts',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\casa\\casa_cmts.py',
+   'PYMODULE'),
+  ('netmiko.cdot',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cdot\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.cdot.cdot_cros_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cdot\\cdot_cros_ssh.py',
+   'PYMODULE'),
+  ('netmiko.centec',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\centec\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.centec.centec_os',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\centec\\centec_os.py',
+   'PYMODULE'),
+  ('netmiko.channel',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\channel.py',
+   'PYMODULE'),
+  ('netmiko.checkpoint',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\checkpoint\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.checkpoint.checkpoint_gaia_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\checkpoint\\checkpoint_gaia_ssh.py',
+   'PYMODULE'),
+  ('netmiko.ciena',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ciena\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.ciena.ciena_saos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ciena\\ciena_saos.py',
+   'PYMODULE'),
+  ('netmiko.ciena.ciena_waveserver',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ciena\\ciena_waveserver.py',
+   'PYMODULE'),
+  ('netmiko.cisco',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_ap_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_ap_ssh.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_apic',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_apic.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_asa_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_asa_ssh.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_ftd_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_ftd_ssh.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_ios',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_ios.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_nxos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_nxos.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_s200',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_s200.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_s300',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_s300.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_tp_tcce',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_tp_tcce.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_viptela',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_viptela.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_wlc_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_wlc_ssh.py',
+   'PYMODULE'),
+  ('netmiko.cisco.cisco_xr',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco\\cisco_xr.py',
+   'PYMODULE'),
+  ('netmiko.cisco_base_connection',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cisco_base_connection.py',
+   'PYMODULE'),
+  ('netmiko.citrix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\citrix\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.citrix.netscaler_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\citrix\\netscaler_ssh.py',
+   'PYMODULE'),
+  ('netmiko.cloudgenix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cloudgenix\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.cloudgenix.cloudgenix_ion',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cloudgenix\\cloudgenix_ion.py',
+   'PYMODULE'),
+  ('netmiko.corelight',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\corelight\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.corelight.corelight_linux_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\corelight\\corelight_linux_ssh.py',
+   'PYMODULE'),
+  ('netmiko.coriant',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\coriant\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.coriant.coriant_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\coriant\\coriant_ssh.py',
+   'PYMODULE'),
+  ('netmiko.cumulus',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cumulus\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.cumulus.cumulus_linux_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\cumulus\\cumulus_linux_ssh.py',
+   'PYMODULE'),
+  ('netmiko.dell',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dell\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.dell.dell_dnos6',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dell\\dell_dnos6.py',
+   'PYMODULE'),
+  ('netmiko.dell.dell_force10_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dell\\dell_force10_ssh.py',
+   'PYMODULE'),
+  ('netmiko.dell.dell_isilon_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dell\\dell_isilon_ssh.py',
+   'PYMODULE'),
+  ('netmiko.dell.dell_os10_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dell\\dell_os10_ssh.py',
+   'PYMODULE'),
+  ('netmiko.dell.dell_powerconnect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dell\\dell_powerconnect.py',
+   'PYMODULE'),
+  ('netmiko.dell.dell_sonic_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dell\\dell_sonic_ssh.py',
+   'PYMODULE'),
+  ('netmiko.digi',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\digi\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.digi.digi_transport',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\digi\\digi_transport.py',
+   'PYMODULE'),
+  ('netmiko.dlink',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dlink\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.dlink.dlink_ds',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\dlink\\dlink_ds.py',
+   'PYMODULE'),
+  ('netmiko.edgecore',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\edgecore\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.edgecore.edgecore_sonic_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\edgecore\\edgecore_sonic_ssh.py',
+   'PYMODULE'),
+  ('netmiko.ekinops',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ekinops\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.ekinops.ekinops_ek360',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ekinops\\ekinops_ek360.py',
+   'PYMODULE'),
+  ('netmiko.eltex',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\eltex\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.eltex.eltex_esr_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\eltex\\eltex_esr_ssh.py',
+   'PYMODULE'),
+  ('netmiko.eltex.eltex_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\eltex\\eltex_ssh.py',
+   'PYMODULE'),
+  ('netmiko.endace',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\endace\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.endace.endace_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\endace\\endace_ssh.py',
+   'PYMODULE'),
+  ('netmiko.enterasys',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\enterasys\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.enterasys.enterasys_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\enterasys\\enterasys_ssh.py',
+   'PYMODULE'),
+  ('netmiko.ericsson',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ericsson\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.ericsson.ericsson_ipos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ericsson\\ericsson_ipos.py',
+   'PYMODULE'),
+  ('netmiko.ericsson.ericsson_mltn',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ericsson\\ericsson_mltn.py',
+   'PYMODULE'),
+  ('netmiko.exceptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\exceptions.py',
+   'PYMODULE'),
+  ('netmiko.extreme',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.extreme.extreme_ers_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\extreme_ers_ssh.py',
+   'PYMODULE'),
+  ('netmiko.extreme.extreme_exos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\extreme_exos.py',
+   'PYMODULE'),
+  ('netmiko.extreme.extreme_netiron',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\extreme_netiron.py',
+   'PYMODULE'),
+  ('netmiko.extreme.extreme_nos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\extreme_nos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.extreme.extreme_slx_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\extreme_slx_ssh.py',
+   'PYMODULE'),
+  ('netmiko.extreme.extreme_tierraos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\extreme_tierraos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.extreme.extreme_vsp_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\extreme_vsp_ssh.py',
+   'PYMODULE'),
+  ('netmiko.extreme.extreme_wing_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\extreme\\extreme_wing_ssh.py',
+   'PYMODULE'),
+  ('netmiko.f5',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\f5\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.f5.f5_linux_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\f5\\f5_linux_ssh.py',
+   'PYMODULE'),
+  ('netmiko.f5.f5_tmsh_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\f5\\f5_tmsh_ssh.py',
+   'PYMODULE'),
+  ('netmiko.fiberstore',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\fiberstore\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.fiberstore.fiberstore_fsos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\fiberstore\\fiberstore_fsos.py',
+   'PYMODULE'),
+  ('netmiko.fiberstore.fiberstore_networkos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\fiberstore\\fiberstore_networkos.py',
+   'PYMODULE'),
+  ('netmiko.flexvnf',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\flexvnf\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.flexvnf.flexvnf_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\flexvnf\\flexvnf_ssh.py',
+   'PYMODULE'),
+  ('netmiko.fortinet',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\fortinet\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.fortinet.fortinet_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\fortinet\\fortinet_ssh.py',
+   'PYMODULE'),
+  ('netmiko.fujitsu',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\fujitsu\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.fujitsu.fujitsu_sir',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\fujitsu\\fujitsu_sir.py',
+   'PYMODULE'),
+  ('netmiko.furukawa',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\furukawa\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.furukawa.furukawa_fitelnet',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\furukawa\\furukawa_fitelnet.py',
+   'PYMODULE'),
+  ('netmiko.garderos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\garderos\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.garderos.garderos_grs',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\garderos\\garderos_grs.py',
+   'PYMODULE'),
+  ('netmiko.genexis',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\genexis\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.genexis.genexis_solt33',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\genexis\\genexis_solt33.py',
+   'PYMODULE'),
+  ('netmiko.hillstone',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hillstone\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.hillstone.hillstone',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hillstone\\hillstone.py',
+   'PYMODULE'),
+  ('netmiko.hioso',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hioso\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.hioso.hioso',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hioso\\hioso.py',
+   'PYMODULE'),
+  ('netmiko.hirschmann',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hirschmann\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.hirschmann.hirschmann_hios',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hirschmann\\hirschmann_hios.py',
+   'PYMODULE'),
+  ('netmiko.hp',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hp\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.hp.hp_comware',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hp\\hp_comware.py',
+   'PYMODULE'),
+  ('netmiko.hp.hp_procurve',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\hp\\hp_procurve.py',
+   'PYMODULE'),
+  ('netmiko.huawei',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\huawei\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.huawei.huawei',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\huawei\\huawei.py',
+   'PYMODULE'),
+  ('netmiko.huawei.huawei_ont',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\huawei\\huawei_ont.py',
+   'PYMODULE'),
+  ('netmiko.huawei.huawei_smartax',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\huawei\\huawei_smartax.py',
+   'PYMODULE'),
+  ('netmiko.iij',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\iij\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.iij.iij_seilos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\iij\\iij_seilos.py',
+   'PYMODULE'),
+  ('netmiko.infinera',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\infinera\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.infinera.infinera_packet',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\infinera\\infinera_packet.py',
+   'PYMODULE'),
+  ('netmiko.ipinfusion',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ipinfusion\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.ipinfusion.ipinfusion_ocnos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ipinfusion\\ipinfusion_ocnos.py',
+   'PYMODULE'),
+  ('netmiko.juniper',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\juniper\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.juniper.juniper',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\juniper\\juniper.py',
+   'PYMODULE'),
+  ('netmiko.juniper.juniper_screenos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\juniper\\juniper_screenos.py',
+   'PYMODULE'),
+  ('netmiko.keymile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\keymile\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.keymile.keymile_nos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\keymile\\keymile_nos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.keymile.keymile_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\keymile\\keymile_ssh.py',
+   'PYMODULE'),
+  ('netmiko.lancom',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\lancom\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.lancom.lancom_lcossx4',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\lancom\\lancom_lcossx4.py',
+   'PYMODULE'),
+  ('netmiko.lancom.lancom_lcossx5',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\lancom\\lancom_lcossx5.py',
+   'PYMODULE'),
+  ('netmiko.linux',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\linux\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.linux.linux_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\linux\\linux_ssh.py',
+   'PYMODULE'),
+  ('netmiko.maipu',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\maipu\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.maipu.maipu',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\maipu\\maipu.py',
+   'PYMODULE'),
+  ('netmiko.mellanox',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\mellanox\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.mellanox.mellanox_mlnxos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\mellanox\\mellanox_mlnxos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.mikrotik',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\mikrotik\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.mikrotik.mikrotik_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\mikrotik\\mikrotik_ssh.py',
+   'PYMODULE'),
+  ('netmiko.moxa',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\moxa\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.moxa.moxa_nos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\moxa\\moxa_nos.py',
+   'PYMODULE'),
+  ('netmiko.mrv',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\mrv\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.mrv.mrv_lx',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\mrv\\mrv_lx.py',
+   'PYMODULE'),
+  ('netmiko.mrv.mrv_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\mrv\\mrv_ssh.py',
+   'PYMODULE'),
+  ('netmiko.nec',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\nec\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.nec.nec_ix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\nec\\nec_ix.py',
+   'PYMODULE'),
+  ('netmiko.netapp',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\netapp\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.netapp.netapp_cdot_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\netapp\\netapp_cdot_ssh.py',
+   'PYMODULE'),
+  ('netmiko.netgear',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\netgear\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.netgear.netgear_prosafe_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\netgear\\netgear_prosafe_ssh.py',
+   'PYMODULE'),
+  ('netmiko.netmiko_globals',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\netmiko_globals.py',
+   'PYMODULE'),
+  ('netmiko.no_config',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\no_config.py',
+   'PYMODULE'),
+  ('netmiko.no_enable',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\no_enable.py',
+   'PYMODULE'),
+  ('netmiko.nokia',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\nokia\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.nokia.nokia_isam',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\nokia\\nokia_isam.py',
+   'PYMODULE'),
+  ('netmiko.nokia.nokia_srl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\nokia\\nokia_srl.py',
+   'PYMODULE'),
+  ('netmiko.nokia.nokia_sros',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\nokia\\nokia_sros.py',
+   'PYMODULE'),
+  ('netmiko.oneaccess',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\oneaccess\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.oneaccess.oneaccess_oneos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\oneaccess\\oneaccess_oneos.py',
+   'PYMODULE'),
+  ('netmiko.opengear',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\opengear\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.opengear.opengear_linux',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\opengear\\opengear_linux.py',
+   'PYMODULE'),
+  ('netmiko.optilink',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\optilink\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.optilink.op_eolt11444',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\optilink\\op_eolt11444.py',
+   'PYMODULE'),
+  ('netmiko.optilink.op_eolt9702',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\optilink\\op_eolt9702.py',
+   'PYMODULE'),
+  ('netmiko.optilink.op_golt924',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\optilink\\op_golt924.py',
+   'PYMODULE'),
+  ('netmiko.ovs',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ovs\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.ovs.ovs_linux_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ovs\\ovs_linux_ssh.py',
+   'PYMODULE'),
+  ('netmiko.paloalto',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\paloalto\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.paloalto.paloalto_panos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\paloalto\\paloalto_panos.py',
+   'PYMODULE'),
+  ('netmiko.perle',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\perle\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.perle.perle_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\perle\\perle_ssh.py',
+   'PYMODULE'),
+  ('netmiko.pluribus',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\pluribus\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.pluribus.pluribus_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\pluribus\\pluribus_ssh.py',
+   'PYMODULE'),
+  ('netmiko.quanta',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\quanta\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.quanta.quanta_mesh_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\quanta\\quanta_mesh_ssh.py',
+   'PYMODULE'),
+  ('netmiko.rad',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\rad\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.rad.rad_etx',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\rad\\rad_etx.py',
+   'PYMODULE'),
+  ('netmiko.raisecom',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\raisecom\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.raisecom.raisecom_roap',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\raisecom\\raisecom_roap.py',
+   'PYMODULE'),
+  ('netmiko.raisecom.raisecom_ros',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\raisecom\\raisecom_ros.py',
+   'PYMODULE'),
+  ('netmiko.ruckus',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ruckus\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.ruckus.ruckus_fastiron',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ruckus\\ruckus_fastiron.py',
+   'PYMODULE'),
+  ('netmiko.ruijie',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ruijie\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.ruijie.ruijie_os',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ruijie\\ruijie_os.py',
+   'PYMODULE'),
+  ('netmiko.scp_functions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\scp_functions.py',
+   'PYMODULE'),
+  ('netmiko.scp_handler',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\scp_handler.py',
+   'PYMODULE'),
+  ('netmiko.session_log',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\session_log.py',
+   'PYMODULE'),
+  ('netmiko.silverpeak',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\silverpeak\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.silverpeak.silverpeak_vxoa_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\silverpeak\\silverpeak_vxoa_ssh.py',
+   'PYMODULE'),
+  ('netmiko.sixwind',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\sixwind\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.sixwind.sixwind_os',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\sixwind\\sixwind_os.py',
+   'PYMODULE'),
+  ('netmiko.smartoptics',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\smartoptics\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.smartoptics.smartoptics_dwdm',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\smartoptics\\smartoptics_dwdm.py',
+   'PYMODULE'),
+  ('netmiko.sophos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\sophos\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.sophos.sophos_sfos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\sophos\\sophos_sfos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.ssh_auth',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ssh_auth.py',
+   'PYMODULE'),
+  ('netmiko.ssh_autodetect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ssh_autodetect.py',
+   'PYMODULE'),
+  ('netmiko.ssh_dispatcher',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ssh_dispatcher.py',
+   'PYMODULE'),
+  ('netmiko.supermicro',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\supermicro\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.supermicro.smci_smis',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\supermicro\\smci_smis.py',
+   'PYMODULE'),
+  ('netmiko.telcosystems',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\telcosystems\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.telcosystems.telcosystems_binos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\telcosystems\\telcosystems_binos.py',
+   'PYMODULE'),
+  ('netmiko.teldat',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\teldat\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.teldat.teldat_cit',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\teldat\\teldat_cit.py',
+   'PYMODULE'),
+  ('netmiko.telnet_proxy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\telnet_proxy.py',
+   'PYMODULE'),
+  ('netmiko.terminal_server',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\terminal_server\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.terminal_server.terminal_server',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\terminal_server\\terminal_server.py',
+   'PYMODULE'),
+  ('netmiko.tplink',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\tplink\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.tplink.tplink_jetstream',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\tplink\\tplink_jetstream.py',
+   'PYMODULE'),
+  ('netmiko.ubiquiti',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ubiquiti\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.ubiquiti.edge_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ubiquiti\\edge_ssh.py',
+   'PYMODULE'),
+  ('netmiko.ubiquiti.edgerouter_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ubiquiti\\edgerouter_ssh.py',
+   'PYMODULE'),
+  ('netmiko.ubiquiti.unifiswitch_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\ubiquiti\\unifiswitch_ssh.py',
+   'PYMODULE'),
+  ('netmiko.utilities',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\utilities.py',
+   'PYMODULE'),
+  ('netmiko.vertiv',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\vertiv\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.vertiv.vertiv_mph_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\vertiv\\vertiv_mph_ssh.py',
+   'PYMODULE'),
+  ('netmiko.vyos',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\vyos\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.vyos.vyos_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\vyos\\vyos_ssh.py',
+   'PYMODULE'),
+  ('netmiko.watchguard',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\watchguard\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.watchguard.fireware_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\watchguard\\fireware_ssh.py',
+   'PYMODULE'),
+  ('netmiko.yamaha',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\yamaha\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.yamaha.yamaha',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\yamaha\\yamaha.py',
+   'PYMODULE'),
+  ('netmiko.zpe',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\zpe\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.zpe.zpe_nodegrid',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\zpe\\zpe_nodegrid.py',
+   'PYMODULE'),
+  ('netmiko.zte',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\zte\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.zte.zte_zxros',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\zte\\zte_zxros.py',
+   'PYMODULE'),
+  ('netmiko.zyxel',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\zyxel\\__init__.py',
+   'PYMODULE'),
+  ('netmiko.zyxel.zyxel_ssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\netmiko\\zyxel\\zyxel_ssh.py',
+   'PYMODULE'),
+  ('netrc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\netrc.py',
+   'PYMODULE'),
+  ('numbers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\numbers.py',
+   'PYMODULE'),
+  ('numpy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\__init__.py',
+   'PYMODULE'),
+  ('numpy.__config__',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\__config__.py',
+   'PYMODULE'),
+  ('numpy._array_api_info',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_array_api_info.py',
+   'PYMODULE'),
+  ('numpy._core',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\__init__.py',
+   'PYMODULE'),
+  ('numpy._core._add_newdocs',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_add_newdocs.py',
+   'PYMODULE'),
+  ('numpy._core._add_newdocs_scalars',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_add_newdocs_scalars.py',
+   'PYMODULE'),
+  ('numpy._core._asarray',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_asarray.py',
+   'PYMODULE'),
+  ('numpy._core._dtype',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_dtype.py',
+   'PYMODULE'),
+  ('numpy._core._dtype_ctypes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_dtype_ctypes.py',
+   'PYMODULE'),
+  ('numpy._core._exceptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_exceptions.py',
+   'PYMODULE'),
+  ('numpy._core._internal',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_internal.py',
+   'PYMODULE'),
+  ('numpy._core._methods',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_methods.py',
+   'PYMODULE'),
+  ('numpy._core._string_helpers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_string_helpers.py',
+   'PYMODULE'),
+  ('numpy._core._type_aliases',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_type_aliases.py',
+   'PYMODULE'),
+  ('numpy._core._ufunc_config',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\_ufunc_config.py',
+   'PYMODULE'),
+  ('numpy._core.arrayprint',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\arrayprint.py',
+   'PYMODULE'),
+  ('numpy._core.defchararray',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\defchararray.py',
+   'PYMODULE'),
+  ('numpy._core.einsumfunc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\einsumfunc.py',
+   'PYMODULE'),
+  ('numpy._core.fromnumeric',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\fromnumeric.py',
+   'PYMODULE'),
+  ('numpy._core.function_base',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\function_base.py',
+   'PYMODULE'),
+  ('numpy._core.getlimits',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\getlimits.py',
+   'PYMODULE'),
+  ('numpy._core.memmap',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\memmap.py',
+   'PYMODULE'),
+  ('numpy._core.multiarray',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\multiarray.py',
+   'PYMODULE'),
+  ('numpy._core.numeric',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\numeric.py',
+   'PYMODULE'),
+  ('numpy._core.numerictypes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\numerictypes.py',
+   'PYMODULE'),
+  ('numpy._core.overrides',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\overrides.py',
+   'PYMODULE'),
+  ('numpy._core.printoptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\printoptions.py',
+   'PYMODULE'),
+  ('numpy._core.records',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\records.py',
+   'PYMODULE'),
+  ('numpy._core.shape_base',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\shape_base.py',
+   'PYMODULE'),
+  ('numpy._core.strings',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\strings.py',
+   'PYMODULE'),
+  ('numpy._core.umath',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_core\\umath.py',
+   'PYMODULE'),
+  ('numpy._distributor_init',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_distributor_init.py',
+   'PYMODULE'),
+  ('numpy._expired_attrs_2_0',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_expired_attrs_2_0.py',
+   'PYMODULE'),
+  ('numpy._globals',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_globals.py',
+   'PYMODULE'),
+  ('numpy._pytesttester',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_pytesttester.py',
+   'PYMODULE'),
+  ('numpy._typing',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\__init__.py',
+   'PYMODULE'),
+  ('numpy._typing._add_docstring',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_add_docstring.py',
+   'PYMODULE'),
+  ('numpy._typing._array_like',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_array_like.py',
+   'PYMODULE'),
+  ('numpy._typing._char_codes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_char_codes.py',
+   'PYMODULE'),
+  ('numpy._typing._dtype_like',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_dtype_like.py',
+   'PYMODULE'),
+  ('numpy._typing._nbit',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_nbit.py',
+   'PYMODULE'),
+  ('numpy._typing._nbit_base',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_nbit_base.py',
+   'PYMODULE'),
+  ('numpy._typing._nested_sequence',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_nested_sequence.py',
+   'PYMODULE'),
+  ('numpy._typing._scalars',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_scalars.py',
+   'PYMODULE'),
+  ('numpy._typing._shape',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_shape.py',
+   'PYMODULE'),
+  ('numpy._typing._ufunc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_typing\\_ufunc.py',
+   'PYMODULE'),
+  ('numpy._utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_utils\\__init__.py',
+   'PYMODULE'),
+  ('numpy._utils._conversions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_utils\\_conversions.py',
+   'PYMODULE'),
+  ('numpy._utils._inspect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\_utils\\_inspect.py',
+   'PYMODULE'),
+  ('numpy.char',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\char\\__init__.py',
+   'PYMODULE'),
+  ('numpy.core',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\core\\__init__.py',
+   'PYMODULE'),
+  ('numpy.core._utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\core\\_utils.py',
+   'PYMODULE'),
+  ('numpy.ctypeslib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\ctypeslib\\__init__.py',
+   'PYMODULE'),
+  ('numpy.ctypeslib._ctypeslib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\ctypeslib\\_ctypeslib.py',
+   'PYMODULE'),
+  ('numpy.dtypes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\dtypes.py',
+   'PYMODULE'),
+  ('numpy.exceptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\exceptions.py',
+   'PYMODULE'),
+  ('numpy.f2py',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\__init__.py',
+   'PYMODULE'),
+  ('numpy.f2py.__version__',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\__version__.py',
+   'PYMODULE'),
+  ('numpy.f2py._backends',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\_backends\\__init__.py',
+   'PYMODULE'),
+  ('numpy.f2py._backends._backend',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\_backends\\_backend.py',
+   'PYMODULE'),
+  ('numpy.f2py._backends._meson',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\_backends\\_meson.py',
+   'PYMODULE'),
+  ('numpy.f2py._isocbind',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\_isocbind.py',
+   'PYMODULE'),
+  ('numpy.f2py.auxfuncs',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\auxfuncs.py',
+   'PYMODULE'),
+  ('numpy.f2py.capi_maps',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\capi_maps.py',
+   'PYMODULE'),
+  ('numpy.f2py.cb_rules',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\cb_rules.py',
+   'PYMODULE'),
+  ('numpy.f2py.cfuncs',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\cfuncs.py',
+   'PYMODULE'),
+  ('numpy.f2py.common_rules',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\common_rules.py',
+   'PYMODULE'),
+  ('numpy.f2py.crackfortran',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\crackfortran.py',
+   'PYMODULE'),
+  ('numpy.f2py.diagnose',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\diagnose.py',
+   'PYMODULE'),
+  ('numpy.f2py.f2py2e',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\f2py2e.py',
+   'PYMODULE'),
+  ('numpy.f2py.f90mod_rules',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\f90mod_rules.py',
+   'PYMODULE'),
+  ('numpy.f2py.func2subr',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\func2subr.py',
+   'PYMODULE'),
+  ('numpy.f2py.rules',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\rules.py',
+   'PYMODULE'),
+  ('numpy.f2py.symbolic',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\symbolic.py',
+   'PYMODULE'),
+  ('numpy.f2py.use_rules',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\f2py\\use_rules.py',
+   'PYMODULE'),
+  ('numpy.fft',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\fft\\__init__.py',
+   'PYMODULE'),
+  ('numpy.fft._helper',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\fft\\_helper.py',
+   'PYMODULE'),
+  ('numpy.fft._pocketfft',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\fft\\_pocketfft.py',
+   'PYMODULE'),
+  ('numpy.lib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\__init__.py',
+   'PYMODULE'),
+  ('numpy.lib._array_utils_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_array_utils_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._arraypad_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_arraypad_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._arraysetops_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_arraysetops_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._arrayterator_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_arrayterator_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._datasource',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_datasource.py',
+   'PYMODULE'),
+  ('numpy.lib._format_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_format_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._function_base_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_function_base_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._histograms_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_histograms_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._index_tricks_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_index_tricks_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._iotools',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_iotools.py',
+   'PYMODULE'),
+  ('numpy.lib._nanfunctions_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_nanfunctions_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._npyio_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_npyio_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._polynomial_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_polynomial_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._scimath_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_scimath_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._shape_base_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_shape_base_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._stride_tricks_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_stride_tricks_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._twodim_base_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_twodim_base_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._type_check_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_type_check_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._ufunclike_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_ufunclike_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._utils_impl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_utils_impl.py',
+   'PYMODULE'),
+  ('numpy.lib._version',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\_version.py',
+   'PYMODULE'),
+  ('numpy.lib.array_utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\array_utils.py',
+   'PYMODULE'),
+  ('numpy.lib.format',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\format.py',
+   'PYMODULE'),
+  ('numpy.lib.introspect',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\introspect.py',
+   'PYMODULE'),
+  ('numpy.lib.mixins',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\mixins.py',
+   'PYMODULE'),
+  ('numpy.lib.npyio',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\npyio.py',
+   'PYMODULE'),
+  ('numpy.lib.recfunctions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\recfunctions.py',
+   'PYMODULE'),
+  ('numpy.lib.scimath',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\scimath.py',
+   'PYMODULE'),
+  ('numpy.lib.stride_tricks',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\lib\\stride_tricks.py',
+   'PYMODULE'),
+  ('numpy.linalg',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\linalg\\__init__.py',
+   'PYMODULE'),
+  ('numpy.linalg._linalg',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\linalg\\_linalg.py',
+   'PYMODULE'),
+  ('numpy.ma',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\ma\\__init__.py',
+   'PYMODULE'),
+  ('numpy.ma.core',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\ma\\core.py',
+   'PYMODULE'),
+  ('numpy.ma.extras',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\ma\\extras.py',
+   'PYMODULE'),
+  ('numpy.ma.mrecords',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\ma\\mrecords.py',
+   'PYMODULE'),
+  ('numpy.matlib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\matlib.py',
+   'PYMODULE'),
+  ('numpy.matrixlib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\matrixlib\\__init__.py',
+   'PYMODULE'),
+  ('numpy.matrixlib.defmatrix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\matrixlib\\defmatrix.py',
+   'PYMODULE'),
+  ('numpy.polynomial',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\__init__.py',
+   'PYMODULE'),
+  ('numpy.polynomial._polybase',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\_polybase.py',
+   'PYMODULE'),
+  ('numpy.polynomial.chebyshev',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\chebyshev.py',
+   'PYMODULE'),
+  ('numpy.polynomial.hermite',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\hermite.py',
+   'PYMODULE'),
+  ('numpy.polynomial.hermite_e',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\hermite_e.py',
+   'PYMODULE'),
+  ('numpy.polynomial.laguerre',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\laguerre.py',
+   'PYMODULE'),
+  ('numpy.polynomial.legendre',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\legendre.py',
+   'PYMODULE'),
+  ('numpy.polynomial.polynomial',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\polynomial.py',
+   'PYMODULE'),
+  ('numpy.polynomial.polyutils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\polynomial\\polyutils.py',
+   'PYMODULE'),
+  ('numpy.random',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\random\\__init__.py',
+   'PYMODULE'),
+  ('numpy.random._pickle',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\random\\_pickle.py',
+   'PYMODULE'),
+  ('numpy.rec',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\rec\\__init__.py',
+   'PYMODULE'),
+  ('numpy.strings',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\strings\\__init__.py',
+   'PYMODULE'),
+  ('numpy.testing',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\testing\\__init__.py',
+   'PYMODULE'),
+  ('numpy.testing._private',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\testing\\_private\\__init__.py',
+   'PYMODULE'),
+  ('numpy.testing._private.extbuild',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\testing\\_private\\extbuild.py',
+   'PYMODULE'),
+  ('numpy.testing._private.utils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\testing\\_private\\utils.py',
+   'PYMODULE'),
+  ('numpy.testing.overrides',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\testing\\overrides.py',
+   'PYMODULE'),
+  ('numpy.typing',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\typing\\__init__.py',
+   'PYMODULE'),
+  ('numpy.version',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\version.py',
+   'PYMODULE'),
+  ('opcode',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\opcode.py',
+   'PYMODULE'),
+  ('packaging',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\packaging\\__init__.py',
+   'PYMODULE'),
+  ('packaging.version',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\packaging\\version.py',
+   'PYMODULE'),
+  ('paramiko',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\__init__.py',
+   'PYMODULE'),
+  ('paramiko._winapi',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\_winapi.py',
+   'PYMODULE'),
+  ('paramiko.agent',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\agent.py',
+   'PYMODULE'),
+  ('paramiko.auth_handler',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\auth_handler.py',
+   'PYMODULE'),
+  ('paramiko.auth_strategy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\auth_strategy.py',
+   'PYMODULE'),
+  ('paramiko.buffered_pipe',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\buffered_pipe.py',
+   'PYMODULE'),
+  ('paramiko.channel',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\channel.py',
+   'PYMODULE'),
+  ('paramiko.client',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\client.py',
+   'PYMODULE'),
+  ('paramiko.common',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\common.py',
+   'PYMODULE'),
+  ('paramiko.compress',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\compress.py',
+   'PYMODULE'),
+  ('paramiko.config',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\config.py',
+   'PYMODULE'),
+  ('paramiko.ecdsakey',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\ecdsakey.py',
+   'PYMODULE'),
+  ('paramiko.ed25519key',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\ed25519key.py',
+   'PYMODULE'),
+  ('paramiko.file',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\file.py',
+   'PYMODULE'),
+  ('paramiko.hostkeys',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\hostkeys.py',
+   'PYMODULE'),
+  ('paramiko.kex_curve25519',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\kex_curve25519.py',
+   'PYMODULE'),
+  ('paramiko.kex_ecdh_nist',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\kex_ecdh_nist.py',
+   'PYMODULE'),
+  ('paramiko.kex_gex',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\kex_gex.py',
+   'PYMODULE'),
+  ('paramiko.kex_group1',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\kex_group1.py',
+   'PYMODULE'),
+  ('paramiko.kex_group14',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\kex_group14.py',
+   'PYMODULE'),
+  ('paramiko.kex_group16',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\kex_group16.py',
+   'PYMODULE'),
+  ('paramiko.kex_gss',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\kex_gss.py',
+   'PYMODULE'),
+  ('paramiko.message',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\message.py',
+   'PYMODULE'),
+  ('paramiko.packet',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\packet.py',
+   'PYMODULE'),
+  ('paramiko.pipe',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\pipe.py',
+   'PYMODULE'),
+  ('paramiko.pkey',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\pkey.py',
+   'PYMODULE'),
+  ('paramiko.primes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\primes.py',
+   'PYMODULE'),
+  ('paramiko.proxy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\proxy.py',
+   'PYMODULE'),
+  ('paramiko.rsakey',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\rsakey.py',
+   'PYMODULE'),
+  ('paramiko.server',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\server.py',
+   'PYMODULE'),
+  ('paramiko.sftp',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\sftp.py',
+   'PYMODULE'),
+  ('paramiko.sftp_attr',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\sftp_attr.py',
+   'PYMODULE'),
+  ('paramiko.sftp_client',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\sftp_client.py',
+   'PYMODULE'),
+  ('paramiko.sftp_file',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\sftp_file.py',
+   'PYMODULE'),
+  ('paramiko.sftp_handle',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\sftp_handle.py',
+   'PYMODULE'),
+  ('paramiko.sftp_server',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\sftp_server.py',
+   'PYMODULE'),
+  ('paramiko.sftp_si',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\sftp_si.py',
+   'PYMODULE'),
+  ('paramiko.ssh_exception',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\ssh_exception.py',
+   'PYMODULE'),
+  ('paramiko.ssh_gss',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\ssh_gss.py',
+   'PYMODULE'),
+  ('paramiko.transport',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\transport.py',
+   'PYMODULE'),
+  ('paramiko.util',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\util.py',
+   'PYMODULE'),
+  ('paramiko.win_openssh',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\win_openssh.py',
+   'PYMODULE'),
+  ('paramiko.win_pageant',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\paramiko\\win_pageant.py',
+   'PYMODULE'),
+  ('pathlib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pathlib\\__init__.py',
+   'PYMODULE'),
+  ('pathlib._os',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pathlib\\_os.py',
+   'PYMODULE'),
+  ('pdb',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pdb.py',
+   'PYMODULE'),
+  ('pickle',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pickle.py',
+   'PYMODULE'),
+  ('pkgutil',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pkgutil.py',
+   'PYMODULE'),
+  ('platform',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\platform.py',
+   'PYMODULE'),
+  ('pprint',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pprint.py',
+   'PYMODULE'),
+  ('pty',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pty.py',
+   'PYMODULE'),
+  ('py_compile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\py_compile.py',
+   'PYMODULE'),
+  ('pydoc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pydoc.py',
+   'PYMODULE'),
+  ('pydoc_data',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pydoc_data\\__init__.py',
+   'PYMODULE'),
+  ('pydoc_data.module_docs',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pydoc_data\\module_docs.py',
+   'PYMODULE'),
+  ('pydoc_data.topics',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pydoc_data\\topics.py',
+   'PYMODULE'),
+  ('pywin32_system32', '-', 'PYMODULE'),
+  ('pywintypes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\win32\\lib\\pywintypes.py',
+   'PYMODULE'),
+  ('queue',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\queue.py',
+   'PYMODULE'),
+  ('quopri',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\quopri.py',
+   'PYMODULE'),
+  ('random',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\random.py',
+   'PYMODULE'),
+  ('rlcompleter',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\rlcompleter.py',
+   'PYMODULE'),
+  ('runpy',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\runpy.py',
+   'PYMODULE'),
+  ('scp',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\scp.py',
+   'PYMODULE'),
+  ('secrets',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\secrets.py',
+   'PYMODULE'),
+  ('selectors',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\selectors.py',
+   'PYMODULE'),
+  ('serial',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\__init__.py',
+   'PYMODULE'),
+  ('serial.serialcli',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\serialcli.py',
+   'PYMODULE'),
+  ('serial.serialjava',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\serialjava.py',
+   'PYMODULE'),
+  ('serial.serialposix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\serialposix.py',
+   'PYMODULE'),
+  ('serial.serialutil',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\serialutil.py',
+   'PYMODULE'),
+  ('serial.serialwin32',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\serialwin32.py',
+   'PYMODULE'),
+  ('serial.tools',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\tools\\__init__.py',
+   'PYMODULE'),
+  ('serial.tools.list_ports',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\tools\\list_ports.py',
+   'PYMODULE'),
+  ('serial.tools.list_ports_common',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\tools\\list_ports_common.py',
+   'PYMODULE'),
+  ('serial.tools.list_ports_linux',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\tools\\list_ports_linux.py',
+   'PYMODULE'),
+  ('serial.tools.list_ports_osx',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\tools\\list_ports_osx.py',
+   'PYMODULE'),
+  ('serial.tools.list_ports_posix',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\tools\\list_ports_posix.py',
+   'PYMODULE'),
+  ('serial.tools.list_ports_windows',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\tools\\list_ports_windows.py',
+   'PYMODULE'),
+  ('serial.win32',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\serial\\win32.py',
+   'PYMODULE'),
+  ('shlex',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\shlex.py',
+   'PYMODULE'),
+  ('shutil',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\shutil.py',
+   'PYMODULE'),
+  ('signal',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\signal.py',
+   'PYMODULE'),
+  ('socket',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\socket.py',
+   'PYMODULE'),
+  ('socketserver',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\socketserver.py',
+   'PYMODULE'),
+  ('ssl',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\ssl.py',
+   'PYMODULE'),
+  ('sspi',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\win32\\lib\\sspi.py',
+   'PYMODULE'),
+  ('sspicon',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\win32\\lib\\sspicon.py',
+   'PYMODULE'),
+  ('statistics',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\statistics.py',
+   'PYMODULE'),
+  ('string',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\string\\__init__.py',
+   'PYMODULE'),
+  ('stringprep',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\stringprep.py',
+   'PYMODULE'),
+  ('subprocess',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\subprocess.py',
+   'PYMODULE'),
+  ('sysconfig',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\sysconfig\\__init__.py',
+   'PYMODULE'),
+  ('tarfile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tarfile.py',
+   'PYMODULE'),
+  ('tempfile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tempfile.py',
+   'PYMODULE'),
+  ('textfsm',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\textfsm\\__init__.py',
+   'PYMODULE'),
+  ('textfsm.clitable',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\textfsm\\clitable.py',
+   'PYMODULE'),
+  ('textfsm.parser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\textfsm\\parser.py',
+   'PYMODULE'),
+  ('textfsm.terminal',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\textfsm\\terminal.py',
+   'PYMODULE'),
+  ('textfsm.texttable',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\textfsm\\texttable.py',
+   'PYMODULE'),
+  ('textwrap',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\textwrap.py',
+   'PYMODULE'),
+  ('threading',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\threading.py',
+   'PYMODULE'),
+  ('tkinter',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\__init__.py',
+   'PYMODULE'),
+  ('tkinter.commondialog',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\commondialog.py',
+   'PYMODULE'),
+  ('tkinter.constants',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\constants.py',
+   'PYMODULE'),
+  ('tkinter.dialog',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\dialog.py',
+   'PYMODULE'),
+  ('tkinter.filedialog',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\filedialog.py',
+   'PYMODULE'),
+  ('tkinter.font',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\font.py',
+   'PYMODULE'),
+  ('tkinter.messagebox',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\messagebox.py',
+   'PYMODULE'),
+  ('tkinter.simpledialog',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\simpledialog.py',
+   'PYMODULE'),
+  ('tkinter.ttk',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tkinter\\ttk.py',
+   'PYMODULE'),
+  ('token',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\token.py',
+   'PYMODULE'),
+  ('tokenize',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tokenize.py',
+   'PYMODULE'),
+  ('tracemalloc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tracemalloc.py',
+   'PYMODULE'),
+  ('tty',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\tty.py',
+   'PYMODULE'),
+  ('typing',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\typing.py',
+   'PYMODULE'),
+  ('typing_extensions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\typing_extensions.py',
+   'PYMODULE'),
+  ('unittest',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\__init__.py',
+   'PYMODULE'),
+  ('unittest._log',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\_log.py',
+   'PYMODULE'),
+  ('unittest.async_case',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\async_case.py',
+   'PYMODULE'),
+  ('unittest.case',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\case.py',
+   'PYMODULE'),
+  ('unittest.loader',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\loader.py',
+   'PYMODULE'),
+  ('unittest.main',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\main.py',
+   'PYMODULE'),
+  ('unittest.mock',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\mock.py',
+   'PYMODULE'),
+  ('unittest.result',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\result.py',
+   'PYMODULE'),
+  ('unittest.runner',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\runner.py',
+   'PYMODULE'),
+  ('unittest.signals',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\signals.py',
+   'PYMODULE'),
+  ('unittest.suite',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\suite.py',
+   'PYMODULE'),
+  ('unittest.util',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\unittest\\util.py',
+   'PYMODULE'),
+  ('urllib',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\urllib\\__init__.py',
+   'PYMODULE'),
+  ('urllib.error',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\urllib\\error.py',
+   'PYMODULE'),
+  ('urllib.parse',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\urllib\\parse.py',
+   'PYMODULE'),
+  ('urllib.request',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\urllib\\request.py',
+   'PYMODULE'),
+  ('urllib.response',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\urllib\\response.py',
+   'PYMODULE'),
+  ('webbrowser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\webbrowser.py',
+   'PYMODULE'),
+  ('xml',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\__init__.py',
+   'PYMODULE'),
+  ('xml.etree',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\etree\\__init__.py',
+   'PYMODULE'),
+  ('xml.etree.ElementInclude',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\etree\\ElementInclude.py',
+   'PYMODULE'),
+  ('xml.etree.ElementPath',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\etree\\ElementPath.py',
+   'PYMODULE'),
+  ('xml.etree.ElementTree',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\etree\\ElementTree.py',
+   'PYMODULE'),
+  ('xml.etree.cElementTree',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\etree\\cElementTree.py',
+   'PYMODULE'),
+  ('xml.parsers',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\parsers\\__init__.py',
+   'PYMODULE'),
+  ('xml.parsers.expat',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\parsers\\expat.py',
+   'PYMODULE'),
+  ('xml.sax',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\sax\\__init__.py',
+   'PYMODULE'),
+  ('xml.sax._exceptions',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\sax\\_exceptions.py',
+   'PYMODULE'),
+  ('xml.sax.expatreader',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\sax\\expatreader.py',
+   'PYMODULE'),
+  ('xml.sax.handler',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\sax\\handler.py',
+   'PYMODULE'),
+  ('xml.sax.saxutils',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\sax\\saxutils.py',
+   'PYMODULE'),
+  ('xml.sax.xmlreader',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xml\\sax\\xmlreader.py',
+   'PYMODULE'),
+  ('xmlrpc',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xmlrpc\\__init__.py',
+   'PYMODULE'),
+  ('xmlrpc.client',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\xmlrpc\\client.py',
+   'PYMODULE'),
+  ('yaml',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\__init__.py',
+   'PYMODULE'),
+  ('yaml.composer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\composer.py',
+   'PYMODULE'),
+  ('yaml.constructor',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\constructor.py',
+   'PYMODULE'),
+  ('yaml.cyaml',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\cyaml.py',
+   'PYMODULE'),
+  ('yaml.dumper',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\dumper.py',
+   'PYMODULE'),
+  ('yaml.emitter',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\emitter.py',
+   'PYMODULE'),
+  ('yaml.error',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\error.py',
+   'PYMODULE'),
+  ('yaml.events',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\events.py',
+   'PYMODULE'),
+  ('yaml.loader',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\loader.py',
+   'PYMODULE'),
+  ('yaml.nodes',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\nodes.py',
+   'PYMODULE'),
+  ('yaml.parser',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\parser.py',
+   'PYMODULE'),
+  ('yaml.reader',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\reader.py',
+   'PYMODULE'),
+  ('yaml.representer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\representer.py',
+   'PYMODULE'),
+  ('yaml.resolver',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\resolver.py',
+   'PYMODULE'),
+  ('yaml.scanner',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\scanner.py',
+   'PYMODULE'),
+  ('yaml.serializer',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\serializer.py',
+   'PYMODULE'),
+  ('yaml.tokens',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\yaml\\tokens.py',
+   'PYMODULE'),
+  ('zipfile',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\zipfile\\__init__.py',
+   'PYMODULE'),
+  ('zipfile._path',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\zipfile\\_path\\__init__.py',
+   'PYMODULE'),
+  ('zipfile._path.glob',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\zipfile\\_path\\glob.py',
+   'PYMODULE'),
+  ('zipimport',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\zipimport.py',
+   'PYMODULE')])
