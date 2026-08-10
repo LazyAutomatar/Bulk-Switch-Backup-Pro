@@ -209,6 +209,9 @@ class App(ctk.CTk):
                                        state="disabled", height=35, font=ctk.CTkFont(size=12, weight="bold"))
         self.download_files_btn.grid(row=0, column=1, padx=(5, 0), sticky="ew")
         
+        self.made_by_label = ctk.CTkLabel(self.left_frame, text="Made by Yash Nalawde", font=ctk.CTkFont(size=12), text_color="gray")
+        self.made_by_label.pack(side="bottom", pady=20)
+
         self.current_temp_dir = None
         self.ip_status_widgets = {}
 

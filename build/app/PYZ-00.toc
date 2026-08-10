@@ -3517,6 +3517,22 @@
    'C:\\Users\\Yash '
    'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pprint.py',
    'PYMODULE'),
+  ('psutil',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\psutil\\__init__.py',
+   'PYMODULE'),
+  ('psutil._common',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\psutil\\_common.py',
+   'PYMODULE'),
+  ('psutil._ntuples',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\psutil\\_ntuples.py',
+   'PYMODULE'),
+  ('psutil._pswindows',
+   'C:\\Users\\Yash '
+   'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\psutil\\_pswindows.py',
+   'PYMODULE'),
   ('pty',
    'C:\\Users\\Yash '
    'Nalawde\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\pty.py',
