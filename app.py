@@ -222,7 +222,7 @@ class App(ctk.CTk):
         self.targets_frame = ctk.CTkFrame(self.tab_general, fg_color="transparent")
         self.targets_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
-        self.targets_label = ctk.CTkLabel(self.targets_frame, text="Target Devices (IPs)", font=ctk.CTkFont(size=14, weight="bold"))
+        self.targets_label = ctk.CTkLabel(self.targets_frame, text="Target Devices / Seed IPs", font=ctk.CTkFont(size=14, weight="bold"))
         self.targets_label.pack(anchor="w", pady=(0, 5))
 
         self.ip_textbox = ctk.CTkTextbox(self.targets_frame, height=80)
@@ -316,10 +316,6 @@ class App(ctk.CTk):
 
         self.dashboard_frame = ctk.CTkScrollableFrame(self.dashboard_container, fg_color="transparent")
         self.dashboard_frame.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nsew")
-        try:
-            self.dashboard_frame._scrollbar.grid_remove()
-        except Exception:
-            pass
 
         # BOTTOM 50%: Log Frame
         self.log_container = ctk.CTkFrame(self.right_frame, corner_radius=15)
@@ -332,10 +328,6 @@ class App(ctk.CTk):
 
         self.log_textbox = ctk.CTkTextbox(self.log_container, state="disabled", font=ctk.CTkFont(family="Consolas", size=13))
         self.log_textbox.grid(row=1, column=0, padx=20, pady=(0, 20), sticky="nsew")
-        try:
-            self.log_textbox._scrollbar.grid_remove()
-        except Exception:
-            pass
 
     def toggle_cdp_options(self):
         if self.enable_cdp_var.get():
@@ -401,14 +393,6 @@ class App(ctk.CTk):
             self.log_textbox.insert(ctk.END, f"[{timestamp}] [{source}] {message}\n")
             self.log_textbox.see(ctk.END)
             self.log_textbox.configure(state="disabled")
-            
-            try:
-                if self.log_textbox._textbox.yview() == (0.0, 1.0):
-                    self.log_textbox._scrollbar.grid_remove()
-                else:
-                    self.log_textbox._scrollbar.grid()
-            except Exception:
-                pass
                 
         self.after(0, update)
 
@@ -441,14 +425,6 @@ class App(ctk.CTk):
             'progress': progress,
             'status_label': status_label
         }
-        
-        try:
-            if self.dashboard_frame._parent_canvas.yview() == (0.0, 1.0):
-                self.dashboard_frame._scrollbar.grid_remove()
-            else:
-                self.dashboard_frame._scrollbar.grid()
-        except Exception:
-            pass
 
     def init_dashboard_cards(self, ip_list):
         for widget in self.dashboard_frame.winfo_children():

@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='app',
+    name='Bulk Backup Pro',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
