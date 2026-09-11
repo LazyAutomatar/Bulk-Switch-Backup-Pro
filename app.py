@@ -157,9 +157,25 @@ def perform_backup(ip, credentials, backup_dir, log_callback, progress_callback,
             for i, cmd in enumerate(commands_to_run):
                 progress_val = int(20 + ((i+1) / len(commands_to_run)) * 70)
                 progress_callback(ip, progress_val, f"Running: {cmd}", protocol_used)
-                output = net_connect.send_command(cmd)
+                
+                cmd_clean = cmd.strip()
+                cmd_lower = cmd_clean.lower()
+
+                if cmd_lower in ["conf t", "configure terminal", "conf term", "config t", "config terminal"]:
+                    output = net_connect.config_mode()
+                elif cmd_lower in ["exit", "end"] and net_connect.check_config_mode():
+                    output = net_connect.exit_config_mode()
+                else:
+                    if net_connect.check_config_mode():
+                        output = net_connect.send_command(cmd_clean, expect_string=r'\(config.*\)#|#')
+                    else:
+                        output = net_connect.send_command(cmd_clean)
+                
                 backup_file.write(f"\n\n{'='*30}\nCommand: {cmd}\n{'='*30}\n")
-                backup_file.write(output)
+                backup_file.write(output if output else "")
+
+            if net_connect.check_config_mode():
+                net_connect.exit_config_mode()
 
         if write_config and not is_ap:
             progress_callback(ip, 95, "Saving configuration...", protocol_used)
