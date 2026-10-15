@@ -39,6 +39,7 @@ namespace BulkBackup.Core.Services
             List<string> customCommands,
             string profileName,
             bool writeConfig,
+            string destinationDirectory,
             LogAction logCallback,
             ProgressAction progressCallback,
             CancellationToken token)
@@ -47,6 +48,12 @@ namespace BulkBackup.Core.Services
             {
                 throw new ArgumentException("At least one credential must be provided.");
             }
+
+            if (string.IsNullOrWhiteSpace(destinationDirectory))
+            {
+                destinationDirectory = Path.Combine(Environment.CurrentDirectory, "Switch_Backups");
+            }
+            Directory.CreateDirectory(destinationDirectory);
 
             logCallback("System", $"Starting Bulk Switch Backup Pro (Profile: {profileName}, Threads: {maxConcurrency}, Credentials: {candidateCredentials.Count})...");
 
@@ -73,35 +80,39 @@ namespace BulkBackup.Core.Services
                 }
             }
 
-            logCallback("System", $"Initiating Backup Phase across {devicesToBackup.Count} targets...");
-            string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            string backupDir = Path.Combine(Environment.CurrentDirectory, "Switch_Backups", timestamp);
-            Directory.CreateDirectory(backupDir);
+            logCallback("System", $"Initiating Parallel Backup Phase across {devicesToBackup.Count} targets (Up to {maxConcurrency} concurrent workers)...");
 
-            var backupTasks = new List<Task>();
-            var semaphore = new SemaphoreSlim(Math.Max(1, maxConcurrency));
-
-            foreach (var kvp in devicesToBackup)
+            var parallelOptions = new ParallelOptions
             {
-                var target = kvp.Value;
-                backupTasks.Add(Task.Run(async () =>
-                {
-                    await semaphore.WaitAsync(token);
-                    try
-                    {
-                        var cmds = target.IsAp ? CommandProfiles.CiscoApCommands.ToList() : customCommands;
-                        await PerformBackupWithFallbackAsync(target.IpAddress, candidateCredentials, target.IsAp, backupDir, cmds, profileName, writeConfig, logCallback, progressCallback, token);
-                    }
-                    finally
-                    {
-                        semaphore.Release();
-                    }
-                }, token));
-            }
+                MaxDegreeOfParallelism = Math.Max(1, maxConcurrency),
+                CancellationToken = token
+            };
 
-            await Task.WhenAll(backupTasks);
-            logCallback("System", $"All backups completed! Configurations stored in: {backupDir}");
-            return backupDir;
+            await Parallel.ForEachAsync(devicesToBackup.Values, parallelOptions, async (target, ct) =>
+            {
+                var cmds = target.IsAp ? CommandProfiles.CiscoApCommands.ToList() : customCommands;
+                await PerformBackupWithFallbackAsync(target.IpAddress, candidateCredentials, target.IsAp, destinationDirectory, cmds, profileName, writeConfig, logCallback, progressCallback, ct);
+            });
+
+            logCallback("System", $"All backups completed! Configurations stored directly in: {destinationDirectory}");
+            return destinationDirectory;
+        }
+
+        public static async Task<bool> IsSshPortReachableAsync(string host, int port = 22, int timeoutMs = 2500, CancellationToken token = default)
+        {
+            try
+            {
+                using var client = new System.Net.Sockets.TcpClient();
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+                cts.CancelAfter(timeoutMs);
+
+                await client.ConnectAsync(host, port, cts.Token);
+                return client.Connected;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private async Task PerformDiscoveryAsync(
@@ -119,6 +130,15 @@ namespace BulkBackup.Core.Services
             if (visited.ContainsKey(ip)) return;
             visited.TryAdd(ip, true);
 
+            progress(ip, 5, "Probing SSH (Port 22)...", "SSH");
+            bool reachable = await IsSshPortReachableAsync(ip, 22, 2500, token);
+            if (!reachable)
+            {
+                progress(ip, 0, "Unreachable / Port 22 Closed", "ERR");
+                log("Error", $"Seed {ip} is unreachable on port 22 (timeout or connection refused). Skipping CDP discovery.");
+                return;
+            }
+
             progress(ip, 15, "Discovering CDP neighbors...", "SSH");
 
             SshClient? client = null;
@@ -130,7 +150,7 @@ namespace BulkBackup.Core.Services
                 try
                 {
                     var testClient = new SshClient(ip, cred.Username, cred.Password);
-                    testClient.ConnectionInfo.Timeout = TimeSpan.FromSeconds(12);
+                    testClient.ConnectionInfo.Timeout = TimeSpan.FromSeconds(7);
                     await Task.Run(() => testClient.Connect(), token);
 
                     client = testClient;
@@ -244,7 +264,15 @@ namespace BulkBackup.Core.Services
             ProgressAction progress,
             CancellationToken token)
         {
-            progress(ip, 5, "Connecting SSH...", "SSH", null, isAp);
+            progress(ip, 5, "Probing SSH (Port 22)...", "SSH", null, isAp);
+
+            bool reachable = await IsSshPortReachableAsync(ip, 22, 2500, token);
+            if (!reachable)
+            {
+                progress(ip, 0, "Unreachable / Port 22 Closed", "ERR", null, isAp);
+                log("Error", $"Device {ip} is unreachable (TCP port 22 connection timed out or refused).");
+                return;
+            }
 
             SshClient? client = null;
             CredentialEntry? activeCred = null;
@@ -256,7 +284,7 @@ namespace BulkBackup.Core.Services
                 {
                     progress(ip, 10, $"Authenticating ({cred.Username})...", "SSH", null, isAp);
                     var testClient = new SshClient(ip, cred.Username, cred.Password);
-                    testClient.ConnectionInfo.Timeout = TimeSpan.FromSeconds(15);
+                    testClient.ConnectionInfo.Timeout = TimeSpan.FromSeconds(7);
                     await Task.Run(() => testClient.Connect(), token);
 
                     client = testClient;
@@ -424,9 +452,9 @@ namespace BulkBackup.Core.Services
         private async Task<string> ReadUntilPromptOrPatternAsync(ShellStream stream, Regex pattern, int timeoutMs, CancellationToken token)
         {
             var sb = new StringBuilder();
-            var startTime = DateTime.Now;
+            var startTime = DateTime.UtcNow;
 
-            while (!token.IsCancellationRequested && (DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
+            while (!token.IsCancellationRequested && (DateTime.UtcNow - startTime).TotalMilliseconds < timeoutMs)
             {
                 if (stream.DataAvailable)
                 {
@@ -439,14 +467,20 @@ namespace BulkBackup.Core.Services
                         continue;
                     }
 
-                    if (pattern.IsMatch(sb.ToString()))
+                    // Only search pattern across the tail window of buffer (up to 512 characters).
+                    // Prevents copying megabytes of string data and avoids GC pauses during large commands like 'show run'.
+                    int searchLen = Math.Min(sb.Length, 512);
+                    string tail = sb.ToString(sb.Length - searchLen, searchLen);
+
+                    if (pattern.IsMatch(tail))
                     {
                         return sb.ToString();
                     }
                 }
                 else
                 {
-                    await Task.Delay(50, token);
+                    // 10ms yield keeps CPU usage near 0% while checking the buffer 5x faster than 50ms
+                    await Task.Delay(10, token);
                 }
             }
 

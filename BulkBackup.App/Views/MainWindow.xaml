@@ -220,7 +220,7 @@
                                     <TextBlock DockPanel.Dock="Left" Text="Worker Threads:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
                                     <TextBlock DockPanel.Dock="Right" Text="{Binding MaxConcurrency, StringFormat='{}{0} threads'}" FontSize="11.5" FontWeight="SemiBold"/>
                                 </DockPanel>
-                                <Slider Minimum="1" Maximum="20" Value="{Binding MaxConcurrency}" SmallChange="1" LargeChange="2" Margin="0,0,0,8"/>
+                                <Slider Minimum="1" Maximum="30" Value="{Binding MaxConcurrency}" SmallChange="1" LargeChange="2" Margin="0,0,0,8"/>
 
                                 <CheckBox Content="Write running-config to startup" IsChecked="{Binding WriteConfig}" Margin="0,0,0,14"/>
 
@@ -455,7 +455,12 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Left Card: Add Credential Form -->
-                    <ui:Card Grid.Column="0" Margin="0,0,14,0" Padding="18" VerticalAlignment="Top">
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                            BorderThickness="1" CornerRadius="8"
+                            Margin="0,0,14,0" Padding="18"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Top">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
                                 <ui:SymbolIcon Symbol="Key24" FontSize="18" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,8,0"/>
@@ -488,7 +493,7 @@
                                            FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" LineHeight="16"/>
                             </Border>
                         </StackPanel>
-                    </ui:Card>
+                    </Border>
 
                     <!-- Right Card: Saved Credentials Table -->
                     <Grid Grid.Column="1">
@@ -497,13 +502,18 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <ui:Card Grid.Row="0" Margin="0,0,0,12" Padding="14">
+                        <Border Grid.Row="0"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="8"
+                                Margin="0,0,0,12" Padding="14"
+                                HorizontalAlignment="Stretch">
                             <StackPanel>
                                 <TextBlock Text="Saved Credentials Pool" FontSize="15" FontWeight="SemiBold"/>
                                 <TextBlock Text="Manage pre-configured credentials to quickly apply them to your session or allow the backup engine to test them sequentially if the primary login fails."
                                            FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,0,0"/>
                             </StackPanel>
-                        </ui:Card>
+                        </Border>
 
                         <DataGrid Grid.Row="1" ItemsSource="{Binding StoredCredentials}">
                             <DataGrid.Columns>
@@ -548,7 +558,12 @@
                     </Grid.RowDefinitions>
 
                     <!-- Top Bar: Cohesive Toolbar without weird center gaps -->
-                    <ui:Card Grid.Row="0" Margin="0,0,0,12" Padding="14">
+                    <Border Grid.Row="0"
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                            BorderThickness="1" CornerRadius="8"
+                            Margin="0,0,0,12" Padding="14"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Top">
                         <DockPanel LastChildFill="False">
                             <!-- Left: Label, ComboBox, Count badge tightly grouped -->
                             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
@@ -577,10 +592,14 @@
                                 </ui:Button>
                             </StackPanel>
                         </DockPanel>
-                    </ui:Card>
+                    </Border>
 
-                    <!-- Custom Commands Editor Area (Native TextBox, No cross button, top-left aligned) -->
-                    <ui:Card Grid.Row="1" Padding="14">
+                    <!-- Custom Commands Editor Area (Native TextBox, No cross button, top-left aligned, full stretch) -->
+                    <Border Grid.Row="1"
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="14"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -592,7 +611,8 @@
 
                             <Border Grid.Row="1" Background="{DynamicResource ControlFillColorDefaultBrush}"
                                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                    BorderThickness="1" CornerRadius="4">
+                                    BorderThickness="1" CornerRadius="4"
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <TextBox Text="{Binding CustomCommandsText, UpdateSourceTrigger=PropertyChanged}"
                                          AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" FontSize="12"
                                          Background="Transparent" BorderThickness="0"
@@ -600,10 +620,11 @@
                                          CaretBrush="{DynamicResource TextFillColorPrimaryBrush}"
                                          VerticalContentAlignment="Top" HorizontalContentAlignment="Left"
                                          TextAlignment="Left" Padding="10,10"
-                                         VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                                         VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                             </Border>
                         </Grid>
-                    </ui:Card>
+                    </Border>
                 </Grid>
             </Grid>
         </Grid>

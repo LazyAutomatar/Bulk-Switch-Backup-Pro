@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using Wpf.Ui.Appearance;
 using SymbolRegular = Wpf.Ui.Controls.SymbolRegular;
 using MessageBox = System.Windows.MessageBox;
@@ -74,13 +75,13 @@ namespace BulkBackup.App.ViewModels
 
         // Execution Tuning
         [ObservableProperty]
-        private int maxConcurrency = 5;
+        private int maxConcurrency = Math.Clamp(Environment.ProcessorCount * 2, 6, 16);
 
         [ObservableProperty]
         private bool writeConfig = true;
 
         [ObservableProperty]
-        private string backupDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Switch_Backups");
+        private string backupDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Switch_Backups");
 
         // Profiles & Commands
         [ObservableProperty]
@@ -432,6 +433,21 @@ namespace BulkBackup.App.ViewModels
                 return;
             }
 
+            // Directly prompt user for destination directory, matching ZIP export UX
+            var folderDialog = new Microsoft.Win32.OpenFolderDialog
+            {
+                Title = "Select Destination Folder for Switch Backups",
+                InitialDirectory = Directory.Exists(BackupDirectory) ? BackupDirectory : Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            };
+
+            if (folderDialog.ShowDialog() != true)
+            {
+                AppendLog("System", "Backup canceled: No destination folder selected.");
+                return;
+            }
+
+            BackupDirectory = folderDialog.FolderName;
+
             string profileTitle = SelectedProfileIndex switch
             {
                 0 => "Cisco Switch (IOS / IOS-XE)",
@@ -462,6 +478,7 @@ namespace BulkBackup.App.ViewModels
             _cts = new CancellationTokenSource();
 
             AppendLog("System", $"Starting bulk backup with profile '{profileTitle}' across {ips.Count} target(s) ({commandsList.Count} commands each)...");
+            AppendLog("System", $"Target destination: {BackupDirectory}");
             if (candidateCreds.Count > 1)
             {
                 AppendLog("Security", $"Credential failover pool: {candidateCreds.Count} candidate credential(s) active.");
@@ -488,8 +505,9 @@ namespace BulkBackup.App.ViewModels
                         commandsList,
                         profileTitle,
                         WriteConfig,
-                        (source, message) => App.Current.Dispatcher.Invoke(() => AppendLog(source, message)),
-                        (deviceIp, pct, stat, proto, hostname, isAp) => App.Current.Dispatcher.Invoke(() =>
+                        BackupDirectory,
+                        (source, message) => App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => AppendLog(source, message)),
+                        (deviceIp, pct, stat, proto, hostname, isAp) => App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
                         {
                             var dev = Devices.FirstOrDefault(d => d.IpAddress == deviceIp);
                             if (dev == null)
@@ -693,7 +711,15 @@ namespace BulkBackup.App.ViewModels
         public void AppendLog(string source, string message)
         {
             var timestamp = DateTime.Now.ToString("HH:mm:ss");
-            Logs += $"[{timestamp}] [{source}] {message}{Environment.NewLine}";
+            string entry = $"[{timestamp}] [{source}] {message}{Environment.NewLine}";
+            if (Logs.Length > 250_000)
+            {
+                Logs = Logs.Substring(Logs.Length - 150_000) + entry;
+            }
+            else
+            {
+                Logs += entry;
+            }
         }
     }
 }
