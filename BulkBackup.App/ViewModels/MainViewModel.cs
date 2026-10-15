@@ -1,5 +1,5 @@
-using BulkSwitchBackupPro.Models;
-using BulkSwitchBackupPro.Services;
+using BulkBackup.Core.Models;
+using BulkBackup.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -13,139 +13,40 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
-namespace BulkSwitchBackupPro.ViewModels
+namespace BulkBackup.App.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
-        private static readonly string[] CiscoIosCommands = new[]
-        {
-            "terminal length 0",
-            "show clock",
-            "show version",
-            "show inventory",
-            "show switch",
-            "show switch stack-ring speed",
-            "show switch virtual",
-            "show environment",
-            "show environment all",
-            "show environment temperature",
-            "show env power",
-            "show env fan",
-            "show power inline",
-            "show post",
-            "show processes cpu | include CPU",
-            "show processes memory",
-            "show ip interface brief",
-            "show interfaces description",
-            "show interfaces status",
-            "show interfaces counters errors",
-            "show interfaces trunk",
-            "show vlan",
-            "show vlan brief",
-            "show mac address-table",
-            "show ip arp",
-            "show ip route",
-            "show ip route summary",
-            "show ip protocols",
-            "show spanning-tree",
-            "show spanning-tree active",
-            "show spanning-tree root",
-            "show spanning-tree summary",
-            "show vtp status",
-            "show etherchannel summary",
-            "show cdp neighbors",
-            "show cdp neighbors detail",
-            "show lldp neighbors",
-            "show lldp neighbors detail",
-            "show port-security",
-            "show port-security address",
-            "show ip dhcp snooping",
-            "show ip source binding",
-            "show access-lists",
-            "show logging",
-            "show log | include Interface",
-            "show license",
-            "show license usage",
-            "show standby brief",
-            "show standby all",
-            "show vrrp brief",
-            "show vrrp all",
-            "show ip sla summary",
-            "show ip sla statistics",
-            "show ntp status",
-            "show ntp associations",
-            "show running-config",
-            "show startup-config"
-        };
-
-        private static readonly string[] CiscoNexusCommands = new[]
-        {
-            "terminal length 0",
-            "show clock",
-            "show version",
-            "show inventory",
-            "show license usage",
-            "show system resources",
-            "show processes cpu",
-            "show processes memory",
-            "show environment",
-            "show environment temperature",
-            "show environment power",
-            "show environment fan",
-            "show interface status",
-            "show interface counters errors",
-            "show interface description",
-            "show vlan brief",
-            "show mac address-table",
-            "show ip arp",
-            "show ip route",
-            "show ip route summary",
-            "show ip protocols",
-            "show spanning-tree",
-            "show spanning-tree root",
-            "show port-channel summary",
-            "show port-channel usage",
-            "show cdp neighbors detail",
-            "show lldp neighbors detail",
-            "show hsrp brief",
-            "show hsrp all",
-            "show vrrp brief",
-            "show vrrp all",
-            "show ip sla summary",
-            "show ip sla statistics",
-            "show logging",
-            "show logging logfile",
-            "show ntp peers",
-            "show ntp status",
-            "show running-config",
-            "show startup-config"
-        };
-
-        private static readonly string[] CustomTemplateCommands = new[]
-        {
-            "! Custom Backup Script",
-            "! Enter your CLI commands, one per line:",
-            "terminal length 0",
-            "show version",
-            "show ip interface brief",
-            "show running-config"
-        };
-
         private readonly CredentialStore _credStore;
+        private CancellationTokenSource? _cts;
 
         [ObservableProperty]
-        private string username = string.Empty;
+        private int selectedNavigationIndex = 0; // 0=Dashboard & Backup, 1=Credentials Vault, 2=Command Profiles
 
+        // Active Connection / Direct SSH inputs
+        [ObservableProperty]
+        private string activeUsername = string.Empty;
+
+        [ObservableProperty]
+        private string activePassword = string.Empty;
+
+        [ObservableProperty]
+        private string activeSecret = string.Empty;
+
+        // Target IPs
         [ObservableProperty]
         private string targetIps = string.Empty;
 
         [ObservableProperty]
+        private int targetIpsCount = 0;
+
+        // Discovery & Traversal
+        [ObservableProperty]
         private bool enableCdp = false;
 
         [ObservableProperty]
-        private int filterTypeIndex = 0; // 0 = Subnet, 1 = VLAN ID
+        private int filterTypeIndex = 0; // 0=Subnet, 1=VLAN ID
 
         [ObservableProperty]
         private string filterValue = string.Empty;
@@ -153,12 +54,17 @@ namespace BulkSwitchBackupPro.ViewModels
         [ObservableProperty]
         private bool includeAps = false;
 
+        // Execution Tuning
         [ObservableProperty]
-        private int maxConcurrency = 100;
+        private int maxConcurrency = 5;
 
         [ObservableProperty]
         private bool writeConfig = true;
 
+        [ObservableProperty]
+        private string backupDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Switch_Backups");
+
+        // Profiles & Commands
         [ObservableProperty]
         private int selectedProfileIndex = 0; // 0=IOS, 1=Nexus, 2=Custom
 
@@ -168,19 +74,19 @@ namespace BulkSwitchBackupPro.ViewModels
         [ObservableProperty]
         private int commandCount = 56;
 
+        // Status & Metrics
         [ObservableProperty]
         private bool isRunning = false;
-
-        [ObservableProperty]
-        private string lastBackupDirectory = string.Empty;
 
         [ObservableProperty]
         private bool hasCompletedBackups = false;
 
         [ObservableProperty]
+        private string lastBackupDirectory = string.Empty;
+
+        [ObservableProperty]
         private string logs = string.Empty;
 
-        // Metrics for summary strip
         [ObservableProperty]
         private int totalDevicesCount = 0;
 
@@ -192,6 +98,9 @@ namespace BulkSwitchBackupPro.ViewModels
 
         [ObservableProperty]
         private int failedDevicesCount = 0;
+
+        [ObservableProperty]
+        private int overallProgress = 0;
 
         // Credential Vault Inputs
         [ObservableProperty]
@@ -209,13 +118,16 @@ namespace BulkSwitchBackupPro.ViewModels
         public ObservableCollection<DeviceModel> Devices { get; } = new();
         public ObservableCollection<CredentialEntry> StoredCredentials { get; } = new();
 
-        private CancellationTokenSource? _cts;
-
         public MainViewModel()
         {
             _credStore = new CredentialStore();
             RefreshStoredCredentials();
             LoadProfileCommands(0);
+
+            if (!Directory.Exists(BackupDirectory))
+            {
+                try { Directory.CreateDirectory(BackupDirectory); } catch { }
+            }
         }
 
         public void RefreshStoredCredentials()
@@ -225,6 +137,21 @@ namespace BulkSwitchBackupPro.ViewModels
             {
                 StoredCredentials.Add(cred);
             }
+        }
+
+        partial void OnTargetIpsChanged(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                TargetIpsCount = 0;
+                return;
+            }
+            var lines = value.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                             .Select(l => l.Trim())
+                             .Where(l => !string.IsNullOrEmpty(l))
+                             .Distinct()
+                             .ToList();
+            TargetIpsCount = lines.Count;
         }
 
         partial void OnSelectedProfileIndexChanged(int value)
@@ -242,13 +169,13 @@ namespace BulkSwitchBackupPro.ViewModels
             switch (profileIndex)
             {
                 case 0:
-                    CustomCommandsText = string.Join(Environment.NewLine, CiscoIosCommands);
+                    CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CiscoIosCommands);
                     break;
                 case 1:
-                    CustomCommandsText = string.Join(Environment.NewLine, CiscoNexusCommands);
+                    CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CiscoNexusCommands);
                     break;
                 case 2:
-                    CustomCommandsText = string.Join(Environment.NewLine, CustomTemplateCommands);
+                    CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CustomTemplateCommands);
                     break;
             }
             UpdateCommandCount();
@@ -273,7 +200,7 @@ namespace BulkSwitchBackupPro.ViewModels
         private void ResetProfileCommands()
         {
             LoadProfileCommands(SelectedProfileIndex);
-            AppendLog("System", "Commands reset to default profile template.");
+            AppendLog("System", "CLI commands reset to default profile template.");
         }
 
         [RelayCommand]
@@ -281,7 +208,7 @@ namespace BulkSwitchBackupPro.ViewModels
         {
             CustomCommandsText = "! Enter custom commands, one per line" + Environment.NewLine;
             UpdateCommandCount();
-            AppendLog("System", "Custom commands cleared.");
+            AppendLog("System", "Custom CLI commands cleared.");
         }
 
         [RelayCommand]
@@ -289,7 +216,7 @@ namespace BulkSwitchBackupPro.ViewModels
         {
             if (string.IsNullOrWhiteSpace(NewCredProfileName) || string.IsNullOrWhiteSpace(NewCredUsername) || string.IsNullOrWhiteSpace(NewCredPassword))
             {
-                MessageBox.Show("Please enter Profile Name, Username, and Password.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter Profile Name, Username, and Password.", "Validation Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -297,7 +224,7 @@ namespace BulkSwitchBackupPro.ViewModels
             {
                 _credStore.SaveCredential(NewCredProfileName.Trim(), NewCredUsername.Trim(), NewCredPassword, NewCredSecret.Trim());
                 RefreshStoredCredentials();
-                AppendLog("Security", $"Saved credential profile '{NewCredProfileName}' to Windows DPAPI.");
+                AppendLog("Security", $"Saved credential profile '{NewCredProfileName}' into Windows DPAPI vault.");
 
                 NewCredProfileName = string.Empty;
                 NewCredUsername = string.Empty;
@@ -306,7 +233,7 @@ namespace BulkSwitchBackupPro.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to save credential: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Failed to save credential: {ex.Message}", "DPAPI Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -327,12 +254,22 @@ namespace BulkSwitchBackupPro.ViewModels
         }
 
         [RelayCommand]
+        private void ApplyCredentialToActive(CredentialEntry? entry)
+        {
+            if (entry == null) return;
+            ActiveUsername = entry.Username;
+            ActivePassword = entry.Password;
+            ActiveSecret = entry.Secret;
+            AppendLog("Security", $"Applied credential profile '{entry.Name}' to active session.");
+        }
+
+        [RelayCommand]
         private void ImportDevices()
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
-                Filter = "Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv|All Files (*.*)|*.*",
-                Title = "Select Devices File"
+                Filter = "Text & CSV Files (*.txt;*.csv)|*.txt;*.csv|All Files (*.*)|*.*",
+                Title = "Select Target Devices File"
             };
 
             if (dialog.ShowDialog() == true)
@@ -346,7 +283,7 @@ namespace BulkSwitchBackupPro.ViewModels
                     if (ips.Any())
                     {
                         TargetIps = string.Join(Environment.NewLine, ips);
-                        AppendLog("System", $"Loaded {ips.Count} IP addresses from {Path.GetFileName(dialog.FileName)}");
+                        AppendLog("System", $"Loaded {ips.Count} IP addresses from '{Path.GetFileName(dialog.FileName)}'.");
                     }
                     else
                     {
@@ -361,24 +298,37 @@ namespace BulkSwitchBackupPro.ViewModels
         }
 
         [RelayCommand]
+        private void BrowseBackupFolder()
+        {
+            var dialog = new Microsoft.Win32.OpenFolderDialog
+            {
+                Title = "Select Backup Storage Directory",
+                InitialDirectory = BackupDirectory
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                BackupDirectory = dialog.FolderName;
+                AppendLog("System", $"Backup destination directory updated: {BackupDirectory}");
+            }
+        }
+
+        [RelayCommand]
         private async Task StartBackupAsync()
         {
             if (IsRunning) return;
 
-            string pass = ((MainWindow)Application.Current.MainWindow).GetPassword();
-            string secret = ((MainWindow)Application.Current.MainWindow).GetSecret();
-
-            // Build list of candidate credentials
+            // Build candidate credentials list
             var candidateCreds = new List<CredentialEntry>();
 
-            if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrEmpty(pass))
+            if (!string.IsNullOrWhiteSpace(ActiveUsername) && !string.IsNullOrEmpty(ActivePassword))
             {
                 candidateCreds.Add(new CredentialEntry
                 {
-                    Name = "Active UI Credential",
-                    Username = Username.Trim(),
-                    Password = pass,
-                    Secret = secret.Trim()
+                    Name = "Active Session Credential",
+                    Username = ActiveUsername.Trim(),
+                    Password = ActivePassword,
+                    Secret = ActiveSecret.Trim()
                 });
             }
 
@@ -393,8 +343,8 @@ namespace BulkSwitchBackupPro.ViewModels
 
             if (candidateCreds.Count == 0)
             {
-                MessageBox.Show("Please enter an SSH Username and Password, or add credentials in the Credentials Vault.", "No Credentials", MessageBoxButton.OK, MessageBoxImage.Warning);
-                AppendLog("System", "Error: No credentials available to connect to devices.");
+                MessageBox.Show("Please enter an SSH Username and Password, or configure credentials in the Credential Vault.", "Missing Credentials", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppendLog("Security", "Execution halted: No valid SSH credentials available.");
                 return;
             }
 
@@ -406,8 +356,8 @@ namespace BulkSwitchBackupPro.ViewModels
 
             if (!ips.Any())
             {
-                MessageBox.Show("Please provide at least one target device or seed IP address.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                AppendLog("System", "No Target IPs provided.");
+                MessageBox.Show("Please provide at least one target device or seed IP address.", "Validation Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppendLog("System", "Execution halted: No target IPs entered.");
                 return;
             }
 
@@ -418,8 +368,8 @@ namespace BulkSwitchBackupPro.ViewModels
 
             if (!commandsList.Any())
             {
-                MessageBox.Show("The command list is empty. Please configure at least one CLI command.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                AppendLog("System", "No valid CLI commands to execute.");
+                MessageBox.Show("The command list is empty. Please configure at least one CLI command.", "Validation Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppendLog("System", "Execution halted: No CLI commands configured.");
                 return;
             }
 
@@ -439,8 +389,8 @@ namespace BulkSwitchBackupPro.ViewModels
                     Hostname = ip,
                     Status = "Queued",
                     Protocol = "Waiting...",
-                    ProtocolColor = new SolidColorBrush(Colors.LightGray),
-                    StatusColor = new SolidColorBrush(Color.FromRgb(45, 45, 48))
+                    ProtocolColor = "#888888",
+                    StatusColor = "#2D2D32"
                 });
             }
 
@@ -448,8 +398,12 @@ namespace BulkSwitchBackupPro.ViewModels
             IsRunning = true;
             _cts = new CancellationTokenSource();
 
-            AppendLog("System", $"Starting bulk backup with profile '{profileTitle}' across {ips.Count} initial targets ({commandsList.Count} commands each)...");
-            AppendLog("Security", $"Using pool of {candidateCreds.Count} credential(s) with automatic failover.");
+            AppendLog("System", $"Starting bulk backup with profile '{profileTitle}' across {ips.Count} target(s) ({commandsList.Count} commands each)...");
+            AppendLog("Security", $"Using pool of {candidateCreds.Count} credential profile(s) with automatic failover.");
+            if (EnableCdp)
+            {
+                AppendLog("Discovery", "CDP/LLDP Discovery enabled: Cisco IP Phones will be automatically skipped.");
+            }
 
             var engine = new NetworkEngine();
 
@@ -496,20 +450,20 @@ namespace BulkSwitchBackupPro.ViewModels
                             {
                                 dev.IsCompleted = true;
                                 dev.IsFailed = false;
-                                dev.StatusColor = new SolidColorBrush(Color.FromRgb(22, 130, 60)); // Green
-                                dev.ProtocolColor = new SolidColorBrush(Color.FromRgb(78, 201, 176));
+                                dev.StatusColor = "#107C41"; // Enterprise Green
+                                dev.ProtocolColor = "#2D7D9A";
                             }
                             else if (stat.StartsWith("Failed", StringComparison.OrdinalIgnoreCase) || stat.Contains("Auth Failed") || proto == "ERR")
                             {
                                 dev.IsFailed = true;
                                 dev.IsCompleted = false;
-                                dev.StatusColor = new SolidColorBrush(Color.FromRgb(168, 42, 42)); // Red
-                                dev.ProtocolColor = new SolidColorBrush(Color.FromRgb(244, 135, 113));
+                                dev.StatusColor = "#C42B1C"; // High-contrast Red
+                                dev.ProtocolColor = "#E04343";
                             }
                             else
                             {
-                                dev.StatusColor = new SolidColorBrush(Color.FromRgb(14, 99, 156)); // Blue
-                                dev.ProtocolColor = new SolidColorBrush(Color.FromRgb(86, 156, 214));
+                                dev.StatusColor = "#0078D4"; // Fluent Blue
+                                dev.ProtocolColor = "#4CC2FF";
                             }
 
                             UpdateMetrics();
@@ -524,7 +478,7 @@ namespace BulkSwitchBackupPro.ViewModels
             }
             catch (OperationCanceledException)
             {
-                AppendLog("Warning", "Backup run was canceled by user.");
+                AppendLog("Warning", "Backup run canceled by user.");
             }
             catch (Exception ex)
             {
@@ -543,22 +497,20 @@ namespace BulkSwitchBackupPro.ViewModels
             if (_cts != null && !_cts.IsCancellationRequested)
             {
                 _cts.Cancel();
-                AppendLog("System", "Cancelling backup operations...");
+                AppendLog("System", "Cancellation signal sent. Stopping background workers...");
             }
         }
 
         [RelayCommand]
         private void OpenBackupFolder()
         {
-            string dirToOpen = LastBackupDirectory;
-            if (string.IsNullOrWhiteSpace(dirToOpen) || !Directory.Exists(dirToOpen))
-            {
-                dirToOpen = Path.Combine(Environment.CurrentDirectory, "Switch_Backups");
-            }
+            string dirToOpen = !string.IsNullOrWhiteSpace(LastBackupDirectory) && Directory.Exists(LastBackupDirectory)
+                ? LastBackupDirectory
+                : BackupDirectory;
 
             if (!Directory.Exists(dirToOpen))
             {
-                Directory.CreateDirectory(dirToOpen);
+                try { Directory.CreateDirectory(dirToOpen); } catch { }
             }
 
             try
@@ -580,10 +532,13 @@ namespace BulkSwitchBackupPro.ViewModels
         [RelayCommand]
         private void ExportZip()
         {
-            string sourceDir = LastBackupDirectory;
+            string sourceDir = !string.IsNullOrWhiteSpace(LastBackupDirectory) && Directory.Exists(LastBackupDirectory)
+                ? LastBackupDirectory
+                : BackupDirectory;
+
             if (string.IsNullOrWhiteSpace(sourceDir) || !Directory.Exists(sourceDir))
             {
-                MessageBox.Show("No active backup directory found to export.", "Export ZIP", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("No backup directory found to export.", "Export ZIP", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -629,7 +584,7 @@ namespace BulkSwitchBackupPro.ViewModels
                 if (!string.IsNullOrEmpty(Logs))
                 {
                     Clipboard.SetText(Logs);
-                    AppendLog("System", "Logs copied to clipboard.");
+                    AppendLog("System", "Console logs copied to clipboard.");
                 }
             }
             catch { }
@@ -641,6 +596,15 @@ namespace BulkSwitchBackupPro.ViewModels
             CompletedDevicesCount = Devices.Count(d => d.IsCompleted);
             FailedDevicesCount = Devices.Count(d => d.IsFailed);
             InProgressDevicesCount = Devices.Count(d => !d.IsCompleted && !d.IsFailed && d.Progress > 0);
+
+            if (TotalDevicesCount > 0)
+            {
+                OverallProgress = (int)Math.Round((double)(CompletedDevicesCount + FailedDevicesCount) / TotalDevicesCount * 100.0);
+            }
+            else
+            {
+                OverallProgress = 0;
+            }
         }
 
         public void AppendLog(string source, string message)

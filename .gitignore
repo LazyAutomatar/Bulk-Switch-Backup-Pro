@@ -1,10 +1,13 @@
 ## Visual Studio / .NET build artifacts
-bin/
-obj/
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+publish/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
+*.pdb
 
 ## Standalone Large Executables (>100MB GitHub limit)
 *.exe

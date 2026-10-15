@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace BulkSwitchBackupPro.Models
+namespace BulkBackup.Core.Models
 {
     public partial class CredentialEntry : ObservableObject
     {
@@ -16,7 +16,7 @@ namespace BulkSwitchBackupPro.Models
         [ObservableProperty]
         private string secret = string.Empty;
 
-        public string MaskedPassword => new string('•', System.Math.Max(6, Password.Length));
+        public string MaskedPassword => new string('•', System.Math.Max(6, Password?.Length ?? 6));
         public bool HasSecret => !string.IsNullOrEmpty(Secret);
     }
 }

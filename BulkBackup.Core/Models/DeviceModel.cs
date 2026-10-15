@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.Windows.Media;
 
-namespace BulkSwitchBackupPro.Models
+namespace BulkBackup.Core.Models
 {
     public partial class DeviceModel : ObservableObject
     {
@@ -15,7 +14,7 @@ namespace BulkSwitchBackupPro.Models
         private string deviceType = "Switch"; // "Switch" or "Access Point"
 
         [ObservableProperty]
-        private string status = "Pending";
+        private string status = "Queued";
 
         [ObservableProperty]
         private int progress = 0;
@@ -24,13 +23,13 @@ namespace BulkSwitchBackupPro.Models
         private string protocol = "Waiting...";
 
         [ObservableProperty]
-        private SolidColorBrush protocolColor = new(Colors.LightGray);
+        private string protocolColor = "#888888";
 
         [ObservableProperty]
-        private SolidColorBrush statusColor = new(Color.FromRgb(60, 60, 65));
+        private string statusColor = "#2D2D32";
 
         [ObservableProperty]
-        private SolidColorBrush statusTextColor = new(Colors.White);
+        private string statusTextColor = "#FFFFFF";
 
         [ObservableProperty]
         private bool isCompleted = false;

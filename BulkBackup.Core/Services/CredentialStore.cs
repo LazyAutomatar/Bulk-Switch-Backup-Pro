@@ -1,11 +1,11 @@
-using BulkSwitchBackupPro.Models;
+using BulkBackup.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BulkSwitchBackupPro.Services
+namespace BulkBackup.Core.Services
 {
     [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public class CredentialStore
@@ -31,7 +31,7 @@ namespace BulkSwitchBackupPro.Services
             string plainText = $"{name}:::{username}:::{password}:::{secret}";
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
 
-            // Encrypt using DPAPI (CurrentUser scope ensures only the current Windows user on this machine can decrypt)
+            // Windows DPAPI encryption restricted to CurrentUser
             byte[] encryptedBytes = ProtectedData.Protect(plainBytes, null, DataProtectionScope.CurrentUser);
 
             string filePath = GetFilePath(name);
@@ -65,7 +65,7 @@ namespace BulkSwitchBackupPro.Services
                 }
                 catch
                 {
-                    // Skip corrupt or unreadable entries
+                    // Skip corrupt entries
                 }
             }
             return list;

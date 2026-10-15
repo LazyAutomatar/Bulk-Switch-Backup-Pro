@@ -1,4 +1,4 @@
-using BulkSwitchBackupPro.Models;
+using BulkBackup.Core.Models;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 using System;
@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BulkSwitchBackupPro.Services
+namespace BulkBackup.Core.Services
 {
     public class NetworkEngine
     {
@@ -45,10 +45,10 @@ namespace BulkSwitchBackupPro.Services
         {
             if (candidateCredentials == null || candidateCredentials.Count == 0)
             {
-                throw new ArgumentException("At least one credential must be supplied.");
+                throw new ArgumentException("At least one credential must be provided.");
             }
 
-            logCallback("System", $"Starting Bulk Switch Backup Pro (Profile: {profileName}, Threads: {maxConcurrency}, Credentials in Pool: {candidateCredentials.Count})...");
+            logCallback("System", $"Starting Bulk Switch Backup Pro (Profile: {profileName}, Threads: {maxConcurrency}, Credentials: {candidateCredentials.Count})...");
 
             var devicesToBackup = new ConcurrentDictionary<string, DiscoveredTarget>();
             var visitedDiscovery = new ConcurrentDictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
@@ -73,15 +73,6 @@ namespace BulkSwitchBackupPro.Services
                 }
             }
 
-            // AP Default Commands
-            var apCommands = new List<string>
-            {
-                "terminal length 0",
-                "show run",
-                "show interfaces wired 0",
-                "show inventory"
-            };
-
             logCallback("System", $"Initiating Backup Phase across {devicesToBackup.Count} targets...");
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             string backupDir = Path.Combine(Environment.CurrentDirectory, "Switch_Backups", timestamp);
@@ -98,7 +89,7 @@ namespace BulkSwitchBackupPro.Services
                     await semaphore.WaitAsync(token);
                     try
                     {
-                        var cmds = target.IsAp ? apCommands : customCommands;
+                        var cmds = target.IsAp ? CommandProfiles.CiscoApCommands.ToList() : customCommands;
                         await PerformBackupWithFallbackAsync(target.IpAddress, candidateCredentials, target.IsAp, backupDir, cmds, profileName, writeConfig, logCallback, progressCallback, token);
                     }
                     finally
@@ -109,7 +100,7 @@ namespace BulkSwitchBackupPro.Services
             }
 
             await Task.WhenAll(backupTasks);
-            logCallback("System", $"All backups finished! Output saved to: {backupDir}");
+            logCallback("System", $"All backups completed! Configurations stored in: {backupDir}");
             return backupDir;
         }
 
@@ -130,7 +121,6 @@ namespace BulkSwitchBackupPro.Services
 
             progress(ip, 15, "Discovering CDP neighbors...", "SSH");
 
-            // Attempt connection with credentials in pool
             SshClient? client = null;
             CredentialEntry? activeCred = null;
 
@@ -153,7 +143,6 @@ namespace BulkSwitchBackupPro.Services
                 }
                 catch (Exception ex)
                 {
-                    // Network / timeout
                     log("Error", $"Connection error to {ip} with '{cred.Username}': {ex.Message}");
                     break;
                 }
@@ -282,7 +271,6 @@ namespace BulkSwitchBackupPro.Services
                 catch (Exception ex)
                 {
                     log("Error", $"Connection error to {ip} with '{cred.Username}': {ex.Message}");
-                    // If host unreachable, don't keep trying more creds
                     if (ex.Message.Contains("timed out") || ex.Message.Contains("No route") || ex.Message.Contains("refused"))
                     {
                         break;
@@ -541,7 +529,7 @@ namespace BulkSwitchBackupPro.Services
                     string plat = n.Platform;
                     string cap = n.Capabilities;
 
-                    // 1. Precise IP Phone Detection (from NetHealth DiscoveryAgent)
+                    // IP Phone Detection (from NetHealth)
                     n.IsPhone = dev.StartsWith("SEP", StringComparison.OrdinalIgnoreCase) ||
                                 dev.StartsWith("CP-", StringComparison.OrdinalIgnoreCase) ||
                                 plat.Contains("IP Phone", StringComparison.OrdinalIgnoreCase) ||
@@ -558,7 +546,7 @@ namespace BulkSwitchBackupPro.Services
                                 cap.Contains("Phone", StringComparison.OrdinalIgnoreCase) ||
                                 (cap.Contains("P", StringComparison.Ordinal) && !cap.Contains("S", StringComparison.Ordinal) && !cap.Contains("R", StringComparison.Ordinal));
 
-                    // 2. AP Detection
+                    // AP Detection
                     n.IsAp = !n.IsPhone && (
                              cap.Contains("Access-Point", StringComparison.OrdinalIgnoreCase) ||
                              cap.Contains("Trans-Bridge", StringComparison.OrdinalIgnoreCase) ||

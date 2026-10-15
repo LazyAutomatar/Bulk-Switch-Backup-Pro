@@ -1,4 +1,4 @@
 @echo off
-echo Starting Bulk Switch Backup Pro (C# Version)...
-"C:\Users\Yash Nalawde\AppData\Local\Microsoft\dotnet\dotnet.exe" run
+echo Launching Bulk Switch Backup Pro (C# Native App)...
+dotnet run --project BulkBackup.App/BulkBackup.App.csproj
 pause

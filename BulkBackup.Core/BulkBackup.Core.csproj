@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <RootNamespace>BulkBackup.Core</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
