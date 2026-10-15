@@ -1,0 +1,23 @@
+## Visual Studio / .NET build artifacts
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Standalone Large Executables (>100MB GitHub limit)
+*.exe
+!dist/*.exe
+
+## Logs and temporary files
+*.log
+trace.txt
+crash.log
+error.log
+Switch_Backups/
+dotnet-install.ps1
+
+## Python legacy cache
+__pycache__/
+*.pyc
