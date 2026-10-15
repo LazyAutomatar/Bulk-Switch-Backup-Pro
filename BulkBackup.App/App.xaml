@@ -10,11 +10,6 @@
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Global Typography -->
-            <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}"/>
-            </Style>
-
             <!-- Global High-Contrast Enterprise DataGrid Styles -->
             <Style TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}"/>

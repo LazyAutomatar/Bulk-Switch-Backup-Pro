@@ -13,6 +13,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Wpf.Ui.Appearance;
+using SymbolRegular = Wpf.Ui.Controls.SymbolRegular;
+using MessageBox = System.Windows.MessageBox;
+using MessageBoxButton = System.Windows.MessageBoxButton;
+using MessageBoxImage = System.Windows.MessageBoxImage;
 
 namespace BulkBackup.App.ViewModels
 {
@@ -21,8 +26,18 @@ namespace BulkBackup.App.ViewModels
         private readonly CredentialStore _credStore;
         private CancellationTokenSource? _cts;
 
+        // Theme properties matching Network Health Reporter
         [ObservableProperty]
-        private int selectedNavigationIndex = 0; // 0=Dashboard & Backup, 1=Credentials Vault, 2=Command Profiles
+        private SymbolRegular themeSymbol = SymbolRegular.WeatherMoon24;
+
+        [ObservableProperty]
+        private string themeButtonText = "Dark Mode";
+
+        [ObservableProperty]
+        private bool isDark = true;
+
+        [ObservableProperty]
+        private int selectedNavigationIndex = 0; // 0=Run & Monitor, 1=Saved Credentials (Optional), 2=Command Profiles
 
         // Active Connection / Direct SSH inputs
         [ObservableProperty]
@@ -33,6 +48,9 @@ namespace BulkBackup.App.ViewModels
 
         [ObservableProperty]
         private string activeSecret = string.Empty;
+
+        [ObservableProperty]
+        private bool useVaultAsFallback = true;
 
         // Target IPs
         [ObservableProperty]
@@ -79,6 +97,9 @@ namespace BulkBackup.App.ViewModels
         private bool isRunning = false;
 
         [ObservableProperty]
+        private string runningStatusSummary = "Ready";
+
+        [ObservableProperty]
         private bool hasCompletedBackups = false;
 
         [ObservableProperty]
@@ -102,7 +123,7 @@ namespace BulkBackup.App.ViewModels
         [ObservableProperty]
         private int overallProgress = 0;
 
-        // Credential Vault Inputs
+        // Credential Vault Inputs (Optional Preset Store)
         [ObservableProperty]
         private string newCredProfileName = string.Empty;
 
@@ -124,9 +145,44 @@ namespace BulkBackup.App.ViewModels
             RefreshStoredCredentials();
             LoadProfileCommands(0);
 
+            // Initialize System Default Theme matching NetHealth
+            try
+            {
+                ApplicationThemeManager.ApplySystemTheme();
+                var currentTheme = ApplicationThemeManager.GetAppTheme();
+                IsDark = currentTheme == ApplicationTheme.Dark;
+                ThemeSymbol = IsDark ? SymbolRegular.WeatherMoon24 : SymbolRegular.WeatherSunny24;
+                ThemeButtonText = IsDark ? "Dark Mode" : "Light Mode";
+            }
+            catch
+            {
+                IsDark = true;
+                ThemeSymbol = SymbolRegular.WeatherMoon24;
+                ThemeButtonText = "Dark Mode";
+            }
+
             if (!Directory.Exists(BackupDirectory))
             {
                 try { Directory.CreateDirectory(BackupDirectory); } catch { }
+            }
+        }
+
+        [RelayCommand]
+        private void ToggleTheme()
+        {
+            if (IsDark)
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
+                ThemeSymbol = SymbolRegular.WeatherSunny24;
+                ThemeButtonText = "Light Mode";
+                IsDark = false;
+            }
+            else
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+                ThemeSymbol = SymbolRegular.WeatherMoon24;
+                ThemeButtonText = "Dark Mode";
+                IsDark = true;
             }
         }
 
@@ -224,7 +280,7 @@ namespace BulkBackup.App.ViewModels
             {
                 _credStore.SaveCredential(NewCredProfileName.Trim(), NewCredUsername.Trim(), NewCredPassword, NewCredSecret.Trim());
                 RefreshStoredCredentials();
-                AppendLog("Security", $"Saved credential profile '{NewCredProfileName}' into Windows DPAPI vault.");
+                AppendLog("Security", $"Saved credential profile '{NewCredProfileName}'.");
 
                 NewCredProfileName = string.Empty;
                 NewCredUsername = string.Empty;
@@ -233,7 +289,7 @@ namespace BulkBackup.App.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to save credential: {ex.Message}", "DPAPI Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Failed to save credential: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -260,7 +316,7 @@ namespace BulkBackup.App.ViewModels
             ActiveUsername = entry.Username;
             ActivePassword = entry.Password;
             ActiveSecret = entry.Secret;
-            AppendLog("Security", $"Applied credential profile '{entry.Name}' to active session.");
+            AppendLog("Security", $"Loaded credential profile '{entry.Name}' into session.");
         }
 
         [RelayCommand]
@@ -325,26 +381,29 @@ namespace BulkBackup.App.ViewModels
             {
                 candidateCreds.Add(new CredentialEntry
                 {
-                    Name = "Active Session Credential",
+                    Name = "Session Credentials",
                     Username = ActiveUsername.Trim(),
                     Password = ActivePassword,
                     Secret = ActiveSecret.Trim()
                 });
             }
 
-            // Append stored credentials from DPAPI vault as fallbacks
-            foreach (var stored in StoredCredentials)
+            // Append stored credentials from vault if enabled
+            if (UseVaultAsFallback)
             {
-                if (!candidateCreds.Any(c => c.Username.Equals(stored.Username, StringComparison.OrdinalIgnoreCase) && c.Password == stored.Password))
+                foreach (var stored in StoredCredentials)
                 {
-                    candidateCreds.Add(stored);
+                    if (!candidateCreds.Any(c => c.Username.Equals(stored.Username, StringComparison.OrdinalIgnoreCase) && c.Password == stored.Password))
+                    {
+                        candidateCreds.Add(stored);
+                    }
                 }
             }
 
             if (candidateCreds.Count == 0)
             {
-                MessageBox.Show("Please enter an SSH Username and Password, or configure credentials in the Credential Vault.", "Missing Credentials", MessageBoxButton.OK, MessageBoxImage.Warning);
-                AppendLog("Security", "Execution halted: No valid SSH credentials available.");
+                MessageBox.Show("Please enter an SSH Username and Password to proceed.", "Missing Credentials", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppendLog("Security", "Execution halted: No SSH credentials provided.");
                 return;
             }
 
@@ -356,7 +415,7 @@ namespace BulkBackup.App.ViewModels
 
             if (!ips.Any())
             {
-                MessageBox.Show("Please provide at least one target device or seed IP address.", "Validation Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter at least one target device IP address.", "Validation Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 AppendLog("System", "Execution halted: No target IPs entered.");
                 return;
             }
@@ -390,19 +449,26 @@ namespace BulkBackup.App.ViewModels
                     Status = "Queued",
                     Protocol = "Waiting...",
                     ProtocolColor = "#888888",
-                    StatusColor = "#2D2D32"
+                    StatusColor = "#2D2D32",
+                    IsInProgress = false,
+                    IsCompleted = false,
+                    IsFailed = false
                 });
             }
 
             UpdateMetrics();
             IsRunning = true;
+            RunningStatusSummary = $"Starting backup across {ips.Count} target(s)...";
             _cts = new CancellationTokenSource();
 
             AppendLog("System", $"Starting bulk backup with profile '{profileTitle}' across {ips.Count} target(s) ({commandsList.Count} commands each)...");
-            AppendLog("Security", $"Using pool of {candidateCreds.Count} credential profile(s) with automatic failover.");
+            if (candidateCreds.Count > 1)
+            {
+                AppendLog("Security", $"Credential failover pool: {candidateCreds.Count} candidate credential(s) active.");
+            }
             if (EnableCdp)
             {
-                AppendLog("Discovery", "CDP/LLDP Discovery enabled: Cisco IP Phones will be automatically skipped.");
+                AppendLog("Discovery", "CDP/LLDP Discovery active. Cisco IP Phones and ATAs are automatically excluded.");
             }
 
             var engine = new NetworkEngine();
@@ -450,6 +516,7 @@ namespace BulkBackup.App.ViewModels
                             {
                                 dev.IsCompleted = true;
                                 dev.IsFailed = false;
+                                dev.IsInProgress = false;
                                 dev.StatusColor = "#107C41"; // Enterprise Green
                                 dev.ProtocolColor = "#2D7D9A";
                             }
@@ -457,11 +524,15 @@ namespace BulkBackup.App.ViewModels
                             {
                                 dev.IsFailed = true;
                                 dev.IsCompleted = false;
+                                dev.IsInProgress = false;
                                 dev.StatusColor = "#C42B1C"; // High-contrast Red
                                 dev.ProtocolColor = "#E04343";
                             }
                             else
                             {
+                                dev.IsInProgress = true;
+                                dev.IsCompleted = false;
+                                dev.IsFailed = false;
                                 dev.StatusColor = "#0078D4"; // Fluent Blue
                                 dev.ProtocolColor = "#4CC2FF";
                             }
@@ -474,19 +545,26 @@ namespace BulkBackup.App.ViewModels
 
                 LastBackupDirectory = resultDir;
                 HasCompletedBackups = Directory.Exists(resultDir);
+                RunningStatusSummary = $"Completed. {CompletedDevicesCount} backed up, {FailedDevicesCount} failed.";
                 AppendLog("System", "All backup tasks successfully finalized.");
             }
             catch (OperationCanceledException)
             {
+                RunningStatusSummary = "Canceled by user";
                 AppendLog("Warning", "Backup run canceled by user.");
             }
             catch (Exception ex)
             {
+                RunningStatusSummary = "Error occurred";
                 AppendLog("Error", $"Engine execution encountered an error: {ex.Message}");
             }
             finally
             {
                 IsRunning = false;
+                foreach (var d in Devices)
+                {
+                    d.IsInProgress = false;
+                }
                 UpdateMetrics();
             }
         }
@@ -497,7 +575,8 @@ namespace BulkBackup.App.ViewModels
             if (_cts != null && !_cts.IsCancellationRequested)
             {
                 _cts.Cancel();
-                AppendLog("System", "Cancellation signal sent. Stopping background workers...");
+                RunningStatusSummary = "Cancelling operations...";
+                AppendLog("System", "Cancellation signal sent. Stopping workers...");
             }
         }
 
@@ -595,11 +674,15 @@ namespace BulkBackup.App.ViewModels
             TotalDevicesCount = Devices.Count;
             CompletedDevicesCount = Devices.Count(d => d.IsCompleted);
             FailedDevicesCount = Devices.Count(d => d.IsFailed);
-            InProgressDevicesCount = Devices.Count(d => !d.IsCompleted && !d.IsFailed && d.Progress > 0);
+            InProgressDevicesCount = Devices.Count(d => d.IsInProgress);
 
             if (TotalDevicesCount > 0)
             {
                 OverallProgress = (int)Math.Round((double)(CompletedDevicesCount + FailedDevicesCount) / TotalDevicesCount * 100.0);
+                if (IsRunning)
+                {
+                    RunningStatusSummary = $"Processing: {CompletedDevicesCount + FailedDevicesCount} of {TotalDevicesCount} devices completed ({OverallProgress}%)";
+                }
             }
             else
             {

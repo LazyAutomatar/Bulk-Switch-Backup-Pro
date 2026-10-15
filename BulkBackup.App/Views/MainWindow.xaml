@@ -8,12 +8,10 @@
         xmlns:conv="clr-namespace:BulkBackup.App.Converters"
         mc:Ignorable="d"
         Title="Bulk Switch Backup Pro"
-        Height="840" Width="1380" MinHeight="680" MinWidth="1050"
+        Height="860" Width="1400" MinHeight="680" MinWidth="1050"
         WindowStartupLocation="CenterScreen"
         ExtendsContentIntoTitleBar="True"
-        WindowBackdropType="Mica"
-        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-        Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+        WindowBackdropType="Mica">
 
     <Window.DataContext>
         <vm:MainViewModel x:Name="ViewModel" />
@@ -28,22 +26,35 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" /> <!-- Title Bar -->
-            <RowDefinition Height="*" />    <!-- Main Workspace -->
+            <RowDefinition Height="*" />    <!-- Main Body Workspace -->
         </Grid.RowDefinitions>
 
-        <!-- Window Title Bar -->
-        <ui:TitleBar Grid.Row="0" Title="Bulk Switch Backup Pro - Enterprise Fleet Automation" CloseWindowByDoubleClickOnIcon="True">
-            <ui:TitleBar.TrailingContent>
-                <StackPanel Orientation="Horizontal" Margin="0,0,14,0" VerticalAlignment="Center">
-                    <Border Background="#107C41" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
-                        <TextBlock Text="C# Native Engine" FontSize="11" FontWeight="SemiBold" Foreground="White"/>
-                    </Border>
-                    <Border Background="#2D2D30" CornerRadius="4" Padding="8,2">
-                        <TextBlock Text="DPAPI Vault Active" FontSize="11" Foreground="#9CDCFE"/>
-                    </Border>
-                </StackPanel>
-            </ui:TitleBar.TrailingContent>
-        </ui:TitleBar>
+        <!-- Window Title Bar with Theme Toggle matching Network Health Reporter -->
+        <Grid Grid.Row="0">
+            <ui:TitleBar Title="Bulk Switch Backup Pro" CloseWindowByDoubleClickOnIcon="True">
+                <ui:TitleBar.TrailingContent>
+                    <ui:Button Appearance="Secondary" 
+                               Padding="10,3"
+                               Cursor="Hand"
+                               Margin="0,0,16,0"
+                               Command="{Binding ToggleThemeCommand}"
+                               ToolTip="Switch between Dark and Light Mode">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="{Binding ThemeSymbol}" Margin="0,0,6,0" FontSize="14"/>
+                            <TextBlock Text="{Binding ThemeButtonText}" VerticalAlignment="Center" FontSize="12"/>
+                        </StackPanel>
+                    </ui:Button>
+                </ui:TitleBar.TrailingContent>
+            </ui:TitleBar>
+
+            <!-- Animated Header Activity Glow Bar (Active while backup engine is running) -->
+            <ProgressBar VerticalAlignment="Bottom" Height="3" Minimum="0" Maximum="100" 
+                         Value="{Binding OverallProgress}"
+                         IsIndeterminate="{Binding IsRunning}"
+                         Foreground="{DynamicResource AccentFillColorDefaultBrush}"
+                         Background="Transparent" BorderThickness="0"
+                         Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </Grid>
 
         <!-- Main Body Grid: Sidebar Navigation + Workspace -->
         <Grid Grid.Row="1">
@@ -92,7 +103,7 @@
                         <ListBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="Key24" Margin="0,0,10,0" FontSize="16" />
-                                <TextBlock Text="Credential Vault" VerticalAlignment="Center" FontWeight="Medium" FontSize="13" />
+                                <TextBlock Text="Saved Credentials" VerticalAlignment="Center" FontWeight="Medium" FontSize="13" />
                             </StackPanel>
                         </ListBoxItem>
 
@@ -107,7 +118,7 @@
                     <!-- Bottom Sidebar Status Banner -->
                     <Border Grid.Row="2" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="6" Padding="10,8">
                         <StackPanel>
-                            <TextBlock Text="Engine Status" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="Status" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
                             <TextBlock Text="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue='Idle', TargetNullValue='Idle'}" 
                                        FontSize="11.5" Foreground="#107C41" FontWeight="Bold" Margin="0,2,0,0">
                                 <TextBlock.Style>
@@ -123,7 +134,7 @@
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
-                            <TextBlock Text="v2.0 Native Edition" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,4,0,0"/>
+                            <TextBlock Text="Enterprise Edition" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -148,145 +159,126 @@
                     </Grid.Style>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="380" /> <!-- Configuration Controls Panel -->
+                        <ColumnDefinition Width="360" /> <!-- Configuration Panel -->
                         <ColumnDefinition Width="*" />   <!-- Monitor & Console Panel -->
                     </Grid.ColumnDefinitions>
 
                     <!-- LEFT CONFIGURATION COLUMN -->
-                    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,12,0" Padding="0,0,4,0">
-                        <StackPanel>
-                            <!-- Card 1: Target Devices -->
-                            <ui:Card Margin="0,0,0,12" Padding="14">
-                                <StackPanel>
-                                    <Grid Margin="0,0,0,8">
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <ui:SymbolIcon Symbol="Router24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
-                                            <TextBlock Text="Target Devices" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <Border HorizontalAlignment="Right" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="6,2">
-                                            <TextBlock Text="{Binding TargetIpsCount, StringFormat='{}{0} IPs'}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        </Border>
-                                    </Grid>
-
-                                    <TextBlock Text="IP Addresses (One per line or seed IPs for CDP):" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
-                                    <ui:TextBox Text="{Binding TargetIps, UpdateSourceTrigger=PropertyChanged}"
-                                                AcceptsReturn="True" TextWrapping="Wrap" Height="84" FontFamily="Consolas" FontSize="12"
-                                                PlaceholderText="192.168.1.1&#x0a;192.168.1.2&#x0a;10.0.0.1" Margin="0,0,0,8"
-                                                VerticalScrollBarVisibility="Auto"/>
-
-                                    <ui:Button Content="Import IP List from File..." Command="{Binding ImportDevicesCommand}"
-                                               Appearance="Secondary" HorizontalAlignment="Stretch" Height="32">
-                                        <ui:Button.Icon>
-                                            <ui:SymbolIcon Symbol="DocumentBulletList24" FontSize="14"/>
-                                        </ui:Button.Icon>
-                                    </ui:Button>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <!-- Card 2: Authentication & Credentials -->
-                            <ui:Card Margin="0,0,0,12" Padding="14">
-                                <StackPanel>
-                                    <Grid Margin="0,0,0,8">
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
-                                            <TextBlock Text="Session Authentication" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <Border HorizontalAlignment="Right" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="6,2">
-                                            <TextBlock Text="{Binding StoredCredentials.Count, StringFormat='{}{0} in Vault'}" FontSize="11" Foreground="#4CC2FF"/>
-                                        </Border>
-                                    </Grid>
-
-                                    <TextBlock Text="SSH Username:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
-                                    <ui:TextBox Text="{Binding ActiveUsername, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="admin / cisco" Margin="0,0,0,8"/>
-
-                                    <TextBlock Text="SSH Password:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
-                                    <PasswordBox x:Name="ActivePwdBox" PasswordChar="*" Height="32" PasswordChanged="ActivePwdBox_PasswordChanged" Margin="0,0,0,8"/>
-
-                                    <TextBlock Text="Enable Secret (Optional):" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
-                                    <PasswordBox x:Name="ActiveSecretBox" PasswordChar="*" Height="32" PasswordChanged="ActiveSecretBox_PasswordChanged" Margin="0,0,0,8"/>
-
-                                    <TextBlock Text="Vault failover: All DPAPI stored credentials will be automatically tried if this login fails." 
-                                               FontSize="10.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </ui:Card>
-
-                            <!-- Card 3: Discovery & Concurrency -->
-                            <ui:Card Margin="0,0,0,12" Padding="14">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                        <ui:SymbolIcon Symbol="Settings24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
-                                        <TextBlock Text="Discovery &amp; Engine Tuning" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                    <Border Grid.Column="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,14,0">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel>
+                                <!-- Section 1: Target Devices -->
+                                <DockPanel LastChildFill="False" Margin="0,0,0,6">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Router24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Target Devices" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
                                     </StackPanel>
+                                    <Border DockPanel.Dock="Right" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="6,2">
+                                        <TextBlock Text="{Binding TargetIpsCount, StringFormat='{}{0} IPs'}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                    </Border>
+                                </DockPanel>
 
-                                    <!-- CDP / LLDP Traversal -->
-                                    <CheckBox Content="Recursive CDP / LLDP Neighbor Crawl" IsChecked="{Binding EnableCdp}" Margin="0,0,0,4"/>
-                                    <TextBlock Text="• Auto-skips Cisco IP Phones (SEP*, 79xx, 88xx, ATA)" FontSize="10.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="20,0,0,6"/>
+                                <TextBlock Text="IP Addresses (One per line):" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                                <ui:TextBox Text="{Binding TargetIps, UpdateSourceTrigger=PropertyChanged}"
+                                            AcceptsReturn="True" TextWrapping="Wrap" Height="90" FontFamily="Consolas" FontSize="12"
+                                            VerticalContentAlignment="Top" HorizontalContentAlignment="Left" TextAlignment="Left"
+                                            Padding="8,8"
+                                            PlaceholderText="192.168.1.1&#x0a;192.168.1.2&#x0a;10.0.0.1" Margin="0,0,0,8"
+                                            VerticalScrollBarVisibility="Auto"/>
 
-                                    <CheckBox Content="Include Discovered Access Points" IsChecked="{Binding IncludeAps}" Margin="20,0,0,8"
-                                              IsEnabled="{Binding EnableCdp}"/>
+                                <ui:Button Content="Import IP List from File..." Command="{Binding ImportDevicesCommand}"
+                                           Appearance="Secondary" HorizontalAlignment="Stretch" Height="32" Margin="0,0,0,14">
+                                    <ui:Button.Icon>
+                                        <ui:SymbolIcon Symbol="DocumentBulletList24" FontSize="14"/>
+                                    </ui:Button.Icon>
+                                </ui:Button>
 
-                                    <!-- Concurrency Slider -->
-                                    <Grid Margin="0,4,0,2">
-                                        <TextBlock Text="Worker Concurrency Threads:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        <TextBlock Text="{Binding MaxConcurrency, StringFormat='{}{0} threads'}" HorizontalAlignment="Right" FontSize="11.5" FontWeight="SemiBold"/>
-                                    </Grid>
-                                    <Slider Minimum="1" Maximum="20" Value="{Binding MaxConcurrency}" SmallChange="1" LargeChange="2" Margin="0,0,0,8"/>
+                                <Separator Margin="0,0,0,14" Background="{DynamicResource DividerStrokeColorDefaultBrush}"/>
 
-                                    <!-- Save Config Option -->
-                                    <CheckBox Content="Write running-config to startup prior to backup" IsChecked="{Binding WriteConfig}" Margin="0,0,0,4"/>
+                                <!-- Section 2: Session Credentials -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="SSH Credentials" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
                                 </StackPanel>
-                            </ui:Card>
 
-                            <!-- Card 4: Backup Destination -->
-                            <ui:Card Margin="0,0,0,12" Padding="14">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <TextBlock Text="Username:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
+                                <ui:TextBox Text="{Binding ActiveUsername, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="admin / cisco" 
+                                            HorizontalContentAlignment="Left" TextAlignment="Left" Margin="0,0,0,8"/>
+
+                                <TextBlock Text="Password:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
+                                <PasswordBox x:Name="ActivePwdBox" PasswordChar="*" Height="32" PasswordChanged="ActivePwdBox_PasswordChanged" Margin="0,0,0,8"/>
+
+                                <TextBlock Text="Enable Secret (Optional):" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
+                                <PasswordBox x:Name="ActiveSecretBox" PasswordChar="*" Height="32" PasswordChanged="ActiveSecretBox_PasswordChanged" Margin="0,0,0,10"/>
+
+                                <CheckBox Content="Failover to saved credentials if needed" IsChecked="{Binding UseVaultAsFallback}" FontSize="11" Margin="0,0,0,14"/>
+
+                                <Separator Margin="0,0,0,14" Background="{DynamicResource DividerStrokeColorDefaultBrush}"/>
+
+                                <!-- Section 3: Traversal & Concurrency -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <ui:SymbolIcon Symbol="Settings24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Traversal &amp; Tuning" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <CheckBox Content="Recursive CDP / LLDP Neighbor Crawl" IsChecked="{Binding EnableCdp}" Margin="0,0,0,4"/>
+                                <TextBlock Text="• IP Phones &amp; ATAs automatically skipped" FontSize="10.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="20,0,0,6"/>
+
+                                <CheckBox Content="Include Discovered Access Points" IsChecked="{Binding IncludeAps}" Margin="20,0,0,8"
+                                          IsEnabled="{Binding EnableCdp}"/>
+
+                                <DockPanel LastChildFill="False" Margin="0,4,0,2">
+                                    <TextBlock DockPanel.Dock="Left" Text="Worker Threads:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding MaxConcurrency, StringFormat='{}{0} threads'}" FontSize="11.5" FontWeight="SemiBold"/>
+                                </DockPanel>
+                                <Slider Minimum="1" Maximum="20" Value="{Binding MaxConcurrency}" SmallChange="1" LargeChange="2" Margin="0,0,0,8"/>
+
+                                <CheckBox Content="Write running-config to startup" IsChecked="{Binding WriteConfig}" Margin="0,0,0,14"/>
+
+                                <Separator Margin="0,0,0,14" Background="{DynamicResource DividerStrokeColorDefaultBrush}"/>
+
+                                <!-- Section 4: Destination Folder -->
+                                <DockPanel LastChildFill="False" Margin="0,0,0,6">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
                                         <ui:SymbolIcon Symbol="Folder24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
                                         <TextBlock Text="Backup Destination" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
                                     </StackPanel>
+                                </DockPanel>
 
-                                    <Grid Margin="0,0,0,8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <ui:TextBox Grid.Column="0" Text="{Binding BackupDirectory, Mode=TwoWay}" IsReadOnly="True" FontSize="11" Margin="0,0,6,0"/>
-                                        <ui:Button Grid.Column="1" Content="Browse..." Command="{Binding BrowseBackupFolderCommand}" Appearance="Secondary" Height="32"/>
-                                    </Grid>
+                                <Grid Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ui:TextBox Grid.Column="0" Text="{Binding BackupDirectory, Mode=TwoWay}" IsReadOnly="True" FontSize="11" Margin="0,0,6,0"/>
+                                    <ui:Button Grid.Column="1" Content="Browse" Command="{Binding BrowseBackupFolderCommand}" Appearance="Secondary" Height="32"/>
+                                </Grid>
+
+                                <!-- Section 5: Primary Action Buttons -->
+                                <StackPanel Margin="0,4,0,0">
+                                    <!-- Start Backup Button (Visible when NOT running) -->
+                                    <ui:Button Content="Start Backup" Icon="{ui:SymbolIcon Play24}"
+                                               Command="{Binding StartBackupCommand}" Appearance="Primary"
+                                               Height="40" HorizontalAlignment="Stretch"
+                                               Visibility="{Binding IsRunning, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+
+                                    <!-- Cancel Backup Button (Visible when running) -->
+                                    <ui:Button Content="Cancel Backup" Icon="{ui:SymbolIcon Stop24}"
+                                               Command="{Binding CancelBackupCommand}" Appearance="Danger"
+                                               Height="40" HorizontalAlignment="Stretch"
+                                               Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 </StackPanel>
-                            </ui:Card>
-
-                            <!-- Primary Action Buttons Row -->
-                            <Grid Margin="0,0,0,8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <ui:Button Grid.Column="0" Content="Start Backup" Command="{Binding StartBackupCommand}"
-                                           Appearance="Primary" Height="40" HorizontalAlignment="Stretch" Margin="0,0,6,0"
-                                           IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}">
-                                    <ui:Button.Icon>
-                                        <ui:SymbolIcon Symbol="Play24" FontSize="16"/>
-                                    </ui:Button.Icon>
-                                </ui:Button>
-
-                                <ui:Button Grid.Column="1" Content="Cancel" Command="{Binding CancelBackupCommand}"
-                                           Appearance="Secondary" Height="40" HorizontalAlignment="Stretch" Margin="6,0,0,0"
-                                           IsEnabled="{Binding IsRunning}">
-                                    <ui:Button.Icon>
-                                        <ui:SymbolIcon Symbol="Stop24" FontSize="16"/>
-                                    </ui:Button.Icon>
-                                </ui:Button>
-                            </Grid>
-                        </StackPanel>
-                    </ScrollViewer>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
 
                     <!-- RIGHT MONITOR & CONSOLE COLUMN -->
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" /> <!-- Stat Summary Cards -->
-                            <RowDefinition Height="Auto" /> <!-- Overall Progress Bar -->
+                            <RowDefinition Height="Auto" /> <!-- Animated Progress Banner -->
                             <RowDefinition Height="3*" />    <!-- Device Live Status DataGrid -->
                             <RowDefinition Height="2*" />    <!-- Live Execution Console -->
                         </Grid.RowDefinitions>
@@ -311,7 +303,11 @@
                             <!-- Stat 2: In Progress -->
                             <ui:Card Grid.Column="1" Margin="3,0,3,0" Padding="12,10">
                                 <StackPanel>
-                                    <TextBlock Text="In Progress" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="In Progress" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="●" Foreground="#4CC2FF" FontSize="10" Margin="6,0,0,0"
+                                                   Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    </StackPanel>
                                     <TextBlock Text="{Binding InProgressDevicesCount}" FontSize="22" FontWeight="Bold" Foreground="#4CC2FF" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </ui:Card>
@@ -333,14 +329,35 @@
                             </ui:Card>
                         </Grid>
 
-                        <!-- Overall Progress Bar -->
-                        <Grid Grid.Row="1" Margin="0,0,0,10">
-                            <ProgressBar Height="4" Minimum="0" Maximum="100" Value="{Binding OverallProgress}"
-                                         Foreground="{DynamicResource AccentFillColorDefaultBrush}"
-                                         Background="{DynamicResource SubtleFillColorSecondaryBrush}" BorderThickness="0"/>
-                        </Grid>
+                        <!-- Animated Visual Progress Banner -->
+                        <ui:Card Grid.Row="1" Margin="0,0,0,10" Padding="12,10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                        <!-- Devices DataGrid -->
+                                <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,6">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:ProgressRing Width="14" Height="14" IsIndeterminate="True" Margin="0,0,8,0"
+                                                         Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                        <ui:SymbolIcon Symbol="DesktopCheckmark24" FontSize="14" Margin="0,0,8,0"
+                                                       Visibility="{Binding IsRunning, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                        <TextBlock Text="{Binding RunningStatusSummary}" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                                    </StackPanel>
+
+                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding OverallProgress, StringFormat='{}{0}%'}" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                    </StackPanel>
+                                </DockPanel>
+
+                                <ProgressBar Grid.Row="1" Height="6" Minimum="0" Maximum="100" Value="{Binding OverallProgress}"
+                                             Foreground="{DynamicResource AccentFillColorDefaultBrush}"
+                                             Background="{DynamicResource SubtleFillColorSecondaryBrush}" BorderThickness="0"/>
+                            </Grid>
+                        </ui:Card>
+
+                        <!-- Devices DataGrid with Animated Live Badges -->
                         <DataGrid Grid.Row="2" ItemsSource="{Binding Devices}" Margin="0,0,0,10">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="IP Address" Binding="{Binding IpAddress}" Width="130" FontWeight="SemiBold"/>
@@ -365,7 +382,19 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Border Background="{Binding StatusColor}" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
+                                                <!-- Animated Progress Ring when device is InProgress -->
+                                                <ui:ProgressRing Width="14" Height="14" IsIndeterminate="True" Margin="0,0,6,0" Foreground="#4CC2FF"
+                                                                 Visibility="{Binding IsInProgress, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                                <!-- Checkmark icon when device is Completed -->
+                                                <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="#107C41" FontSize="14" Margin="0,0,6,0"
+                                                               Visibility="{Binding IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                                <!-- Dismiss icon when device is Failed -->
+                                                <ui:SymbolIcon Symbol="DismissCircle24" Foreground="#C42B1C" FontSize="14" Margin="0,0,6,0"
+                                                               Visibility="{Binding IsFailed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                                <Border Background="{Binding StatusColor}" CornerRadius="4" Padding="8,2">
                                                     <TextBlock Text="{Binding Status}" Foreground="{Binding StatusTextColor}" FontSize="11" FontWeight="SemiBold"/>
                                                 </Border>
                                             </StackPanel>
@@ -416,7 +445,7 @@
                 </Grid>
 
                 <!-- ============================================================== -->
-                <!-- PAGE 1: CREDENTIAL VAULT (DPAPI)                               -->
+                <!-- PAGE 1: SAVED CREDENTIALS (OPTIONAL PRESETS)                   -->
                 <!-- ============================================================== -->
                 <Grid>
                     <Grid.Style>
@@ -431,7 +460,7 @@
                     </Grid.Style>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="420" /> <!-- Add Credential Form -->
+                        <ColumnDefinition Width="380" /> <!-- Add Credential Form -->
                         <ColumnDefinition Width="*" />   <!-- Saved Credentials List -->
                     </Grid.ColumnDefinitions>
 
@@ -440,7 +469,7 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
                                 <ui:SymbolIcon Symbol="Key24" FontSize="18" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,8,0"/>
-                                <TextBlock Text="Store Credential in DPAPI Vault" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="Save Credential Preset" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <TextBlock Text="Profile Name (Label):" FontSize="12" Margin="0,0,0,4"/>
@@ -455,15 +484,15 @@
                             <TextBlock Text="Enable Secret (Optional):" FontSize="12" Margin="0,0,0,4"/>
                             <PasswordBox x:Name="NewCredSecretBox" PasswordChar="*" Height="34" PasswordChanged="NewCredSecretBox_PasswordChanged" Margin="0,0,0,16"/>
 
-                            <ui:Button Content="Save Credential to Windows DPAPI" Command="{Binding SaveNewCredentialCommand}"
+                            <ui:Button Content="Save Credential" Command="{Binding SaveNewCredentialCommand}"
                                        Appearance="Primary" HorizontalAlignment="Stretch" Height="38">
                                 <ui:Button.Icon>
-                                    <ui:SymbolIcon Symbol="LockClosed24" FontSize="16"/>
+                                    <ui:SymbolIcon Symbol="Save24" FontSize="16"/>
                                 </ui:Button.Icon>
                             </ui:Button>
 
                             <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="6" Padding="12" Margin="0,16,0,0">
-                                <TextBlock Text="Security Note: Credentials stored here are strongly encrypted with the Windows Data Protection API (DPAPI) tied to your current user account. Plaintext passwords are never saved to disk."
+                                <TextBlock Text="Note: Storing credentials here is completely optional. Saved credentials can be applied to the active session with one click, or used as automatic failover."
                                            FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" LineHeight="16"/>
                             </Border>
                         </StackPanel>
@@ -478,8 +507,8 @@
 
                         <ui:Card Grid.Row="0" Margin="0,0,0,12" Padding="14">
                             <StackPanel>
-                                <TextBlock Text="Saved Credentials Pool (Sequential Failover)" FontSize="15" FontWeight="SemiBold"/>
-                                <TextBlock Text="During bulk backup runs, if connection or authentication fails on a switch using active credentials, the engine automatically attempts each vault credential in sequence until successful."
+                                <TextBlock Text="Saved Credentials Pool" FontSize="15" FontWeight="SemiBold"/>
+                                <TextBlock Text="Manage pre-configured credentials to quickly apply them to your session or allow the backup engine to test them sequentially if the primary login fails."
                                            FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,0,0"/>
                             </StackPanel>
                         </ui:Card>
@@ -526,41 +555,36 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <!-- Top Bar: Profile Selector & Action Controls -->
+                    <!-- Top Bar: Cohesive Toolbar without weird center gaps -->
                     <ui:Card Grid.Row="0" Margin="0,0,0,12" Padding="14">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="280" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                        <DockPanel LastChildFill="False">
+                            <!-- Left: Label, ComboBox, Count badge tightly grouped -->
+                            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="CLI Command Profile:" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <ComboBox SelectedIndex="{Binding SelectedProfileIndex, Mode=TwoWay}" Width="260" VerticalAlignment="Center">
+                                    <ComboBoxItem Content="Cisco Switch (IOS / IOS-XE)"/>
+                                    <ComboBoxItem Content="Cisco Nexus Switch (NX-OS)"/>
+                                    <ComboBoxItem Content="Custom CLI Command Script"/>
+                                </ComboBox>
+                                <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding CommandCount, StringFormat='{}{0} Commands'}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                </Border>
+                            </StackPanel>
 
-                            <TextBlock Grid.Column="0" Text="CLI Command Profile:" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"/>
-
-                            <ComboBox Grid.Column="1" SelectedIndex="{Binding SelectedProfileIndex, Mode=TwoWay}" VerticalAlignment="Center">
-                                <ComboBoxItem Content="Cisco Switch (IOS / IOS-XE)"/>
-                                <ComboBoxItem Content="Cisco Nexus Switch (NX-OS)"/>
-                                <ComboBoxItem Content="Custom CLI Command Script"/>
-                            </ComboBox>
-
-                            <Border Grid.Column="2" HorizontalAlignment="Left" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" Margin="14,0,0,0">
-                                <TextBlock Text="{Binding CommandCount, StringFormat='{}{0} Commands Configured'}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
-                            </Border>
-
-                            <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                                <ui:Button Content="Reset to Template" Command="{Binding ResetProfileCommandsCommand}" Appearance="Secondary" Height="32" Margin="0,0,6,0">
+                            <!-- Right: Reset & Clear buttons -->
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:Button Content="Reset Template" Command="{Binding ResetProfileCommandsCommand}" Appearance="Secondary" Height="32" Margin="0,0,8,0">
                                     <ui:Button.Icon>
                                         <ui:SymbolIcon Symbol="ArrowReset24" FontSize="14"/>
                                     </ui:Button.Icon>
                                 </ui:Button>
-                                <ui:Button Content="Clear Commands" Command="{Binding ClearCommandsCommand}" Appearance="Secondary" Height="32">
+                                <ui:Button Content="Clear" Command="{Binding ClearCommandsCommand}" Appearance="Secondary" Height="32">
                                     <ui:Button.Icon>
                                         <ui:SymbolIcon Symbol="Delete24" FontSize="14"/>
                                     </ui:Button.Icon>
                                 </ui:Button>
                             </StackPanel>
-                        </Grid>
+                        </DockPanel>
                     </ui:Card>
 
                     <!-- Custom Commands Editor Area -->
@@ -571,12 +595,14 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Text="Execute CLI Commands (One command per line; lines starting with '!' are treated as comments):"
+                            <TextBlock Grid.Row="0" Text="CLI Commands to execute per target (One per line; lines starting with '!' are comments):"
                                        FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
 
                             <ui:TextBox Grid.Row="1" Text="{Binding CustomCommandsText, UpdateSourceTrigger=PropertyChanged}"
                                         AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" FontSize="12"
-                                        VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                                        VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                        VerticalContentAlignment="Top" HorizontalContentAlignment="Left" TextAlignment="Left"
+                                        Padding="10,10"/>
                         </Grid>
                     </ui:Card>
                 </Grid>

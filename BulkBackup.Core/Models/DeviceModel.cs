@@ -36,5 +36,8 @@ namespace BulkBackup.Core.Models
 
         [ObservableProperty]
         private bool isFailed = false;
+
+        [ObservableProperty]
+        private bool isInProgress = false;
     }
 }
