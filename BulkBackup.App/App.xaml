@@ -10,6 +10,77 @@
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Modern Windows 11 Auto-Hiding ScrollBar (Invisible until hovering / scrolling) -->
+            <Style x:Key="FluentScrollThumb" TargetType="{x:Type Thumb}">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border x:Name="ThumbBorder"
+                                    Background="{DynamicResource TextFillColorSecondaryBrush}"
+                                    CornerRadius="3"
+                                    Margin="1,0,1,0"
+                                    Opacity="0">
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ThumbBorder" Property="Opacity" Value="0.8"/>
+                                    <Setter TargetName="ThumbBorder" Property="Background" Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                </Trigger>
+                                <Trigger Property="IsDragging" Value="True">
+                                    <Setter TargetName="ThumbBorder" Property="Opacity" Value="1.0"/>
+                                    <Setter TargetName="ThumbBorder" Property="Background" Value="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="FluentScrollLineButton" TargetType="{x:Type RepeatButton}">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Setter Property="Height" Value="0"/>
+                <Setter Property="Width" Value="0"/>
+            </Style>
+
+            <Style TargetType="{x:Type ScrollBar}">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Width" Value="6"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+                            <Grid x:Name="Bg" Background="Transparent" SnapsToDevicePixels="True">
+                                <Track x:Name="PART_Track" IsDirectionReversed="True" HorizontalAlignment="Center">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Style="{StaticResource FluentScrollLineButton}" Command="ScrollBar.PageUpCommand"/>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb x:Name="ThumbControl" Style="{StaticResource FluentScrollThumb}"/>
+                                    </Track.Thumb>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Style="{StaticResource FluentScrollLineButton}" Command="ScrollBar.PageDownCommand"/>
+                                    </Track.IncreaseRepeatButton>
+                                </Track>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ThumbControl" Property="Opacity" Value="0.75"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="Orientation" Value="Horizontal">
+                        <Setter Property="Width" Value="Auto"/>
+                        <Setter Property="Height" Value="6"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <!-- Global High-Contrast Enterprise DataGrid Styles -->
             <Style TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}"/>

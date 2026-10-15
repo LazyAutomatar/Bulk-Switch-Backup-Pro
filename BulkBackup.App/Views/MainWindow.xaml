@@ -69,7 +69,6 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" /> <!-- App Branding -->
                         <RowDefinition Height="*" />    <!-- Navigation Links -->
-                        <RowDefinition Height="Auto" /> <!-- Bottom Status -->
                     </Grid.RowDefinitions>
 
                     <!-- App Branding Header -->
@@ -83,7 +82,9 @@
 
                     <!-- Navigation Items -->
                     <ListBox Grid.Row="1" SelectedIndex="{Binding SelectedNavigationIndex, Mode=TwoWay}"
-                             Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                             Background="Transparent" BorderThickness="0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="10,10" />
@@ -114,29 +115,6 @@
                             </StackPanel>
                         </ListBoxItem>
                     </ListBox>
-
-                    <!-- Bottom Sidebar Status Banner -->
-                    <Border Grid.Row="2" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="6" Padding="10,8">
-                        <StackPanel>
-                            <TextBlock Text="Status" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Text="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue='Idle', TargetNullValue='Idle'}" 
-                                       FontSize="11.5" Foreground="#107C41" FontWeight="Bold" Margin="0,2,0,0">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="● Idle - Ready"/>
-                                        <Setter Property="Foreground" Value="#107C41"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsRunning}" Value="True">
-                                                <Setter Property="Text" Value="● Running Backups..."/>
-                                                <Setter Property="Foreground" Value="#0078D4"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                            <TextBlock Text="Enterprise Edition" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,4,0,0"/>
-                        </StackPanel>
-                    </Border>
                 </Grid>
             </Border>
 
@@ -167,7 +145,7 @@
                     <Border Grid.Column="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                             BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
                             BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,14,0">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
                             <StackPanel>
                                 <!-- Section 1: Target Devices -->
                                 <DockPanel LastChildFill="False" Margin="0,0,0,6">
@@ -181,12 +159,21 @@
                                 </DockPanel>
 
                                 <TextBlock Text="IP Addresses (One per line):" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
-                                <ui:TextBox Text="{Binding TargetIps, UpdateSourceTrigger=PropertyChanged}"
-                                            AcceptsReturn="True" TextWrapping="Wrap" Height="90" FontFamily="Consolas" FontSize="12"
-                                            VerticalContentAlignment="Top" HorizontalContentAlignment="Left" TextAlignment="Left"
-                                            Padding="8,8"
-                                            PlaceholderText="192.168.1.1&#x0a;192.168.1.2&#x0a;10.0.0.1" Margin="0,0,0,8"
-                                            VerticalScrollBarVisibility="Auto"/>
+
+                                <!-- Native Multiline IP Input Box (No clear cross button, top-left aligned) -->
+                                <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                        BorderThickness="1" CornerRadius="4" Margin="0,0,0,8">
+                                    <TextBox Text="{Binding TargetIps, UpdateSourceTrigger=PropertyChanged}"
+                                             AcceptsReturn="True" TextWrapping="Wrap" Height="96"
+                                             FontFamily="Consolas" FontSize="12"
+                                             Background="Transparent" BorderThickness="0"
+                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                             CaretBrush="{DynamicResource TextFillColorPrimaryBrush}"
+                                             VerticalContentAlignment="Top" HorizontalContentAlignment="Left"
+                                             TextAlignment="Left" Padding="8,8"
+                                             VerticalScrollBarVisibility="Auto"/>
+                                </Border>
 
                                 <ui:Button Content="Import IP List from File..." Command="{Binding ImportDevicesCommand}"
                                            Appearance="Secondary" HorizontalAlignment="Stretch" Height="32" Margin="0,0,0,14">
@@ -205,7 +192,7 @@
 
                                 <TextBlock Text="Username:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
                                 <ui:TextBox Text="{Binding ActiveUsername, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="admin / cisco" 
-                                            HorizontalContentAlignment="Left" TextAlignment="Left" Margin="0,0,0,8"/>
+                                            ClearButtonEnabled="False" HorizontalContentAlignment="Left" TextAlignment="Left" Margin="0,0,0,8"/>
 
                                 <TextBlock Text="Password:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
                                 <PasswordBox x:Name="ActivePwdBox" PasswordChar="*" Height="32" PasswordChanged="ActivePwdBox_PasswordChanged" Margin="0,0,0,8"/>
@@ -435,11 +422,14 @@
                                 </Grid>
                             </Border>
 
-                            <ui:TextBox Grid.Row="1" x:Name="ConsoleTextBox" Text="{Binding Logs, Mode=OneWay}" IsReadOnly="True"
-                                        TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" FontSize="11"
-                                        Background="#181818" Foreground="#D4D4D4" BorderThickness="1,0,1,1"
-                                        TextChanged="ConsoleTextBox_TextChanged"
-                                        VerticalScrollBarVisibility="Auto"/>
+                            <Border Grid.Row="1" Background="#181818" BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1">
+                                <TextBox x:Name="ConsoleTextBox" Text="{Binding Logs, Mode=OneWay}" IsReadOnly="True"
+                                         TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" FontSize="11"
+                                         Background="Transparent" Foreground="#D4D4D4" CaretBrush="#D4D4D4"
+                                         BorderThickness="0" Padding="8,8"
+                                         TextChanged="ConsoleTextBox_TextChanged"
+                                         VerticalScrollBarVisibility="Auto"/>
+                            </Border>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -473,10 +463,12 @@
                             </StackPanel>
 
                             <TextBlock Text="Profile Name (Label):" FontSize="12" Margin="0,0,0,4"/>
-                            <ui:TextBox Text="{Binding NewCredProfileName, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="e.g. Core Switches, NOC Fallback" Margin="0,0,0,10"/>
+                            <ui:TextBox Text="{Binding NewCredProfileName, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="e.g. Core Switches, NOC Fallback"
+                                        ClearButtonEnabled="False" HorizontalContentAlignment="Left" TextAlignment="Left" Margin="0,0,0,10"/>
 
                             <TextBlock Text="SSH Username:" FontSize="12" Margin="0,0,0,4"/>
-                            <ui:TextBox Text="{Binding NewCredUsername, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="admin / netadmin" Margin="0,0,0,10"/>
+                            <ui:TextBox Text="{Binding NewCredUsername, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="admin / netadmin"
+                                        ClearButtonEnabled="False" HorizontalContentAlignment="Left" TextAlignment="Left" Margin="0,0,0,10"/>
 
                             <TextBlock Text="SSH Password:" FontSize="12" Margin="0,0,0,4"/>
                             <PasswordBox x:Name="NewCredPwdBox" PasswordChar="*" Height="34" PasswordChanged="NewCredPwdBox_PasswordChanged" Margin="0,0,0,10"/>
@@ -587,7 +579,7 @@
                         </DockPanel>
                     </ui:Card>
 
-                    <!-- Custom Commands Editor Area -->
+                    <!-- Custom Commands Editor Area (Native TextBox, No cross button, top-left aligned) -->
                     <ui:Card Grid.Row="1" Padding="14">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -598,11 +590,18 @@
                             <TextBlock Grid.Row="0" Text="CLI Commands to execute per target (One per line; lines starting with '!' are comments):"
                                        FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
 
-                            <ui:TextBox Grid.Row="1" Text="{Binding CustomCommandsText, UpdateSourceTrigger=PropertyChanged}"
-                                        AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" FontSize="12"
-                                        VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                                        VerticalContentAlignment="Top" HorizontalContentAlignment="Left" TextAlignment="Left"
-                                        Padding="10,10"/>
+                            <Border Grid.Row="1" Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                    BorderThickness="1" CornerRadius="4">
+                                <TextBox Text="{Binding CustomCommandsText, UpdateSourceTrigger=PropertyChanged}"
+                                         AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" FontSize="12"
+                                         Background="Transparent" BorderThickness="0"
+                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                         CaretBrush="{DynamicResource TextFillColorPrimaryBrush}"
+                                         VerticalContentAlignment="Top" HorizontalContentAlignment="Left"
+                                         TextAlignment="Left" Padding="10,10"
+                                         VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+                            </Border>
                         </Grid>
                     </ui:Card>
                 </Grid>
