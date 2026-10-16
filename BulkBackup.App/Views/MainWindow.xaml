@@ -8,6 +8,7 @@
         xmlns:conv="clr-namespace:BulkBackup.App.Converters"
         mc:Ignorable="d"
         Title="Bulk Switch Backup Pro"
+        Icon="pack://application:,,,/Assets/app.ico"
         Height="860" Width="1400" MinHeight="680" MinWidth="1050"
         WindowStartupLocation="CenterScreen"
         ExtendsContentIntoTitleBar="True"
@@ -31,7 +32,7 @@
 
         <!-- Window Title Bar with Theme Toggle matching Network Health Reporter -->
         <Grid Grid.Row="0">
-            <ui:TitleBar Title="Bulk Switch Backup Pro" CloseWindowByDoubleClickOnIcon="True">
+            <ui:TitleBar Title="Bulk Switch Backup Pro" Icon="pack://application:,,,/Assets/app.ico" CloseWindowByDoubleClickOnIcon="True">
                 <ui:TitleBar.TrailingContent>
                     <ui:Button Appearance="Secondary" 
                                Padding="10,3"
