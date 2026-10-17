@@ -40,6 +40,44 @@ namespace BulkBackup.App.ViewModels
         [ObservableProperty]
         private int selectedNavigationIndex = 0; // 0=Run & Monitor, 1=Saved Credentials, 2=Command Profiles, 3=About & System
 
+        [ObservableProperty]
+        private int topNavIndex = 0;
+
+        [ObservableProperty]
+        private int bottomNavIndex = -1;
+
+        partial void OnTopNavIndexChanged(int value)
+        {
+            if (value >= 0)
+            {
+                if (BottomNavIndex != -1) BottomNavIndex = -1;
+                if (SelectedNavigationIndex != value) SelectedNavigationIndex = value;
+            }
+        }
+
+        partial void OnBottomNavIndexChanged(int value)
+        {
+            if (value == 0)
+            {
+                if (TopNavIndex != -1) TopNavIndex = -1;
+                if (SelectedNavigationIndex != 3) SelectedNavigationIndex = 3;
+            }
+        }
+
+        partial void OnSelectedNavigationIndexChanged(int value)
+        {
+            if (value >= 0 && value <= 2)
+            {
+                if (TopNavIndex != value) TopNavIndex = value;
+                if (BottomNavIndex != -1) BottomNavIndex = -1;
+            }
+            else if (value == 3)
+            {
+                if (TopNavIndex != -1) TopNavIndex = -1;
+                if (BottomNavIndex != 0) BottomNavIndex = 0;
+            }
+        }
+
         // Application & Developer Details
         [ObservableProperty]
         private string appVersion = "2.5.0 Enterprise";
