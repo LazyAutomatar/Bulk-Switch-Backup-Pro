@@ -38,7 +38,26 @@ namespace BulkBackup.App.ViewModels
         private bool isDark = true;
 
         [ObservableProperty]
-        private int selectedNavigationIndex = 0; // 0=Run & Monitor, 1=Saved Credentials (Optional), 2=Command Profiles
+        private int selectedNavigationIndex = 0; // 0=Run & Monitor, 1=Saved Credentials, 2=Command Profiles, 3=About & System
+
+        // Application & Developer Details
+        [ObservableProperty]
+        private string appVersion = "2.5.0 Enterprise";
+
+        [ObservableProperty]
+        private string framework = ".NET 8.0 Desktop Runtime with WPF-UI Fluent Design";
+
+        [ObservableProperty]
+        private string developerName = "Yash Nalawde";
+
+        [ObservableProperty]
+        private string developerRole = "Network Automation & Infrastructure Engineer";
+
+        [ObservableProperty]
+        private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
+
+        [ObservableProperty]
+        private string projectGitHub = "https://github.com/Majordean0303/Bulk-Switch-Backup";
 
         // Active Connection / Direct SSH inputs
         [ObservableProperty]
@@ -166,6 +185,8 @@ namespace BulkBackup.App.ViewModels
             {
                 try { Directory.CreateDirectory(BackupDirectory); } catch { }
             }
+
+            AppendLog("System", "Bulk Switch Backup Pro v2.5.0 Enterprise ready. Engineered by Yash Nalawde.");
         }
 
         [RelayCommand]
@@ -720,6 +741,48 @@ namespace BulkBackup.App.ViewModels
             {
                 Logs += entry;
             }
+        }
+
+        [RelayCommand]
+        private void OpenLinkedIn()
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = DeveloperLinkedIn,
+                    UseShellExecute = true
+                });
+                AppendLog("System", "Navigating to Yash Nalawde's LinkedIn profile...");
+            }
+            catch (Exception ex)
+            {
+                AppendLog("Error", $"Could not open LinkedIn: {ex.Message}");
+            }
+        }
+
+        [RelayCommand]
+        private void OpenGitHub()
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = ProjectGitHub,
+                    UseShellExecute = true
+                });
+                AppendLog("System", "Navigating to Bulk Switch Backup GitHub repository...");
+            }
+            catch (Exception ex)
+            {
+                AppendLog("Error", $"Could not open GitHub: {ex.Message}");
+            }
+        }
+
+        [RelayCommand]
+        private void NavigateToAbout()
+        {
+            SelectedNavigationIndex = 3;
         }
     }
 }

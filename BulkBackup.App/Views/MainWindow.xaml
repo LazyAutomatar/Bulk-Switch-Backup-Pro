@@ -34,17 +34,26 @@
         <Grid Grid.Row="0">
             <ui:TitleBar Title="Bulk Switch Backup Pro" Icon="pack://application:,,,/Assets/app.ico" CloseWindowByDoubleClickOnIcon="True">
                 <ui:TitleBar.TrailingContent>
-                    <ui:Button Appearance="Secondary" 
-                               Padding="10,3"
-                               Cursor="Hand"
-                               Margin="0,0,16,0"
-                               Command="{Binding ToggleThemeCommand}"
-                               ToolTip="Switch between Dark and Light Mode">
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="{Binding ThemeSymbol}" Margin="0,0,6,0" FontSize="14"/>
-                            <TextBlock Text="{Binding ThemeButtonText}" VerticalAlignment="Center" FontSize="12"/>
-                        </StackPanel>
-                    </ui:Button>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Person24" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,0,5,0"/>
+                                <TextBlock Text="By Yash Nalawde" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <ui:Button Appearance="Secondary" 
+                                   Padding="10,3"
+                                   Cursor="Hand"
+                                   Margin="0,0,16,0"
+                                   Command="{Binding ToggleThemeCommand}"
+                                   ToolTip="Switch between Dark and Light Mode">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="{Binding ThemeSymbol}" Margin="0,0,6,0" FontSize="14"/>
+                                <TextBlock Text="{Binding ThemeButtonText}" VerticalAlignment="Center" FontSize="12"/>
+                            </StackPanel>
+                        </ui:Button>
+                    </StackPanel>
                 </ui:TitleBar.TrailingContent>
             </ui:TitleBar>
 
@@ -70,6 +79,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" /> <!-- App Branding -->
                         <RowDefinition Height="*" />    <!-- Navigation Links -->
+                        <RowDefinition Height="Auto" /> <!-- Developer Footer -->
                     </Grid.RowDefinitions>
 
                     <!-- App Branding Header -->
@@ -115,7 +125,36 @@
                                 <TextBlock Text="Command Profiles" VerticalAlignment="Center" FontWeight="Medium" FontSize="13" />
                             </StackPanel>
                         </ListBoxItem>
+
+                        <ListBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Info24" Margin="0,0,10,0" FontSize="16" />
+                                <TextBlock Text="About &amp; Architecture" VerticalAlignment="Center" FontWeight="Medium" FontSize="13" />
+                            </StackPanel>
+                        </ListBoxItem>
                     </ListBox>
+
+                    <!-- Subtle Developer Footer at bottom of sidebar -->
+                    <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                            Padding="6,12,6,4" Margin="0,10,0,0">
+                        <Button Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand"
+                                Command="{Binding OpenLinkedInCommand}" ToolTip="Connect with Yash Nalawde on LinkedIn"
+                                HorizontalAlignment="Stretch">
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ui:SymbolIcon Grid.Column="0" Symbol="Person24" FontSize="14" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="By Yash Nalawde" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                    <TextBlock Text="LinkedIn Profile" FontSize="9.5" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                </StackPanel>
+                                <ui:SymbolIcon Grid.Column="2" Symbol="Open24" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Button>
+                    </Border>
                 </Grid>
             </Border>
 
@@ -626,6 +665,191 @@
                             </Border>
                         </Grid>
                     </Border>
+                </Grid>
+
+                <!-- ============================================================== -->
+                <!-- PAGE 3: ABOUT & ARCHITECTURE                                   -->
+                <!-- ============================================================== -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedNavigationIndex}" Value="3">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="6,2,10,24" MaxWidth="920" HorizontalAlignment="Left">
+
+                            <!-- Header Title -->
+                            <StackPanel Margin="0,0,0,18">
+                                <TextBlock Text="About Bulk Switch Backup Pro" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                <TextBlock Text="Enterprise multi-threaded configuration backup, fleet topology discovery &amp; automation engine for Cisco campus &amp; data center networks."
+                                           FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0"/>
+                            </StackPanel>
+
+                            <!-- 1. App Specification Card -->
+                            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                                    BorderThickness="1" CornerRadius="8" Padding="20" Margin="0,0,0,16"
+                                    HorizontalAlignment="Stretch">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                        <Image Source="pack://application:,,,/Assets/app.png" Width="48" Height="48" Margin="0,0,14,0"/>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="Bulk Switch Backup Pro" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                            <TextBlock Text="{Binding AppVersion, StringFormat='{}Version {0}'}" FontSize="12" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Architecture:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Framework}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Supported Platforms:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Cisco Catalyst (IOS / IOS-XE), Nexus (NX-OS), Aironet &amp; Catalyst Access Points" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Concurrency Engine:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Asynchronous Parallel.ForEachAsync with fast TCP port 22 socket probing &amp; 10ms stream loop" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Safety &amp; Compliance:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="1" Text="Non-disruptive command extraction, VoIP IP Phone hardware exclusion, DPAPI credential protection" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                    </Grid>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <ui:Button Command="{Binding OpenBackupFolderCommand}" Appearance="Secondary" Height="36" Padding="14,0" Margin="0,0,10,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Folder24" FontSize="16" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Open Backups Folder"/>
+                                            </StackPanel>
+                                        </ui:Button>
+                                        <ui:Button Command="{Binding ExportZipCommand}" Appearance="Secondary" Height="36" Padding="14,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="ArrowDownload24" FontSize="16" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Export ZIP Archive"/>
+                                            </StackPanel>
+                                        </ui:Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 2. Lead Developer Details Card -->
+                            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                                    BorderThickness="1" CornerRadius="8" Padding="20" Margin="0,0,0,16"
+                                    HorizontalAlignment="Stretch">
+                                <StackPanel>
+                                    <DockPanel LastChildFill="False" Margin="0,0,0,14">
+                                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Border Background="{DynamicResource AccentFillColorDefaultBrush}" Width="36" Height="36" CornerRadius="18" Margin="0,0,12,0">
+                                                <ui:SymbolIcon Symbol="Person24" FontSize="18" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="Lead Developer &amp; Architect" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                                <TextBlock Text="Engineering &amp; Network Automation" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <Border DockPanel.Dock="Right" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
+                                            <TextBlock Text="Author" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        </Border>
+                                    </DockPanel>
+
+                                    <Grid Margin="0,0,0,16">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Developer Name:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DeveloperName}" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Professional Profile:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="www.linkedin.com/in/yash-nalawde" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Specialization:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Enterprise Network Infrastructure, Multi-Threaded Tooling, Cisco SDN &amp; Diagnostics" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                    </Grid>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:Button Command="{Binding OpenLinkedInCommand}" Appearance="Primary" Height="36" Padding="16,0" Margin="0,0,10,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Open24" FontSize="15" Margin="0,0,8,0"/>
+                                                <TextBlock Text="Connect on LinkedIn" FontWeight="SemiBold"/>
+                                            </StackPanel>
+                                        </ui:Button>
+
+                                        <ui:Button Command="{Binding OpenGitHubCommand}" Appearance="Secondary" Height="36" Padding="16,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Code24" FontSize="15" Margin="0,0,8,0"/>
+                                                <TextBlock Text="GitHub Repository"/>
+                                            </StackPanel>
+                                        </ui:Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 3. Engine Capabilities & Architecture Highlights -->
+                            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                                    BorderThickness="1" CornerRadius="8" Padding="20"
+                                    HorizontalAlignment="Stretch">
+                                <StackPanel>
+                                    <TextBlock Text="Engine Capabilities &amp; Architecture" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,14"/>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="• High-Performance Concurrency &amp; Async I/O" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Engineered using .NET 8 Parallel.ForEachAsync with dynamic worker provisioning. Supports up to 30 simultaneous SSH/Telnet sessions without stalling host resources or freezing the UI."
+                                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="• Fast-Fail TCP Pre-Flight Probing" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Probes TCP port 22 with an ultra-responsive 2.5-second timeout prior to heavy SSH handshakes. Offline or firewalled devices fail in seconds rather than hanging threads across multiple credential retries."
+                                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="• Recursive CDP &amp; LLDP Topology Crawl" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Autonomous neighbor discovery with CIDR subnet matching. Automatically identifies and skips Cisco IP Phones and ATAs to ensure zero disruption to voice infrastructure."
+                                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="• Zero-Allocation Stream Polling" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="10ms responsive yield loop with 512-byte tail-buffer prompt detection. Prevents megabytes of redundant string allocations and eliminates GC pauses on massive 'show run' outputs."
+                                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel>
+                                        <TextBlock Text="• Windows DPAPI Credential Vault" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Stores network credentials protected by Windows user cryptographic DPAPI keys. Enables seamless sequential credential failover testing across multi-tier enterprise switches."
+                                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                        </StackPanel>
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </Grid>
