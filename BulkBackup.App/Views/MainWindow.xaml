@@ -688,7 +688,7 @@
                             <!-- Header Title -->
                             <StackPanel Margin="0,0,0,18">
                                 <TextBlock Text="About Bulk Switch Backup Pro" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
-                                <TextBlock Text="Enterprise multi-threaded configuration backup, fleet topology discovery &amp; automation engine for Cisco campus &amp; data center networks."
+                                <TextBlock Text="Autonomous multi-device configuration backup, fleet topology discovery &amp; automation utility for enterprise networks."
                                            FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0"/>
                             </StackPanel>
 
@@ -722,29 +722,21 @@
                                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Framework}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
 
                                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Supported Platforms:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Cisco Catalyst (IOS / IOS-XE), Nexus (NX-OS), Aironet &amp; Catalyst Access Points" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Cisco Catalyst (IOS / IOS-XE), Cisco Nexus (NX-OS), Cisco Wireless Access Points" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
 
-                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Concurrency Engine:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
-                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Asynchronous Parallel.ForEachAsync with fast TCP port 22 socket probing &amp; 10ms stream loop" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Discovery Mode:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Direct IP &amp; CIDR subnet range input or autonomous recursive CDP/LLDP topology crawl" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
 
-                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Safety &amp; Compliance:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        <TextBlock Grid.Row="3" Grid.Column="1" Text="Non-disruptive command extraction, VoIP IP Phone hardware exclusion, DPAPI credential protection" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Safety Policy:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="1" Text="Non-intrusive read-only configuration extraction. Automatic VoIP phone &amp; endpoint filtering." Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
                                     </Grid>
 
-                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                        <ui:Button Command="{Binding OpenBackupFolderCommand}" Appearance="Secondary" Height="36" Padding="14,0" Margin="0,0,10,0">
-                                            <StackPanel Orientation="Horizontal">
-                                                <ui:SymbolIcon Symbol="Folder24" FontSize="16" Margin="0,0,8,0"/>
-                                                <TextBlock Text="Open Backups Folder"/>
-                                            </StackPanel>
-                                        </ui:Button>
-                                        <ui:Button Command="{Binding ExportZipCommand}" Appearance="Secondary" Height="36" Padding="14,0">
-                                            <StackPanel Orientation="Horizontal">
-                                                <ui:SymbolIcon Symbol="ArrowDownload24" FontSize="16" Margin="0,0,8,0"/>
-                                                <TextBlock Text="Export ZIP Archive"/>
-                                            </StackPanel>
-                                        </ui:Button>
-                                    </StackPanel>
+                                    <ui:Button Command="{Binding OpenLogFolderCommand}" Appearance="Secondary" Height="36" Padding="14,0" HorizontalAlignment="Left" Margin="0,6,0,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon Symbol="Folder24" FontSize="16" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Open Application Logs Folder"/>
+                                        </StackPanel>
+                                    </ui:Button>
                                 </StackPanel>
                             </Border>
 
@@ -760,8 +752,8 @@
                                                 <ui:SymbolIcon Symbol="Person24" FontSize="18" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
                                             <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="Lead Developer &amp; Architect" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
-                                                <TextBlock Text="Engineering &amp; Network Automation" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                                <TextBlock Text="Developer Details" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                                <TextBlock Text="Software Development &amp; Network Automation" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
                                             </StackPanel>
                                         </StackPanel>
                                         <Border DockPanel.Dock="Right" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
@@ -783,66 +775,78 @@
                                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Developer Name:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
                                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DeveloperName}" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
 
-                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Professional Profile:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="LinkedIn Profile:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
                                         <TextBlock Grid.Row="1" Grid.Column="1" Text="www.linkedin.com/in/yash-nalawde" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold" Margin="0,0,0,8"/>
 
-                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Specialization:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Enterprise Network Infrastructure, Multi-Threaded Tooling, Cisco SDN &amp; Diagnostics" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="GitHub Profile:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="github.com/Majordean0303" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold"/>
                                     </Grid>
 
                                     <StackPanel Orientation="Horizontal">
                                         <ui:Button Command="{Binding OpenLinkedInCommand}" Appearance="Primary" Height="36" Padding="16,0" Margin="0,0,10,0">
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon Symbol="Open24" FontSize="15" Margin="0,0,8,0"/>
-                                                <TextBlock Text="Connect on LinkedIn" FontWeight="SemiBold"/>
+                                                <TextBlock Text="LinkedIn Profile" FontWeight="SemiBold"/>
                                             </StackPanel>
                                         </ui:Button>
 
                                         <ui:Button Command="{Binding OpenGitHubCommand}" Appearance="Secondary" Height="36" Padding="16,0">
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon Symbol="Code24" FontSize="15" Margin="0,0,8,0"/>
-                                                <TextBlock Text="GitHub Repository"/>
+                                                <TextBlock Text="GitHub Profile"/>
                                             </StackPanel>
                                         </ui:Button>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
 
-                            <!-- 3. Engine Capabilities & Architecture Highlights -->
+                            <!-- 3. Feature Capabilities & Network Coverage -->
                             <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                                     BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
                                     BorderThickness="1" CornerRadius="8" Padding="20"
                                     HorizontalAlignment="Stretch">
                                 <StackPanel>
-                                    <TextBlock Text="Engine Capabilities &amp; Architecture" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,14"/>
+                                    <TextBlock Text="Feature Capabilities &amp; Network Coverage" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,14"/>
 
                                     <StackPanel Margin="0,0,0,12">
-                                        <TextBlock Text="• High-Performance Concurrency &amp; Async I/O" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
-                                        <TextBlock Text="Engineered using .NET 8 Parallel.ForEachAsync with dynamic worker provisioning. Supports up to 30 simultaneous SSH/Telnet sessions without stalling host resources or freezing the UI."
+                                        <TextBlock Text="• Multi-Platform Enterprise Network Support" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Automated SSH configuration backup and command execution across Cisco Catalyst switches (2960, 3850, 9200, 9300, 9500), Nexus data center switches (NX-OS), and wireless infrastructure."
                                                    FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
                                     </StackPanel>
 
                                     <StackPanel Margin="0,0,0,12">
-                                        <TextBlock Text="• Fast-Fail TCP Pre-Flight Probing" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
-                                        <TextBlock Text="Probes TCP port 22 with an ultra-responsive 2.5-second timeout prior to heavy SSH handshakes. Offline or firewalled devices fail in seconds rather than hanging threads across multiple credential retries."
+                                        <TextBlock Text="• Flexible Target Ingestion &amp; CIDR Subnet Expansion" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Accepts individual IP addresses, hostnames, CIDR network notations (e.g., /24, /28), and IP ranges, or import bulk device lists directly from inventory text or CSV files."
                                                    FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
                                     </StackPanel>
 
                                     <StackPanel Margin="0,0,0,12">
-                                        <TextBlock Text="• Recursive CDP &amp; LLDP Topology Crawl" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
-                                        <TextBlock Text="Autonomous neighbor discovery with CIDR subnet matching. Automatically identifies and skips Cisco IP Phones and ATAs to ensure zero disruption to voice infrastructure."
+                                        <TextBlock Text="• Autonomous CDP &amp; LLDP Topology Discovery" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Recursively crawls connected switch infrastructure from seed devices across user-defined hop limits and subnet boundaries, with automatic filtering to exclude VoIP IP phones and endpoints."
                                                    FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
                                     </StackPanel>
 
                                     <StackPanel Margin="0,0,0,12">
-                                        <TextBlock Text="• Zero-Allocation Stream Polling" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
-                                        <TextBlock Text="10ms responsive yield loop with 512-byte tail-buffer prompt detection. Prevents megabytes of redundant string allocations and eliminates GC pauses on massive 'show run' outputs."
+                                        <TextBlock Text="• Multi-Tier Credential Vault &amp; Automatic Failover" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Configurable fallback credential profiles with username, password, and enable secret. Automatically tries successive credentials until authentication succeeds, with optional DPAPI encryption."
+                                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="• Customizable Command Profiles &amp; Extraction Templates" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Pre-configured and customizable CLI profiles (show running-config, show version, show inventory, show vlan, etc.) tailored for fleet audits and disaster recovery backups."
+                                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="• Real-Time Live Monitoring &amp; Operational Telemetry" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Interactive data grid tracking live connection states, per-device execution stages, elapsed run times, and output volume alongside real-time diagnostic console streaming."
                                                    FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
                                     </StackPanel>
 
                                     <StackPanel>
-                                        <TextBlock Text="• Windows DPAPI Credential Vault" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
-                                        <TextBlock Text="Stores network credentials protected by Windows user cryptographic DPAPI keys. Enables seamless sequential credential failover testing across multi-tier enterprise switches."
+                                        <TextBlock Text="• Modern Windows 11 Fluent Interface" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Modern desktop experience with Windows 11 Fluent styling, Mica material backdrop, responsive layout, and instant theme switching honoring your Windows system preference."
                                                    FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
                                     </StackPanel>
                                 </StackPanel>

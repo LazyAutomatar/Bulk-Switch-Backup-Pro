@@ -12,7 +12,7 @@
     <AssemblyVersion>2.5.0.0</AssemblyVersion>
     <FileVersion>2.5.0.0</FileVersion>
     <Product>Bulk Switch Backup Pro</Product>
-    <Authors>Yash Nalawde (Conventus Technologies)</Authors>
+    <Authors>Yash Nalawde</Authors>
     <Company>Yash Nalawde</Company>
     <Description>Enterprise Multi-Threaded Network Switch Backup &amp; Automation by Yash Nalawde</Description>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>

@@ -51,13 +51,10 @@ namespace BulkBackup.App.ViewModels
         private string developerName = "Yash Nalawde";
 
         [ObservableProperty]
-        private string developerRole = "Network Automation & Infrastructure Engineer";
-
-        [ObservableProperty]
         private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
 
         [ObservableProperty]
-        private string projectGitHub = "https://github.com/Majordean0303/Bulk-Switch-Backup";
+        private string developerGitHub = "https://github.com/Majordean0303";
 
         // Active Connection / Direct SSH inputs
         [ObservableProperty]
@@ -729,6 +726,13 @@ namespace BulkBackup.App.ViewModels
             }
         }
 
+        private static readonly string LogDirectory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "BulkSwitchBackup",
+            "Logs"
+        );
+        private static readonly string LogFilePath = Path.Combine(LogDirectory, "bulkswitchbackup.log");
+
         public void AppendLog(string source, string message)
         {
             var timestamp = DateTime.Now.ToString("HH:mm:ss");
@@ -740,6 +744,40 @@ namespace BulkBackup.App.ViewModels
             else
             {
                 Logs += entry;
+            }
+
+            try
+            {
+                if (!Directory.Exists(LogDirectory))
+                {
+                    Directory.CreateDirectory(LogDirectory);
+                }
+                File.AppendAllText(LogFilePath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{source}] {message}{Environment.NewLine}");
+            }
+            catch { }
+        }
+
+        [RelayCommand]
+        private void OpenLogFolder()
+        {
+            try
+            {
+                if (!Directory.Exists(LogDirectory))
+                {
+                    Directory.CreateDirectory(LogDirectory);
+                }
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = LogDirectory,
+                    UseShellExecute = true,
+                    Verb = "open"
+                });
+                AppendLog("System", $"Opened application logs folder: {LogDirectory}");
+            }
+            catch (Exception ex)
+            {
+                AppendLog("Error", $"Could not open logs folder: {ex.Message}");
             }
         }
 
@@ -768,10 +806,10 @@ namespace BulkBackup.App.ViewModels
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = ProjectGitHub,
+                    FileName = DeveloperGitHub,
                     UseShellExecute = true
                 });
-                AppendLog("System", "Navigating to Bulk Switch Backup GitHub repository...");
+                AppendLog("System", "Navigating to Yash Nalawde's GitHub profile...");
             }
             catch (Exception ex)
             {
