@@ -1,9 +1,9 @@
 {
-    "sha256": "B604750EB9B783085F1D73FA3E96EC1714EDB0654D83FF105B3EE592D7A72CE2",
+    "sha256": "FF00996211A3178B4894AD1C15F963DF4A3DBF81922FE13B2883CE9479DD397D",
     "version": "2.5.0",
-    "releaseNotes": "Bulk Switch Backup Pro v2.5.0 Enterprise with zero-friction temporary staging, post-backup Save to Folder & Export ZIP choices, auto-cleanup on exit, Catalyst 9800 & AireOS WLC deep diagnostics, and multi-distro installers.",
+    "releaseNotes": "Bulk Switch Backup Pro v2.5.0 Enterprise: Zero-friction temporary session staging, post-backup Save to Folder & Export ZIP choices, automated exit cleanup, ASLR/DEP code hardening, and multi-distro installers.",
     "downloadUrl": "https://github.com/Majordean0303/Bulk-Switch-Backup/releases/download/v2.5.0/BulkSwitchBackupPro.exe",
-    "publishedAt": "2026-10-19T23:45:00Z",
+    "publishedAt": "2026-10-20T00:00:00Z",
     "title": "Bulk Switch Backup Pro v2.5.0 Enterprise",
-    "fileSizeBytes": 50281236
+    "fileSizeBytes": 50285332
 }

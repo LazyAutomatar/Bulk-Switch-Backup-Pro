@@ -80,6 +80,12 @@ public class GitHubAssetDto
     public long Size { get; set; }
 }
 
+public class GitHubTagDto
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+}
+
 public class UpdateService
 {
     private static readonly HttpClient HttpClient = new()
@@ -113,14 +119,21 @@ public class UpdateService
                 return await CheckCustomManifestAsync(customManifestUrlOrPath, currentVer, ct);
             }
 
-            // Mode B: Try GitHub Releases API first
+            // Mode B: Query GitHub Releases API
             var ghResult = await CheckGitHubReleasesAsync(currentVer, ct);
             if (ghResult.ErrorMessage == null)
             {
                 return ghResult;
             }
 
-            // Fallback: If GitHub API fails (rate-limited / repo private), check raw manifest
+            // Mode C: Fallback to GitHub Tags API if releases/latest is not published yet
+            var tagResult = await CheckGitHubTagsAsync(currentVer, ct);
+            if (tagResult != null && tagResult.ErrorMessage == null)
+            {
+                return tagResult;
+            }
+
+            // Mode D: Fallback to repository update manifest if available
             try
             {
                 string rawManifestUrl = $"https://raw.githubusercontent.com/{GitHubRepo}/main/dist/update_manifest.json";
@@ -128,7 +141,14 @@ public class UpdateService
             }
             catch
             {
-                return ghResult;
+                // When no remote releases or manifests exist yet, the running build is the latest
+                return new UpdateInfo
+                {
+                    CurrentVersion = currentVer,
+                    LatestVersion = currentVer,
+                    IsUpdateAvailable = false,
+                    ErrorMessage = null
+                };
             }
         }
         catch (Exception ex)
@@ -155,23 +175,42 @@ public class UpdateService
 
             if (resp.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
+                // GitHub returns 404 when no releases are published yet on a repository.
+                // Fall back to checking tags or report current version is up to date.
+                var tagFallback = await CheckGitHubTagsAsync(currentVer, ct);
+                if (tagFallback != null)
+                {
+                    return tagFallback;
+                }
+
                 return new UpdateInfo
                 {
                     CurrentVersion = currentVer,
                     LatestVersion = currentVer,
                     IsUpdateAvailable = false,
-                    ErrorMessage = "Update check: Repository is currently private or no public releases are published yet."
+                    ErrorMessage = null
                 };
             }
 
             if (!resp.IsSuccessStatusCode)
             {
+                if ((int)resp.StatusCode == 403)
+                {
+                    return new UpdateInfo
+                    {
+                        CurrentVersion = currentVer,
+                        LatestVersion = currentVer,
+                        IsUpdateAvailable = false,
+                        ErrorMessage = "GitHub API rate limit reached. Please wait a moment or configure a custom manifest URL."
+                    };
+                }
+
                 return new UpdateInfo
                 {
                     CurrentVersion = currentVer,
                     LatestVersion = currentVer,
                     IsUpdateAvailable = false,
-                    ErrorMessage = $"Update check returned HTTP {(int)resp.StatusCode} ({resp.ReasonPhrase})."
+                    ErrorMessage = $"GitHub returned HTTP {(int)resp.StatusCode} ({resp.ReasonPhrase})."
                 };
             }
 
@@ -184,7 +223,8 @@ public class UpdateService
                 {
                     CurrentVersion = currentVer,
                     LatestVersion = currentVer,
-                    IsUpdateAvailable = false
+                    IsUpdateAvailable = false,
+                    ErrorMessage = null
                 };
             }
 
@@ -216,7 +256,8 @@ public class UpdateService
                 ReleaseNotes = release.Body ?? string.Empty,
                 DownloadUrl = downloadUrl,
                 PublishedAt = release.PublishedAt,
-                FileSizeBytes = fileSize
+                FileSizeBytes = fileSize,
+                ErrorMessage = null
             };
         }
         catch (Exception ex)
@@ -228,6 +269,50 @@ public class UpdateService
                 IsUpdateAvailable = false,
                 ErrorMessage = $"GitHub update check failed: {ex.Message}"
             };
+        }
+    }
+
+    private async Task<UpdateInfo?> CheckGitHubTagsAsync(string currentVer, CancellationToken ct)
+    {
+        try
+        {
+            string url = $"https://api.github.com/repos/{GitHubRepo}/tags";
+            using var req = new HttpRequestMessage(HttpMethod.Get, url);
+            req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+
+            using var resp = await HttpClient.SendAsync(req, ct);
+            if (!resp.IsSuccessStatusCode) return null;
+
+            string json = await resp.Content.ReadAsStringAsync(ct);
+            var tags = JsonSerializer.Deserialize<GitHubTagDto[]>(json);
+            if (tags == null || tags.Length == 0)
+            {
+                return new UpdateInfo
+                {
+                    CurrentVersion = currentVer,
+                    LatestVersion = currentVer,
+                    IsUpdateAvailable = false,
+                    ErrorMessage = null
+                };
+            }
+
+            string latestTag = tags[0].Name.TrimStart('v', 'V');
+            bool isNewer = CompareVersions(latestTag, currentVer) > 0;
+
+            return new UpdateInfo
+            {
+                CurrentVersion = currentVer,
+                LatestVersion = latestTag,
+                IsUpdateAvailable = isNewer,
+                Title = $"Version {latestTag}",
+                ReleaseNotes = isNewer ? $"New release tag v{latestTag} available on GitHub." : string.Empty,
+                DownloadUrl = isNewer ? $"https://github.com/{GitHubRepo}/releases/download/v{latestTag}/BulkSwitchBackupPro.exe" : null,
+                ErrorMessage = null
+            };
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -304,6 +389,27 @@ public class UpdateService
             }
         }
 
+        // Flush and close stream before verification
+        await fileStream.FlushAsync(ct);
+        await fileStream.DisposeAsync();
+
+        // Cryptographic Security Verification: Verify SHA256 checksum if provided
+        if (!string.IsNullOrWhiteSpace(update.Sha256))
+        {
+            using var sha = System.Security.Cryptography.SHA256.Create();
+            await using var verifyStream = File.OpenRead(targetPath);
+            byte[] hashBytes = await sha.ComputeHashAsync(verifyStream, ct);
+            string computedHash = Convert.ToHexString(hashBytes);
+
+            if (!computedHash.Equals(update.Sha256.Trim(), StringComparison.OrdinalIgnoreCase))
+            {
+                try { File.Delete(targetPath); } catch { }
+                throw new System.Security.SecurityException(
+                    $"Cryptographic Security Verification Failed:\nDownloaded binary SHA256 ({computedHash}) did not match the expected release checksum ({update.Sha256}). The untrusted file has been deleted."
+                );
+            }
+        }
+
         progress?.Report(1.0);
         return targetPath;
     }
@@ -316,6 +422,22 @@ public class UpdateService
         if (!File.Exists(installerPath))
         {
             throw new FileNotFoundException("Installer executable was not found.", installerPath);
+        }
+
+        // Verify file is a valid Win32/PE executable before launching
+        try
+        {
+            using var fs = File.OpenRead(installerPath);
+            var header = new byte[2];
+            if (fs.Read(header, 0, 2) < 2 || header[0] != 0x4D || header[1] != 0x5A) // 'MZ' signature
+            {
+                throw new System.Security.SecurityException("Downloaded file failed binary integrity verification (invalid executable PE header).");
+            }
+        }
+        catch (System.Security.SecurityException)
+        {
+            try { File.Delete(installerPath); } catch { }
+            throw;
         }
 
         var startInfo = new ProcessStartInfo
