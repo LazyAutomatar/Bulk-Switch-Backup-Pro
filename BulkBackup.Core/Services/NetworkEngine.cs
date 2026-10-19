@@ -1002,10 +1002,17 @@ namespace BulkBackup.Core.Services
                     foreach (var c in commands)
                     {
                         var trimmed = c.Trim();
-                        if (!string.IsNullOrWhiteSpace(trimmed) && !trimmed.StartsWith("!"))
+                        if (string.IsNullOrWhiteSpace(trimmed) || trimmed.StartsWith("!"))
+                            continue;
+
+                        // Configuration push is suppressed until further notice
+                        if (IsConfigurationPushCommand(trimmed))
                         {
-                            validCommands.Add(trimmed);
+                            log("Safety", $"[Suppressed] Configuration command '{trimmed}' blocked on {ip}. Configuration push is disabled until further notice.");
+                            continue;
                         }
+
+                        validCommands.Add(trimmed);
                     }
 
                     if (validCommands.Count == 0) validCommands.Add("show run");
@@ -1025,17 +1032,6 @@ namespace BulkBackup.Core.Services
                         sb.AppendLine("==================================================");
                         sb.AppendLine(output.TrimEnd());
                         sb.AppendLine();
-                    }
-
-                    // If configuration commands were executed (e.g. conf t, interface, etc.), gracefully return to privileged EXEC mode
-                    bool hasConfigCommand = validCommands.Any(c => c.StartsWith("conf", StringComparison.OrdinalIgnoreCase));
-                    if (hasConfigCommand)
-                    {
-                        try
-                        {
-                            await ExecuteRawCommandAsync(stream, "end", token, timeoutMs: 5000);
-                        }
-                        catch { }
                     }
 
                     if (writeConfig && !isAp)
@@ -1188,6 +1184,34 @@ namespace BulkBackup.Core.Services
             }
 
             return ipStr.StartsWith(filter);
+        }
+
+        /// <summary>
+        /// Safety guard: Intercepts and blocks commands attempting to enter configuration mode
+        /// or mutate device configuration. Configuration push is suppressed until further notice.
+        /// </summary>
+        public static bool IsConfigurationPushCommand(string command)
+        {
+            if (string.IsNullOrWhiteSpace(command)) return false;
+            string cmd = command.Trim();
+
+            // Allow AireOS terminal paging commands
+            if (cmd.StartsWith("config paging", StringComparison.OrdinalIgnoreCase)) return false;
+
+            // Check common configuration mode entry variants
+            if (cmd.Equals("conf t", StringComparison.OrdinalIgnoreCase) ||
+                cmd.Equals("conf term", StringComparison.OrdinalIgnoreCase) ||
+                cmd.Equals("config t", StringComparison.OrdinalIgnoreCase) ||
+                cmd.Equals("config term", StringComparison.OrdinalIgnoreCase) ||
+                cmd.Equals("configure terminal", StringComparison.OrdinalIgnoreCase) ||
+                cmd.Equals("configure", StringComparison.OrdinalIgnoreCase) ||
+                cmd.StartsWith("conf t ", StringComparison.OrdinalIgnoreCase) ||
+                cmd.StartsWith("configure ", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public class DiscoveredTarget

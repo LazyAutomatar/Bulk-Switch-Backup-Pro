@@ -57,7 +57,7 @@
                 BorderThickness="1" CornerRadius="8" Padding="14"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid RowDefinitions="Auto,*">
-                <TextBlock Grid.Row="0" Text="CLI Commands to execute per target (One per line; lines starting with '!' are comments):"
+                <TextBlock Grid.Row="0" Text="CLI Commands to execute per target (Read-only diagnostic &amp; audit commands; configuration push is suppressed):"
                            FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
 
                 <TextBox Grid.Row="1" Text="{Binding CustomCommandsText}"
