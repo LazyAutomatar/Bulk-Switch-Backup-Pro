@@ -21,6 +21,11 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        // Purge any stale session files from prior executions
+        TempSessionManager.CleanupAllSessions();
+
+        AppDomain.CurrentDomain.ProcessExit += (s, e) => TempSessionManager.CleanupAllSessions();
+
         var services = new ServiceCollection();
         ConfigureServices(services);
         Services = services.BuildServiceProvider();
@@ -28,6 +33,7 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = Services.GetRequiredService<MainWindow>();
+            desktop.Exit += (s, e) => TempSessionManager.CleanupAllSessions();
         }
 
         base.OnFrameworkInitializationCompleted();

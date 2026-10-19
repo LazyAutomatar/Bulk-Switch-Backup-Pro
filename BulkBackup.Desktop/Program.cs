@@ -26,6 +26,10 @@ class Program
             }
             throw;
         }
+        finally
+        {
+            BulkBackup.Desktop.Services.TempSessionManager.CleanupAllSessions();
+        }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

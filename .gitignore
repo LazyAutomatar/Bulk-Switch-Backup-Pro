@@ -11,7 +11,10 @@ publish/
 
 ## Standalone Large Executables (>100MB GitHub limit)
 *.exe
-!dist/*.exe
+!dist/BulkSwitchBackupPro.exe
+dist/*
+!dist/BulkSwitchBackupPro.exe
+!dist/update_manifest.json
 
 ## Logs and temporary files
 *.log

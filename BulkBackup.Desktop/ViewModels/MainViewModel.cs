@@ -50,7 +50,7 @@ public partial class MainViewModel : ObservableObject
     // Execution Tuning
     [ObservableProperty] private int maxConcurrency = Math.Clamp(Environment.ProcessorCount * 2, 6, 16);
     [ObservableProperty] private bool writeConfig = true;
-    [ObservableProperty] private string backupDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Switch_Backups");
+    [ObservableProperty] private string backupDirectory = "Temporary Session Staging";
 
     // Profiles & Commands
     [ObservableProperty] private int selectedProfileIndex = 0;
@@ -90,11 +90,6 @@ public partial class MainViewModel : ObservableObject
 
         RefreshStoredCredentials();
         LoadProfileCommands(0);
-
-        if (!Directory.Exists(BackupDirectory))
-        {
-            try { Directory.CreateDirectory(BackupDirectory); } catch { }
-        }
 
         AppendLog("System", "Bulk Switch Backup Pro v2.5.0 Enterprise ready. Powered by Avalonia UI 11.");
     }
@@ -339,14 +334,9 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        var selectedFolder = await _dialogService.ShowOpenFolderDialogAsync("Select Destination Folder for Switch Backups");
-        if (string.IsNullOrEmpty(selectedFolder))
-        {
-            AppendLog("System", "Backup canceled: No destination folder selected.");
-            return;
-        }
-
-        BackupDirectory = selectedFolder;
+        string sessionDir = TempSessionManager.CreateNewSession();
+        BackupDirectory = sessionDir;
+        LastBackupDirectory = sessionDir;
 
         string profileTitle = SelectedProfileIndex switch
         {
@@ -381,7 +371,7 @@ public partial class MainViewModel : ObservableObject
         _cts = new CancellationTokenSource();
 
         AppendLog("System", $"Starting bulk backup with profile '{profileTitle}' across {ips.Count} target(s) ({commandsList.Count} commands each)...");
-        AppendLog("System", $"Target destination: {BackupDirectory}");
+        AppendLog("System", $"Isolated temporary session staging: {BackupDirectory}");
         if (candidateCreds.Count > 1)
         {
             AppendLog("Security", $"Credential failover pool: {candidateCreds.Count} candidate credential(s) active.");
@@ -465,9 +455,10 @@ public partial class MainViewModel : ObservableObject
             });
 
             LastBackupDirectory = resultDir;
-            HasCompletedBackups = Directory.Exists(resultDir);
+            HasCompletedBackups = Directory.Exists(resultDir) && Directory.EnumerateFileSystemEntries(resultDir).Any();
             RunningStatusSummary = $"Completed. {CompletedDevicesCount} backed up, {FailedDevicesCount} failed.";
             AppendLog("System", "All backup tasks successfully finalized.");
+            AppendLog("System", "Backups staged in temporary session workspace. Use 'Save to Folder...' or 'Export ZIP...' to save your files.");
         }
         catch (OperationCanceledException)
         {
@@ -510,9 +501,10 @@ public partial class MainViewModel : ObservableObject
             ? LastBackupDirectory
             : BackupDirectory;
 
-        if (!Directory.Exists(dirToOpen))
+        if (string.IsNullOrWhiteSpace(dirToOpen) || !Directory.Exists(dirToOpen))
         {
-            try { Directory.CreateDirectory(dirToOpen); } catch { }
+            AppendLog("Warning", "No active temporary session workspace exists yet.");
+            return;
         }
 
         try
@@ -523,11 +515,74 @@ public partial class MainViewModel : ObservableObject
                 UseShellExecute = true,
                 Verb = "open"
             });
-            AppendLog("System", $"Opened backups directory: {dirToOpen}");
+            AppendLog("System", $"Opened temporary session directory: {dirToOpen}");
         }
         catch (Exception ex)
         {
             AppendLog("Error", $"Could not open folder: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task SaveToFolderAsync()
+    {
+        string sourceDir = !string.IsNullOrWhiteSpace(LastBackupDirectory) && Directory.Exists(LastBackupDirectory)
+            ? LastBackupDirectory
+            : BackupDirectory;
+
+        if (string.IsNullOrWhiteSpace(sourceDir) || !Directory.Exists(sourceDir) || !Directory.EnumerateFileSystemEntries(sourceDir).Any())
+        {
+            await _dialogService.ShowMessageAsync("Save to Folder", "No backup files are currently available to save. Please run a backup first.");
+            return;
+        }
+
+        var selectedFolder = await _dialogService.ShowOpenFolderDialogAsync("Select Destination Folder to Save Backups");
+        if (string.IsNullOrWhiteSpace(selectedFolder))
+        {
+            return;
+        }
+
+        try
+        {
+            await Task.Run(() => CopyDirectoryContents(sourceDir, selectedFolder));
+            AppendLog("System", $"All backup files successfully saved to: {selectedFolder}");
+            await _dialogService.ShowMessageAsync("Save Complete", $"Successfully saved backup files to:\n{selectedFolder}");
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = selectedFolder,
+                    UseShellExecute = true,
+                    Verb = "open"
+                });
+            }
+            catch { }
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Error", $"Failed to save backup files to folder: {ex.Message}");
+            await _dialogService.ShowMessageAsync("Save Error", $"Failed to save backup files: {ex.Message}");
+        }
+    }
+
+    private static void CopyDirectoryContents(string sourceDir, string targetDir)
+    {
+        if (!Directory.Exists(targetDir))
+        {
+            Directory.CreateDirectory(targetDir);
+        }
+
+        foreach (var file in Directory.GetFiles(sourceDir))
+        {
+            var targetFile = Path.Combine(targetDir, Path.GetFileName(file));
+            File.Copy(file, targetFile, true);
+        }
+
+        foreach (var dir in Directory.GetDirectories(sourceDir))
+        {
+            var targetSubDir = Path.Combine(targetDir, Path.GetFileName(dir));
+            CopyDirectoryContents(dir, targetSubDir);
         }
     }
 
@@ -538,9 +593,9 @@ public partial class MainViewModel : ObservableObject
             ? LastBackupDirectory
             : BackupDirectory;
 
-        if (string.IsNullOrWhiteSpace(sourceDir) || !Directory.Exists(sourceDir))
+        if (string.IsNullOrWhiteSpace(sourceDir) || !Directory.Exists(sourceDir) || !Directory.EnumerateFileSystemEntries(sourceDir).Any())
         {
-            await _dialogService.ShowMessageAsync("Export ZIP", "No backup directory found to export.");
+            await _dialogService.ShowMessageAsync("Export ZIP", "No backup files are currently available to export. Please run a backup first.");
             return;
         }
 
@@ -556,7 +611,7 @@ public partial class MainViewModel : ObservableObject
                     File.Delete(savePath);
                 }
 
-                ZipFile.CreateFromDirectory(sourceDir, savePath);
+                await Task.Run(() => ZipFile.CreateFromDirectory(sourceDir, savePath));
                 AppendLog("System", $"Exported backups ZIP successfully to: {savePath}");
                 await _dialogService.ShowMessageAsync("Export Complete", $"Successfully exported backup archive to:\n{savePath}");
             }

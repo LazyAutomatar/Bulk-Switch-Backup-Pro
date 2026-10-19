@@ -107,18 +107,46 @@
 
                     <Border Height="1" Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,14"/>
 
-                    <!-- Section 5: Destination Folder -->
+                    <!-- Section 5: Temporary Staging & Post-Backup Export -->
                     <DockPanel Margin="0,0,0,6">
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
                             <ui:SymbolIcon Symbol="Folder" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
-                            <TextBlock Text="Backup Destination" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                            <TextBlock Text="Backup Staging &amp; Export" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
                         </StackPanel>
                     </DockPanel>
 
-                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,16">
-                        <TextBox Grid.Column="0" Text="{Binding BackupDirectory}" IsReadOnly="True" FontSize="11" Margin="0,0,6,0"/>
-                        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseBackupFolderCommand}" Height="32" Cursor="Hand"/>
-                    </Grid>
+                    <!-- Staging Explanation Badge -->
+                    <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="6" Padding="10,8" Margin="0,0,0,12">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <ui:SymbolIcon Symbol="Clock" FontSize="13" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                                <TextBlock Text="Zero-Friction Temporary Staging" FontWeight="SemiBold" FontSize="11.5"/>
+                            </StackPanel>
+                            <TextBlock Text="Backups are staged into an isolated temporary workspace during execution and auto-purged on exit. Persist to folder or download as ZIP anytime after run."
+                                       FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Dynamic Post-Backup Export Actions (Visible once backups are completed) -->
+                    <StackPanel IsVisible="{Binding HasCompletedBackups}" Margin="0,0,0,14">
+                        <TextBlock Text="Export Completed Backups:" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                        <Grid ColumnDefinitions="*,*" Margin="0,0,0,4">
+                            <Button Grid.Column="0" Command="{Binding SaveToFolderCommand}"
+                                    Height="32" Margin="0,0,4,0" Cursor="Hand" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Folder" FontSize="13" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Save Folder..." FontSize="11.5" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Column="1" Command="{Binding ExportZipCommand}"
+                                    Height="32" Margin="4,0,0,0" Cursor="Hand" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Save" FontSize="13" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Export ZIP..." FontSize="11.5" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
 
                     <!-- Primary Action Buttons -->
                     <StackPanel Margin="0,4,0,0">
@@ -271,10 +299,36 @@
                         </StackPanel>
 
                         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <Button Content="Open Folder" Command="{Binding OpenBackupFolderCommand}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand"/>
-                            <Button Content="Export ZIP" Command="{Binding ExportZipCommand}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand"/>
-                            <Button Content="Copy" Command="{Binding CopyLogsCommand}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand"/>
-                            <Button Content="Clear" Command="{Binding ClearLogsCommand}" Height="26" Padding="8,0" Cursor="Hand"/>
+                            <Button Command="{Binding SaveToFolderCommand}" IsEnabled="{Binding HasCompletedBackups}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand" ToolTip.Tip="Save all device backups to a selected local directory">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Folder" FontSize="12" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Save to Folder" FontSize="11"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding ExportZipCommand}" IsEnabled="{Binding HasCompletedBackups}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand" ToolTip.Tip="Compress all device backups into a single .zip archive">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Save" FontSize="12" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Export ZIP" FontSize="11"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding OpenBackupFolderCommand}" IsEnabled="{Binding HasCompletedBackups}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand" ToolTip.Tip="Open temporary session directory in File Explorer">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Open" FontSize="12" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Open Temp" FontSize="11"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding CopyLogsCommand}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Copy" FontSize="12" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Copy" FontSize="11"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding ClearLogsCommand}" Height="26" Padding="8,0" Cursor="Hand">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="Delete" FontSize="12" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Clear" FontSize="11"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </DockPanel>
                 </Border>
