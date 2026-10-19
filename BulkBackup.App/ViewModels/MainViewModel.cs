@@ -288,6 +288,12 @@ namespace BulkBackup.App.ViewModels
                     CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CiscoNexusCommands);
                     break;
                 case 2:
+                    CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CiscoWlcCommands);
+                    break;
+                case 3:
+                    CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CiscoAireOsWlcCommands);
+                    break;
+                case 4:
                     CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CustomTemplateCommands);
                     break;
             }
@@ -508,6 +514,8 @@ namespace BulkBackup.App.ViewModels
             {
                 0 => "Cisco Switch (IOS / IOS-XE)",
                 1 => "Cisco Nexus Switch (NX-OS)",
+                2 => "Cisco Catalyst 9800 WLC (IOS-XE)",
+                3 => "Cisco AireOS WLC (5520 / 8540 / 3504)",
                 _ => "Custom Profile"
             };
 

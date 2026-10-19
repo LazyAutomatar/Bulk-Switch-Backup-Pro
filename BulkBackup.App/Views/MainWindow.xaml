@@ -244,7 +244,25 @@
 
                                 <Separator Margin="0,0,0,14" Background="{DynamicResource DividerStrokeColorDefaultBrush}"/>
 
-                                <!-- Section 2: Session Credentials -->
+                                <!-- Section 2: Command Profile Selection -->
+                                <DockPanel LastChildFill="False" Margin="0,0,0,4">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Code24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Command Profile" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding CommandCount, StringFormat='{}{0} commands'}" FontSize="11" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </DockPanel>
+                                <ComboBox SelectedIndex="{Binding SelectedProfileIndex, Mode=TwoWay}" HorizontalAlignment="Stretch" Margin="0,0,0,14">
+                                    <ComboBoxItem Content="Cisco Switch (IOS / IOS-XE)"/>
+                                    <ComboBoxItem Content="Cisco Nexus Switch (NX-OS)"/>
+                                    <ComboBoxItem Content="Cisco Catalyst 9800 WLC (IOS-XE)"/>
+                                    <ComboBoxItem Content="Cisco AireOS WLC (5520 / 8540 / 3504)"/>
+                                    <ComboBoxItem Content="Custom CLI Command Script"/>
+                                </ComboBox>
+
+                                <Separator Margin="0,0,0,14" Background="{DynamicResource DividerStrokeColorDefaultBrush}"/>
+
+                                <!-- Section 3: Session Credentials -->
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                     <ui:SymbolIcon Symbol="ShieldKeyhole24" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
                                     <TextBlock Text="SSH Credentials" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
@@ -628,9 +646,11 @@
                             <!-- Left: Label, ComboBox, Count badge tightly grouped -->
                             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="CLI Command Profile:" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <ComboBox SelectedIndex="{Binding SelectedProfileIndex, Mode=TwoWay}" Width="260" VerticalAlignment="Center">
+                                <ComboBox SelectedIndex="{Binding SelectedProfileIndex, Mode=TwoWay}" Width="310" VerticalAlignment="Center">
                                     <ComboBoxItem Content="Cisco Switch (IOS / IOS-XE)"/>
                                     <ComboBoxItem Content="Cisco Nexus Switch (NX-OS)"/>
+                                    <ComboBoxItem Content="Cisco Catalyst 9800 WLC (IOS-XE)"/>
+                                    <ComboBoxItem Content="Cisco AireOS WLC (5520 / 8540 / 3504)"/>
                                     <ComboBoxItem Content="Custom CLI Command Script"/>
                                 </ComboBox>
                                 <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" Margin="10,0,0,0" VerticalAlignment="Center">
@@ -742,7 +762,7 @@
                                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Framework}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
 
                                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Supported Platforms:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Cisco Catalyst (IOS / IOS-XE), Cisco Nexus (NX-OS), Cisco Wireless Access Points" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Cisco Catalyst (IOS / IOS-XE), Nexus (NX-OS), Catalyst 9800 &amp; AireOS WLCs, Aironet &amp; Catalyst APs" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
 
                                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Discovery Mode:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
                                         <TextBlock Grid.Row="2" Grid.Column="1" Text="Direct IP &amp; CIDR subnet range input or autonomous recursive CDP/LLDP topology crawl" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
@@ -831,6 +851,12 @@
                                     <StackPanel Margin="0,0,0,12">
                                         <TextBlock Text="• Multi-Platform Enterprise Network Support" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
                                         <TextBlock Text="Automated SSH configuration backup and command execution across Cisco Catalyst switches (2960, 3850, 9200, 9300, 9500), Nexus data center switches (NX-OS), and wireless infrastructure."
+                                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="• Cisco Wireless LAN Controller (WLC) Deep Diagnostics" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                        <TextBlock Text="Comprehensive operational telemetry for Catalyst 9800 &amp; AireOS controllers: AP fleet inventory, uptime &amp; join history, RF CleanAir spectrum interference, client metrics, WLAN policy profiles, and HA SSO redundancy."
                                                    FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
                                     </StackPanel>
 

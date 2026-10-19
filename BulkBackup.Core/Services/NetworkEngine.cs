@@ -19,9 +19,9 @@ namespace BulkBackup.Core.Services
         public delegate void LogAction(string source, string message);
         public delegate void ProgressAction(string ip, int percentage, string status, string protocol, string? hostname = null, bool isAp = false);
 
-        private static readonly Regex PromptRegex = new(@"(?:^|[\r\n])\s*[\w\.\-]+(?:\([^\)]+\))?[>#]\s*$", RegexOptions.Compiled);
+        private static readonly Regex PromptRegex = new(@"(?:^|[\r\n])\s*(?:\([\w\.\-\s]+\)|[\w\.\-]+)(?:\([^\)]+\))?[>#]\s*$", RegexOptions.Compiled);
         private static readonly Regex PasswordRegex = new(@"[Pp]assword:\s*$", RegexOptions.Compiled);
-        private static readonly Regex MoreRegex = new(@"--\s*More\s*--", RegexOptions.Compiled);
+        private static readonly Regex MoreRegex = new(@"--\s*More\s*--|Press any key to continue", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex DeviceIdRegex = new(@"Device ID:\s*([^\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex PlatformRegex = new(@"Platform:\s*([^,\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex CapabilitiesRegex = new(@"Capabilities:\s*([^\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -324,21 +324,38 @@ namespace BulkBackup.Core.Services
                     string prompt = await ElevatePrivilegesAsync(stream, initial, activeCred.Secret, token);
 
                     string hostname = ip;
-                    var hostMatch = Regex.Match(prompt, @"(?:^|[\r\n])\s*([\w\.\-]+?)(?:\([^\)]+\))?[>#]");
-                    if (hostMatch.Success && !hostMatch.Groups[1].Value.Equals("Switch", StringComparison.OrdinalIgnoreCase) && !hostMatch.Groups[1].Value.Equals("Router", StringComparison.OrdinalIgnoreCase))
+                    var hostMatch = Regex.Match(prompt, @"(?:^|[\r\n])\s*(?:\(([\w\.\-\s]+?)\)|([\w\.\-]+?))(?:\([^\)]+\))?[>#]");
+                    if (hostMatch.Success)
                     {
-                        hostname = hostMatch.Groups[1].Value.Trim();
+                        string candidate = !string.IsNullOrWhiteSpace(hostMatch.Groups[1].Value) ? hostMatch.Groups[1].Value : hostMatch.Groups[2].Value;
+                        candidate = candidate.Trim();
+                        if (!string.IsNullOrEmpty(candidate) &&
+                            !candidate.Equals("Switch", StringComparison.OrdinalIgnoreCase) &&
+                            !candidate.Equals("Router", StringComparison.OrdinalIgnoreCase) &&
+                            !candidate.Equals("Cisco Controller", StringComparison.OrdinalIgnoreCase))
+                        {
+                            hostname = candidate;
+                        }
                     }
 
                     progress(ip, 25, "Session Ready", "SSH", hostname, isAp);
-                    await ExecuteRawCommandAsync(stream, "terminal length 0", token);
+                    if (!profileName.Contains("AireOS", StringComparison.OrdinalIgnoreCase))
+                    {
+                        await ExecuteRawCommandAsync(stream, "terminal length 0", token);
+                    }
+                    else
+                    {
+                        await ExecuteRawCommandAsync(stream, "config paging disable", token);
+                    }
+
+                    string deviceTypeLabel = isAp ? "Access Point" : (profileName.Contains("WLC", StringComparison.OrdinalIgnoreCase) || profileName.Contains("Wireless", StringComparison.OrdinalIgnoreCase) ? "Cisco Wireless Controller" : "Cisco Switch");
 
                     var sb = new StringBuilder();
                     sb.AppendLine("==================================================");
                     sb.AppendLine($"Backup Date : {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
                     sb.AppendLine($"Device IP   : {ip}");
                     sb.AppendLine($"Hostname    : {hostname}");
-                    sb.AppendLine($"Device Type : {(isAp ? "Access Point" : "Cisco Switch")}");
+                    sb.AppendLine($"Device Type : {deviceTypeLabel}");
                     sb.AppendLine($"Profile     : {(isAp ? "Cisco Access Point" : profileName)}");
                     sb.AppendLine($"Auth User   : {activeCred.Username}");
                     sb.AppendLine($"Protocol    : SSH (Interactive Shell)");
@@ -394,7 +411,8 @@ namespace BulkBackup.Core.Services
                     client.Disconnect();
 
                     string safeHostname = Regex.Replace(hostname, @"[^\w\.\-]", "_");
-                    string filename = Path.Combine(backupDir, $"{ip}_{safeHostname}_{(isAp ? "AP" : "Switch")}.txt");
+                    string devTypeSuffix = isAp ? "AP" : (profileName.Contains("WLC", StringComparison.OrdinalIgnoreCase) || profileName.Contains("Wireless", StringComparison.OrdinalIgnoreCase) ? "WLC" : "Switch");
+                    string filename = Path.Combine(backupDir, $"{ip}_{safeHostname}_{devTypeSuffix}.txt");
                     await File.WriteAllTextAsync(filename, sb.ToString(), token);
 
                     progress(ip, 100, $"Completed ({validCommands.Count} cmds)", "SSH", hostname, isAp);
@@ -580,11 +598,19 @@ namespace BulkBackup.Core.Services
                                 cap.Contains("Phone", StringComparison.OrdinalIgnoreCase) ||
                                 (cap.Contains("P", StringComparison.Ordinal) && !cap.Contains("S", StringComparison.Ordinal) && !cap.Contains("R", StringComparison.Ordinal));
 
+                    // WLC Detection - Ensure Wireless LAN Controllers are NOT classified as APs
+                    bool isWlc = plat.Contains("AIR-CT", StringComparison.OrdinalIgnoreCase) ||
+                                 plat.Contains("C9800", StringComparison.OrdinalIgnoreCase) ||
+                                 plat.Contains("Wireless Controller", StringComparison.OrdinalIgnoreCase) ||
+                                 cap.Contains("WLC", StringComparison.OrdinalIgnoreCase);
+
                     // AP Detection
-                    n.IsAp = !n.IsPhone && (
+                    n.IsAp = !n.IsPhone && !isWlc && (
                              cap.Contains("Access-Point", StringComparison.OrdinalIgnoreCase) ||
                              cap.Contains("Trans-Bridge", StringComparison.OrdinalIgnoreCase) ||
-                             plat.StartsWith("AIR-", StringComparison.OrdinalIgnoreCase) ||
+                             plat.StartsWith("AIR-AP", StringComparison.OrdinalIgnoreCase) ||
+                             plat.StartsWith("AIR-CAP", StringComparison.OrdinalIgnoreCase) ||
+                             plat.StartsWith("AIR-SAP", StringComparison.OrdinalIgnoreCase) ||
                              plat.StartsWith("C91", StringComparison.OrdinalIgnoreCase) ||
                              plat.Contains("AP", StringComparison.OrdinalIgnoreCase) ||
                              dev.StartsWith("AP", StringComparison.OrdinalIgnoreCase));
