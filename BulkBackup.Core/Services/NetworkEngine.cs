@@ -1027,6 +1027,17 @@ namespace BulkBackup.Core.Services
                         sb.AppendLine();
                     }
 
+                    // If configuration commands were executed (e.g. conf t, interface, etc.), gracefully return to privileged EXEC mode
+                    bool hasConfigCommand = validCommands.Any(c => c.StartsWith("conf", StringComparison.OrdinalIgnoreCase));
+                    if (hasConfigCommand)
+                    {
+                        try
+                        {
+                            await ExecuteRawCommandAsync(stream, "end", token, timeoutMs: 5000);
+                        }
+                        catch { }
+                    }
+
                     if (writeConfig && !isAp)
                     {
                         progress(ip, 95, "Saving Config (write memory)...", "SSH", hostname, isAp, uplinkDevice, port);

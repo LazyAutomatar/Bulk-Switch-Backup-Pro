@@ -195,8 +195,7 @@ We welcome community feedback, feature requests, and issue reports!
 
 <h1><a id="author"></a>Author & Attribution</h1>
 
-Designed and engineered by **Yash Nalawde**  
-*M/s Conventus Technologies Pvt. Ltd.*
+Designed and engineered by **Yash Nalawde** (Independent Developer)
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Yash%20Nalawde-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yash-nalawde)
 [![GitHub](https://img.shields.io/badge/GitHub-Majordean0303-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Majordean0303)
