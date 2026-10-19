@@ -170,6 +170,7 @@ public class UpdateService
             string url = $"https://api.github.com/repos/{GitHubRepo}/releases/latest";
             using var req = new HttpRequestMessage(HttpMethod.Get, url);
             req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            TryAttachAuthHeader(req);
 
             using var resp = await HttpClient.SendAsync(req, ct);
 
@@ -279,6 +280,7 @@ public class UpdateService
             string url = $"https://api.github.com/repos/{GitHubRepo}/tags";
             using var req = new HttpRequestMessage(HttpMethod.Get, url);
             req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            TryAttachAuthHeader(req);
 
             using var resp = await HttpClient.SendAsync(req, ct);
             if (!resp.IsSuccessStatusCode) return null;
@@ -321,7 +323,11 @@ public class UpdateService
         string json;
         if (urlOrPath.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || urlOrPath.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
         {
-            json = await HttpClient.GetStringAsync(urlOrPath, ct);
+            using var req = new HttpRequestMessage(HttpMethod.Get, urlOrPath);
+            TryAttachAuthHeader(req);
+            using var resp = await HttpClient.SendAsync(req, ct);
+            resp.EnsureSuccessStatusCode();
+            json = await resp.Content.ReadAsStringAsync(ct);
         }
         else
         {
@@ -352,6 +358,15 @@ public class UpdateService
         };
     }
 
+    private static void TryAttachAuthHeader(HttpRequestMessage req)
+    {
+        string? token = Environment.GetEnvironmentVariable("GITHUB_TOKEN") ?? Environment.GetEnvironmentVariable("GH_TOKEN");
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.Trim());
+        }
+    }
+
     /// <summary>
     /// Downloads the update package to the temporary folder with progress reporting.
     /// </summary>
@@ -366,7 +381,9 @@ public class UpdateService
         string fileName = $"BulkSwitchBackupPro_v{update.LatestVersion}.exe";
         string targetPath = Path.Combine(tempDir, fileName);
 
-        using var response = await HttpClient.GetAsync(update.DownloadUrl, HttpCompletionOption.ResponseHeadersRead, ct);
+        using var request = new HttpRequestMessage(HttpMethod.Get, update.DownloadUrl);
+        TryAttachAuthHeader(request);
+        using var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
         response.EnsureSuccessStatusCode();
 
         long? totalBytes = response.Content.Headers.ContentLength ?? (update.FileSizeBytes > 0 ? update.FileSizeBytes : null);

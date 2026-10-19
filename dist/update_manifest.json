@@ -1,9 +1,9 @@
 {
-    "version": "2.5.0",
-    "title": "Bulk Switch Backup Pro v2.5.0 Enterprise",
-    "releaseNotes": "Bulk Switch Backup Pro v2.5.0 Enterprise: Added 25G Twe (TwentyFiveGigE) port tokenizer support, multi-token port parsing (100G Hu, 40G Fo, 25G Twe, 10G Ten), placeholder IP collision prevention via HostKey matching, hierarchical uplink tracking, and combined CDP/LLDP telemetry ingestion.",
-    "downloadUrl": "https://github.com/Majordean0303/Bulk-Switch-Backup/releases/download/v2.5.0/BulkSwitchBackupPro.exe",
-    "publishedAt": "2026-10-20T01:30:00Z",
-    "sha256": "1FA68F5B6F3C3B0F8DDB1458F452A2A4BBBC89232DA22C7E8AFA97297A9E24B5",
-    "fileSizeBytes": 50291065
+    "version": "2.5.1",
+    "title": "Bulk Switch Backup Pro v2.5.1 Enterprise",
+    "releaseNotes": "Bulk Switch Backup Pro v2.5.1 Enterprise: 25G Twe (TwentyFiveGigE) port tokenizer support, multi-token port parsing (100G Hu, 40G Fo, 25G Twe, 10G Ten), placeholder IP collision prevention via HostKey matching, hierarchical uplink tracking, and combined CDP/LLDP telemetry ingestion.",
+    "downloadUrl": "https://github.com/Majordean0303/Bulk-Switch-Backup/releases/download/v2.5.1/BulkSwitchBackupPro.exe",
+    "publishedAt": "2026-10-20T01:45:00Z",
+    "sha256": "3AE90CF27248FC685224AA7E4F28BFBCBB181B2BEB1133187FAB9ACDF4727C6A",
+    "fileSizeBytes": 50291066
 }
