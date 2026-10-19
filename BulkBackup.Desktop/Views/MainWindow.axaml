@@ -1,0 +1,155 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
+        xmlns:vm="using:BulkBackup.Desktop.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="1380" d:DesignHeight="820"
+        Width="1380" Height="820"
+        MinWidth="850" MinHeight="550"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaTitleBarHeightHint="38"
+        x:Class="BulkBackup.Desktop.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/app.ico"
+        Title="{Binding ApplicationTitle}">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Top TitleBar / Header -->
+        <Grid Grid.Row="0" Height="38" Margin="14,0,0,0" ColumnDefinitions="Auto,*,Auto"
+              Background="Transparent"
+              PointerPressed="OnTitleBarPointerPressed"
+              DoubleTapped="OnTitleBarDoubleTapped">
+            <!-- App Icon & Title -->
+            <StackPanel x:Name="TitleBarLeadingContent" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Image Source="/Assets/app.png" Width="20" Height="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding ApplicationTitle}" FontWeight="SemiBold" FontSize="12.5" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Middle drag area -->
+            <Panel Grid.Column="1" Background="Transparent" IsHitTestVisible="True"/>
+
+            <!-- Trailing Content: UI Zoom Controls, Developer Tag & Theme Toggle -->
+            <StackPanel x:Name="TitleBarTrailingContent" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,140,0">
+                <!-- UI Scale Zoom Pill -->
+                <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" 
+                        BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="14" 
+                        Height="28"
+                        Padding="4,2" 
+                        Margin="0,0,10,0" 
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Command="{Binding ZoomOutCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="6,0"
+                                Height="22"
+                                Cursor="Hand"
+                                ToolTip.Tip="Zoom Out (Ctrl -)">
+                            <TextBlock Text="-" FontSize="14" FontWeight="Bold"/>
+                        </Button>
+                        <Button Command="{Binding ResetZoomCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="4,0"
+                                Height="22"
+                                Cursor="Hand"
+                                ToolTip.Tip="Reset Zoom (Ctrl 0)">
+                            <TextBlock Text="{Binding UiScaleText}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button Command="{Binding ZoomInCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="6,0"
+                                Height="22"
+                                Cursor="Hand"
+                                ToolTip.Tip="Zoom In (Ctrl +)">
+                            <TextBlock Text="+" FontSize="14" FontWeight="Bold"/>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- Developer Attribution Badge -->
+                <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" 
+                        BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4" 
+                        Padding="8,4" 
+                        Margin="0,0,10,0" 
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="Contact" FontSize="12" Margin="0,0,5,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="By Yash Nalawde" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Quick Theme Toggle Pill -->
+                <Button Command="{Binding ToggleThemeCommand}" 
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="14"
+                        Height="28"
+                        Padding="12,0"
+                        Cursor="Hand"
+                        ToolTip.Tip="Switch between Dark and Light Mode">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="{Binding ThemeSymbol}" Margin="0,0,6,0" FontSize="14" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="{Binding ThemeButtonText}" VerticalAlignment="Center" FontSize="12" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <!-- Global Activity Glow / Progress Bar -->
+            <ProgressBar Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" Height="3" Minimum="0" Maximum="100" 
+                         Value="{Binding OverallProgress}"
+                         IsVisible="{Binding IsRunning}"
+                         Foreground="{DynamicResource AccentFillColorDefaultBrush}"
+                         Background="Transparent" BorderThickness="0" Margin="0,0,0,0"/>
+        </Grid>
+
+        <!-- Main Navigation Host Shell inside LayoutTransformControl for crisp high-DPI scaling -->
+        <LayoutTransformControl Grid.Row="1">
+            <LayoutTransformControl.LayoutTransform>
+                <ScaleTransform ScaleX="{Binding UiScale}" ScaleY="{Binding UiScale}"/>
+            </LayoutTransformControl.LayoutTransform>
+            <ui:NavigationView x:Name="RootNavigation"
+                               PaneDisplayMode="Left"
+                               OpenPaneLength="220"
+                               IsPaneOpen="True"
+                               IsSettingsVisible="False">
+                <ui:NavigationView.MenuItems>
+                    <ui:NavigationViewItem Content="Run &amp; Monitor" Tag="Run">
+                        <ui:NavigationViewItem.IconSource>
+                            <ui:SymbolIconSource Symbol="Play"/>
+                        </ui:NavigationViewItem.IconSource>
+                    </ui:NavigationViewItem>
+
+                    <ui:NavigationViewItem Content="Saved Credentials" Tag="Credentials">
+                        <ui:NavigationViewItem.IconSource>
+                            <ui:SymbolIconSource Symbol="Permissions"/>
+                        </ui:NavigationViewItem.IconSource>
+                    </ui:NavigationViewItem>
+
+                    <ui:NavigationViewItem Content="Command Profiles" Tag="Profiles">
+                        <ui:NavigationViewItem.IconSource>
+                            <ui:SymbolIconSource Symbol="Document"/>
+                        </ui:NavigationViewItem.IconSource>
+                    </ui:NavigationViewItem>
+                </ui:NavigationView.MenuItems>
+
+                <ui:NavigationView.FooterMenuItems>
+                    <ui:NavigationViewItem Content="About &amp; System" Tag="About">
+                        <ui:NavigationViewItem.IconSource>
+                            <ui:SymbolIconSource Symbol="Help"/>
+                        </ui:NavigationViewItem.IconSource>
+                    </ui:NavigationViewItem>
+                </ui:NavigationView.FooterMenuItems>
+            </ui:NavigationView>
+        </LayoutTransformControl>
+    </Grid>
+</Window>

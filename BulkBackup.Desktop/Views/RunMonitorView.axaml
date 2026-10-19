@@ -1,0 +1,291 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:vm="using:BulkBackup.Desktop.ViewModels"
+             xmlns:models="using:BulkBackup.Core.Models"
+             mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="780"
+             x:Class="BulkBackup.Desktop.Views.RunMonitorView"
+             x:DataType="vm:MainViewModel">
+
+    <Grid ColumnDefinitions="360,*" Margin="16,14,16,14">
+        <!-- LEFT CONFIGURATION COLUMN -->
+        <Border Grid.Column="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,14,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <!-- Section 1: Target Devices -->
+                    <DockPanel Margin="0,0,0,6">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Globe" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                            <TextBlock Text="Target Devices" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Border HorizontalAlignment="Right" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="6,2">
+                            <TextBlock Text="{Binding TargetIpsCount, StringFormat='{}{0} IPs'}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </Border>
+                    </DockPanel>
+
+                    <TextBlock Text="IP Addresses (One per line):" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+
+                    <!-- Multiline IP Input Box -->
+                    <TextBox Text="{Binding TargetIps}"
+                             AcceptsReturn="True" TextWrapping="Wrap" Height="96"
+                             FontFamily="Consolas" FontSize="12"
+                             Watermark="192.168.1.1&#x0a;10.10.20.0/24"
+                             VerticalContentAlignment="Top" HorizontalContentAlignment="Left"
+                             Margin="0,0,0,8"/>
+
+                    <Button Command="{Binding ImportDevicesCommand}"
+                            HorizontalAlignment="Stretch" Height="32" Margin="0,0,0,14" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Document" FontSize="14" Margin="0,0,6,0"/>
+                            <TextBlock Text="Import IP List from File..." FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Border Height="1" Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,14"/>
+
+                    <!-- Section 2: Command Profile Selection -->
+                    <DockPanel Margin="0,0,0,4">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Code" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                            <TextBlock Text="Command Profile" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock HorizontalAlignment="Right" Text="{Binding CommandCount, StringFormat='{}{0} commands'}" FontSize="11" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <ComboBox SelectedIndex="{Binding SelectedProfileIndex}" HorizontalAlignment="Stretch" Margin="0,0,0,14">
+                        <ComboBoxItem Content="Cisco Switch (IOS / IOS-XE)"/>
+                        <ComboBoxItem Content="Cisco Nexus Switch (NX-OS)"/>
+                        <ComboBoxItem Content="Cisco Catalyst 9800 WLC (IOS-XE)"/>
+                        <ComboBoxItem Content="Cisco AireOS WLC (5520 / 8540 / 3504)"/>
+                        <ComboBoxItem Content="Custom CLI Command Script"/>
+                    </ComboBox>
+
+                    <Border Height="1" Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,14"/>
+
+                    <!-- Section 3: Session Credentials -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <ui:SymbolIcon Symbol="Permissions" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                        <TextBlock Text="SSH Credentials" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <TextBlock Text="Username:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
+                    <TextBox Text="{Binding ActiveUsername}" Watermark="admin / cisco" Margin="0,0,0,8"/>
+
+                    <TextBlock Text="Password:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
+                    <TextBox Text="{Binding ActivePassword}" PasswordChar="*" Watermark="••••••••" Margin="0,0,0,8"/>
+
+                    <TextBlock Text="Enable Secret (Optional):" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3"/>
+                    <TextBox Text="{Binding ActiveSecret}" PasswordChar="*" Watermark="Optional enable secret" Margin="0,0,0,10"/>
+
+                    <CheckBox Content="Failover to saved credentials if needed" IsChecked="{Binding UseVaultAsFallback}" FontSize="11" Margin="0,0,0,14"/>
+
+                    <Border Height="1" Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,14"/>
+
+                    <!-- Section 4: Traversal & Concurrency -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <ui:SymbolIcon Symbol="Setting" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                        <TextBlock Text="Traversal &amp; Tuning" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <CheckBox Content="Recursive CDP / LLDP Neighbor Crawl" IsChecked="{Binding EnableCdp}" Margin="0,0,0,4"/>
+                    <TextBlock Text="• IP Phones &amp; ATAs automatically skipped" FontSize="10.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="20,0,0,6"/>
+
+                    <CheckBox Content="Include Discovered Access Points" IsChecked="{Binding IncludeAps}" Margin="20,0,0,8"
+                              IsEnabled="{Binding EnableCdp}"/>
+
+                    <DockPanel Margin="0,4,0,2">
+                        <TextBlock DockPanel.Dock="Left" Text="Worker Threads:" FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock HorizontalAlignment="Right" Text="{Binding MaxConcurrency, StringFormat='{}{0} threads'}" FontSize="11.5" FontWeight="SemiBold"/>
+                    </DockPanel>
+                    <Slider Minimum="1" Maximum="30" Value="{Binding MaxConcurrency}" Margin="0,0,0,8"/>
+
+                    <CheckBox Content="Write running-config to startup" IsChecked="{Binding WriteConfig}" Margin="0,0,0,14"/>
+
+                    <Border Height="1" Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,14"/>
+
+                    <!-- Section 5: Destination Folder -->
+                    <DockPanel Margin="0,0,0,6">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Folder" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
+                            <TextBlock Text="Backup Destination" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+                        <TextBox Grid.Column="0" Text="{Binding BackupDirectory}" IsReadOnly="True" FontSize="11" Margin="0,0,6,0"/>
+                        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseBackupFolderCommand}" Height="32" Cursor="Hand"/>
+                    </Grid>
+
+                    <!-- Primary Action Buttons -->
+                    <StackPanel Margin="0,4,0,0">
+                        <Button Command="{Binding StartBackupCommand}"
+                                Background="{DynamicResource AccentFillColorDefaultBrush}" Foreground="#FFFFFF"
+                                Height="40" HorizontalAlignment="Stretch" Cursor="Hand"
+                                IsVisible="{Binding !IsRunning}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Play" FontSize="16" Margin="0,0,8,0" Foreground="#FFFFFF"/>
+                                <TextBlock Text="Start Backup" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding CancelBackupCommand}"
+                                Background="#DC2626" Foreground="#FFFFFF"
+                                Height="40" HorizontalAlignment="Stretch" Cursor="Hand"
+                                IsVisible="{Binding IsRunning}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Stop" FontSize="16" Margin="0,0,8,0" Foreground="#FFFFFF"/>
+                                <TextBlock Text="Cancel Backup" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- RIGHT MONITOR & CONSOLE COLUMN -->
+        <Grid Grid.Column="1" RowDefinitions="Auto,Auto,3*,2*">
+            <!-- Stat Cards Strip -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,*,*,*" Margin="0,0,0,10">
+                <!-- Stat 1: Total -->
+                <Border Grid.Column="0" Margin="0,0,6,0" Padding="12,10"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8">
+                    <StackPanel>
+                        <TextBlock Text="Total Devices" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{Binding TotalDevicesCount}" FontSize="22" FontWeight="Bold" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Stat 2: In Progress -->
+                <Border Grid.Column="1" Margin="3,0,3,0" Padding="12,10"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="In Progress" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="●" Foreground="#4CC2FF" FontSize="10" Margin="6,0,0,0"
+                                       IsVisible="{Binding IsRunning}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding InProgressDevicesCount}" FontSize="22" FontWeight="Bold" Foreground="#4CC2FF" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Stat 3: Completed -->
+                <Border Grid.Column="2" Margin="3,0,3,0" Padding="12,10"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8">
+                    <StackPanel>
+                        <TextBlock Text="Completed" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{Binding CompletedDevicesCount}" FontSize="22" FontWeight="Bold" Foreground="#10B981" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Stat 4: Failed -->
+                <Border Grid.Column="3" Margin="6,0,0,0" Padding="12,10"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8">
+                    <StackPanel>
+                        <TextBlock Text="Failed" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{Binding FailedDevicesCount}" FontSize="22" FontWeight="Bold" Foreground="#EF4444" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Animated Visual Progress Banner -->
+            <Border Grid.Row="1" Margin="0,0,0,10" Padding="12,10"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1" CornerRadius="8">
+                <Grid RowDefinitions="Auto,Auto">
+                    <DockPanel Grid.Row="0" Margin="0,0,0,6">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:ProgressRing Width="14" Height="14" IsIndeterminate="True" Margin="0,0,8,0"
+                                             IsVisible="{Binding IsRunning}"/>
+                            <ui:SymbolIcon Symbol="Accept" FontSize="14" Margin="0,0,8,0" Foreground="#10B981"
+                                           IsVisible="{Binding !IsRunning}"/>
+                            <TextBlock Text="{Binding RunningStatusSummary}" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock HorizontalAlignment="Right" Text="{Binding OverallProgress, StringFormat='{}{0}%'}"
+                                   FontWeight="Bold" FontSize="13" Foreground="{DynamicResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
+                    </DockPanel>
+
+                    <ProgressBar Grid.Row="1" Height="6" Minimum="0" Maximum="100" Value="{Binding OverallProgress}"
+                                 Foreground="{DynamicResource AccentFillColorDefaultBrush}"
+                                 Background="{DynamicResource SubtleFillColorSecondaryBrush}" BorderThickness="0"/>
+                </Grid>
+            </Border>
+
+            <!-- Devices DataGrid with Live Badges -->
+            <DataGrid Grid.Row="2" ItemsSource="{Binding Devices}" Margin="0,0,0,10" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="IP Address" Binding="{Binding IpAddress}" Width="130"/>
+                    <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="180"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding DeviceType}" Width="110"/>
+                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="90"/>
+                    <DataGridTemplateColumn Header="Progress" Width="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="models:DeviceModel">
+                                <Grid ColumnDefinitions="*,40" VerticalAlignment="Center" Margin="4,0">
+                                    <ProgressBar Grid.Column="0" Value="{Binding Progress}" Maximum="100" Height="6" BorderThickness="0" Background="{DynamicResource SubtleFillColorSecondaryBrush}" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Progress, StringFormat='{}{0}%'}" FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Status" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate x:DataType="models:DeviceModel">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:ProgressRing Width="14" Height="14" IsIndeterminate="True" Margin="0,0,6,0" Foreground="#4CC2FF"
+                                                     IsVisible="{Binding IsInProgress}"/>
+                                    <ui:SymbolIcon Symbol="Accept" Foreground="#10B981" FontSize="14" Margin="0,0,6,0"
+                                                   IsVisible="{Binding IsCompleted}"/>
+                                    <ui:SymbolIcon Symbol="Dismiss" Foreground="#EF4444" FontSize="14" Margin="0,0,6,0"
+                                                   IsVisible="{Binding IsFailed}"/>
+                                    <Border CornerRadius="4" Padding="8,2" Background="{DynamicResource SubtleFillColorSecondaryBrush}">
+                                        <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="SemiBold"/>
+                                    </Border>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Live Console & Action Strip -->
+            <Grid Grid.Row="3" RowDefinitions="Auto,*">
+                <Border Grid.Row="0" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4,4,0,0" Padding="10,6">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Code" FontSize="14" Margin="0,0,6,0"/>
+                            <TextBlock Text="Execution Logs &amp; Events" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button Content="Open Folder" Command="{Binding OpenBackupFolderCommand}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand"/>
+                            <Button Content="Export ZIP" Command="{Binding ExportZipCommand}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand"/>
+                            <Button Content="Copy" Command="{Binding CopyLogsCommand}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand"/>
+                            <Button Content="Clear" Command="{Binding ClearLogsCommand}" Height="26" Padding="8,0" Cursor="Hand"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <Border Grid.Row="1" Background="#181818" BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1">
+                    <TextBox x:Name="ConsoleTextBox" Text="{Binding Logs}" IsReadOnly="True"
+                             TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas, Cascadia Code, Courier New" FontSize="11"
+                             Background="Transparent" Foreground="#D4D4D4" CaretBrush="#D4D4D4"
+                             BorderThickness="0" Padding="8,8"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

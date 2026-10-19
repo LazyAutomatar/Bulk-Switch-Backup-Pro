@@ -1,0 +1,181 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:vm="using:BulkBackup.Desktop.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="1050"
+             x:Class="BulkBackup.Desktop.Views.AboutView"
+             x:DataType="vm:AboutViewModel">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="24" MaxWidth="920" HorizontalAlignment="Left">
+
+            <!-- Header Title & Subtitle -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="About Bulk Switch Backup Pro" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                <TextBlock Text="Autonomous multi-device configuration backup, fleet topology discovery &amp; automation utility for enterprise networks." 
+                           FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <!-- Card 1: App Specification Card -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Margin="0,0,0,16" Padding="20">
+                <StackPanel>
+                    <!-- Header with App Icon, Name, and Version Badge -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <Image Source="/Assets/app.png" Width="48" Height="48" Margin="0,0,14,0"/>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Bulk Switch Backup Pro" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                            <TextBlock Text="{Binding AppVersion, StringFormat='{}Version {0}'}" FontSize="12" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Specification Grid -->
+                    <Grid Margin="0,0,0,14" ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Architecture:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Framework}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Supported Platforms:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Cisco Catalyst (IOS / IOS-XE), Nexus (NX-OS), Catalyst 9800 &amp; AireOS WLCs, Aironet &amp; Catalyst APs" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8" TextWrapping="Wrap"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Discovery Mode:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Direct IP &amp; CIDR subnet range input or autonomous recursive CDP/LLDP topology crawl" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8" TextWrapping="Wrap"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Safety Policy:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="Non-intrusive read-only configuration extraction. Automatic VoIP phone &amp; endpoint filtering." Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap"/>
+                    </Grid>
+
+                    <!-- Action Button: Open Logs Folder -->
+                    <Button Command="{Binding OpenLogFolderCommand}" 
+                            Height="36" Padding="14,0" HorizontalAlignment="Left" Margin="0,6,0,0" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Folder" FontSize="16" Margin="0,0,8,0" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                            <TextBlock Text="Open Application Logs Folder" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Card 2: Developer Details Card -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Margin="0,0,0,16" Padding="20">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,14">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Background="{DynamicResource AccentFillColorDefaultBrush}" Width="36" Height="36" CornerRadius="18" Margin="0,0,12,0">
+                                <ui:SymbolIcon Symbol="Contact" FontSize="18" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Developer Details" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                <TextBlock Text="Software Development &amp; Network Automation" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <Border HorizontalAlignment="Right" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
+                            <TextBlock Text="Author" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        </Border>
+                    </DockPanel>
+
+                    <Grid Margin="0,0,0,16" ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Developer Name:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DeveloperName}" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="LinkedIn Profile:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="www.linkedin.com/in/yash-nalawde" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="GitHub Profile:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="github.com/Majordean0303" Foreground="{DynamicResource AccentFillColorDefaultBrush}" FontWeight="SemiBold"/>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Command="{Binding OpenLinkedInCommand}"
+                                Background="#0A66C2"
+                                Foreground="#FFFFFF"
+                                Height="36" Padding="16,0" Margin="0,0,10,0"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Open" FontSize="15" Margin="0,0,8,0" Foreground="#FFFFFF"/>
+                                <TextBlock Text="LinkedIn Profile" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding OpenGitHubCommand}"
+                                Background="#24292F"
+                                Foreground="#FFFFFF"
+                                Height="36" Padding="16,0" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Code" FontSize="15" Margin="0,0,8,0" Foreground="#FFFFFF"/>
+                                <TextBlock Text="GitHub Profile" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Card 3: Feature Capabilities & Technical Coverage -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Feature Capabilities &amp; Technical Coverage" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,14"/>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="• Multi-Platform Enterprise Network Support" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="Automated SSH configuration backup and command execution across Cisco Catalyst switches (2960, 3850, 9200, 9300, 9500), Nexus data center switches (NX-OS), and wireless infrastructure." 
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="• Cisco Wireless LAN Controller (WLC) Deep Diagnostics" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="Comprehensive operational telemetry for Catalyst 9800 &amp; AireOS controllers: AP fleet inventory, uptime &amp; join history, RF CleanAir spectrum interference, client metrics, WLAN policy profiles, and HA SSO redundancy." 
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="• Flexible Target Ingestion &amp; CIDR Subnet Expansion" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="Accepts individual IP addresses, hostnames, CIDR network notations (e.g., /24, /28), and IP ranges, or import bulk device lists directly from inventory text or CSV files." 
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="• Autonomous CDP &amp; LLDP Topology Discovery" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="Recursively crawls connected switch infrastructure from seed devices across user-defined hop limits and subnet boundaries, with automatic filtering to exclude VoIP IP phones and endpoints." 
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="• Multi-Tier Credential Vault &amp; Automatic Failover" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="Configurable fallback credential profiles with username, password, and enable secret. Automatically tries successive credentials until authentication succeeds, with optional DPAPI encryption." 
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="• Customizable Command Profiles &amp; Extraction Templates" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="Pre-configured and customizable CLI profiles (show running-config, show version, show inventory, show vlan, etc.) tailored for fleet audits and disaster recovery backups." 
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="• Real-Time Live Monitoring &amp; Operational Telemetry" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="Interactive data grid tracking live connection states, per-device execution stages, elapsed run times, and output volume alongside real-time diagnostic console streaming." 
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="• Modern Windows 11 Fluent Interface (Avalonia UI 11)" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                        <TextBlock Text="Modern cross-platform desktop experience with FluentAvalonia, crisp high-DPI scaling via LayoutTransformControl, dynamic dark/light theming, and responsive layout." 
+                                   FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="12,2,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
