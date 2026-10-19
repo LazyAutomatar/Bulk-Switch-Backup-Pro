@@ -53,10 +53,10 @@ echo  [BUILD PASSED] Solution compiled successfully!
 echo ========================================================
 echo.
 
-REM 4. Build and publish Release standalone single-file executable into ./Publish and ./dist
-echo [2/3] Publishing standalone single-file Release executable to .\Publish...
+REM 4. Build and publish Release standalone single-file executable using publish-all.ps1
+echo [2/2] Running production publishing pipeline (win-x64)...
 echo --------------------------------------------------------
-dotnet publish BulkBackup.App/BulkBackup.App.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./Publish
+powershell -NoProfile -ExecutionPolicy Bypass -File .\publish-all.ps1 -Target win-x64 -Configuration Release
 
 if %ERRORLEVEL% neq 0 (
     echo.
@@ -69,22 +69,15 @@ if %ERRORLEVEL% neq 0 (
     exit /b %ERRORLEVEL%
 )
 
-echo [3/3] Preparing distribution directory .\dist...
-echo --------------------------------------------------------
-if not exist "dist" mkdir "dist"
-copy /y "Publish\BulkSwitchBackupPro.exe" "dist\BulkSwitchBackupPro.exe" >nul
-
 echo.
 echo ========================================================
 echo  [SUCCESS] Application published for distribution!
-echo  Locations:
-echo    - Publish\BulkSwitchBackupPro.exe
-echo    - dist\BulkSwitchBackupPro.exe
+echo  Location: dist\BulkSwitchBackupPro.exe
 echo ========================================================
 echo.
 
-if exist "Publish\BulkSwitchBackupPro.exe" (
-    for %%F in ("Publish\BulkSwitchBackupPro.exe") do (
+if exist "dist\BulkSwitchBackupPro.exe" (
+    for %%F in ("dist\BulkSwitchBackupPro.exe") do (
         set /a sizeMB=%%~zF / 1048576
         echo Binary Name: BulkSwitchBackupPro.exe
         echo Binary Size: !sizeMB! MB [%%~zF bytes]
@@ -94,3 +87,4 @@ if exist "Publish\BulkSwitchBackupPro.exe" (
 
 echo.
 echo Standalone distribution package is ready!
+pause

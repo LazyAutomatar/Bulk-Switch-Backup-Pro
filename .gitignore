@@ -3,6 +3,8 @@
 [Oo]bj/
 [Pp]ublish/
 publish/
+[Bb]uild/
+build/
 *.user
 *.suo
 *.userosscache

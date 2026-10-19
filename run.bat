@@ -1,4 +1,4 @@
 @echo off
-echo Launching Bulk Switch Backup Pro (C# Native App)...
-dotnet run --project BulkBackup.App/BulkBackup.App.csproj
+echo Launching Bulk Switch Backup Pro (Avalonia UI Cross-Platform)...
+dotnet run --project BulkBackup.Desktop/BulkBackup.Desktop.csproj
 pause
