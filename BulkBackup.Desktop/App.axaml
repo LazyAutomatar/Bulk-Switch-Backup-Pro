@@ -91,5 +91,18 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}"/>
         </Style>
+
+        <!-- Minimal / Hidden ScrollBar Styling (Hidden by default, subtle fade on hover) -->
+        <Style Selector="ScrollBar">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.25"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="ScrollBar:pointerover">
+            <Setter Property="Opacity" Value="0.85"/>
+        </Style>
     </Application.Styles>
 </Application>

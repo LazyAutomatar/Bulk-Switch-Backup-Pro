@@ -62,6 +62,7 @@
 
                 <TextBox Grid.Row="1" Text="{Binding CustomCommandsText}"
                          AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas, Cascadia Code, Courier New" FontSize="12"
+                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
                          Padding="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </Grid>
         </Border>

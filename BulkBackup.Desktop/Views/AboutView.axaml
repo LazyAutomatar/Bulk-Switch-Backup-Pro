@@ -8,7 +8,7 @@
              x:Class="BulkBackup.Desktop.Views.AboutView"
              x:DataType="vm:AboutViewModel">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
         <StackPanel Margin="24" MaxWidth="920" HorizontalAlignment="Left">
 
             <!-- Header Title & Subtitle -->
@@ -49,14 +49,58 @@
                         <TextBlock Grid.Row="3" Grid.Column="1" Text="Non-intrusive read-only configuration extraction. Automatic VoIP phone &amp; endpoint filtering." Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap"/>
                     </Grid>
 
-                    <!-- Action Button: Open Logs Folder -->
-                    <Button Command="{Binding OpenLogFolderCommand}" 
-                            Height="36" Padding="14,0" HorizontalAlignment="Left" Margin="0,6,0,0" Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="Folder" FontSize="16" Margin="0,0,8,0" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
-                            <TextBlock Text="Open Application Logs Folder" FontWeight="SemiBold"/>
+                    <!-- Action Buttons: Open Logs Folder & Check for Updates -->
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button Command="{Binding OpenLogFolderCommand}" 
+                                Height="36" Padding="14,0" Margin="0,0,10,6" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Folder" FontSize="16" Margin="0,0,8,0" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
+                                <TextBlock Text="Open Application Logs Folder" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding CheckForUpdatesCommand}" 
+                                Background="#0284C7" Foreground="#FFFFFF"
+                                IsEnabled="{Binding !IsCheckingUpdate}"
+                                Height="36" Padding="14,0" Margin="0,0,10,6" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Refresh" FontSize="16" Margin="0,0,8,0" Foreground="#FFFFFF"/>
+                                <TextBlock Text="Check for Updates" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+
+                    <!-- Update Status & In-Place Upgrade Panel -->
+                    <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" 
+                            BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}" 
+                            BorderThickness="1" CornerRadius="8" Padding="14,12" Margin="0,10,0,0"
+                            IsVisible="{Binding HasUpdateMessage}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Help" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding UpdateStatusText}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <!-- Upgrade Action (Visible only when update is available) -->
+                            <StackPanel Margin="0,10,0,0" IsVisible="{Binding IsUpdateAvailable}">
+                                <TextBlock Text="{Binding ReleaseNotes}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,10" MaxHeight="80"/>
+
+                                <ProgressBar Value="{Binding DownloadProgress}" Maximum="1.0" Height="6" Margin="0,0,0,10"
+                                             Foreground="{DynamicResource AccentFillColorDefaultBrush}"
+                                             IsVisible="{Binding IsDownloadingUpdate}"/>
+
+                                <Button Command="{Binding DownloadAndInstallUpdateCommand}"
+                                        Background="{DynamicResource AccentFillColorDefaultBrush}" Foreground="#FFFFFF"
+                                        IsEnabled="{Binding !IsDownloadingUpdate}"
+                                        Height="36" Padding="16,0" HorizontalAlignment="Left" Cursor="Hand">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Save" FontSize="15" Margin="0,0,8,0" Foreground="#FFFFFF"/>
+                                        <TextBlock Text="Download &amp; Install Update" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
                         </StackPanel>
-                    </Button>
+                    </Border>
                 </StackPanel>
             </Border>
 

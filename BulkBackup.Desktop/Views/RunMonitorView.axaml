@@ -14,7 +14,7 @@
         <Border Grid.Column="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,14,0">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel>
                     <!-- Section 1: Target Devices -->
                     <DockPanel Margin="0,0,0,6">
@@ -35,6 +35,7 @@
                              FontFamily="Consolas" FontSize="12"
                              Watermark="192.168.1.1&#x0a;10.10.20.0/24"
                              VerticalContentAlignment="Top" HorizontalContentAlignment="Left"
+                             ScrollViewer.VerticalScrollBarVisibility="Hidden"
                              Margin="0,0,0,8"/>
 
                     <Button Command="{Binding ImportDevicesCommand}"
@@ -283,7 +284,7 @@
                              TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas, Cascadia Code, Courier New" FontSize="11"
                              Background="Transparent" Foreground="#D4D4D4" CaretBrush="#D4D4D4"
                              BorderThickness="0" Padding="8,8"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                             ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
                 </Border>
             </Grid>
         </Grid>

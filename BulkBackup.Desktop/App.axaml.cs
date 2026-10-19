@@ -38,6 +38,7 @@ public partial class App : Application
         // Core State & Services
         services.AddSingleton<AppState>();
         services.AddSingleton<CredentialStore>();
+        services.AddSingleton<UpdateService>();
         services.AddSingleton<IDialogService, AvaloniaDialogService>();
         services.AddSingleton<INavigationService, NavigationService>();
 
