@@ -1,95 +1,217 @@
+<div align="center">
+
+<br/>
+
+<img src="Logo.png" alt="Bulk Switch Backup Pro Icon" width="180" />
+
 # Bulk Switch Backup Pro
 
-**Bulk Switch Backup Pro** is a high-performance GUI desktop application for network engineers and administrators to automate bulk configuration backups of Cisco switches, Nexus switches, and Access Points. 
+### High-Performance Enterprise Network Switch Configuration & Topology Automation Engine
 
-Featuring an intelligent **Two-Phase CDP Traversal Engine**, the tool can discover and map your entire network topology from a single seed switch and execute multi-threaded backups across all discovered devices concurrently.
+<br/>
 
----
+[![Latest Release](https://img.shields.io/badge/Release-v2.5.1%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/Majordean0303/Bulk-Switch-Backup/releases)
+[![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
+[![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
+[![Runtime](https://img.shields.io/badge/.NET%208-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
+[![Security Hardened](https://img.shields.io/badge/Security-ASLR%20%7C%20DEP%20%7C%20SHA--256-blueviolet?style=for-the-badge&logo=shield&logoColor=white&labelColor=0d1117)](#security)
 
-## Key Features
+<br/>
 
-- **Two-Phase Execution Engine:**
-  - **Phase 1 (Fast Topology Mapping):** Rapidly queries `show cdp neighbors detail` across seed nodes to map out the network structure without waiting for heavy backups.
-  - **Phase 2 (Concurrent Bulk Backup):** Executes multi-threaded backups across all mapped devices concurrently via SSH (with automatic Telnet fallback).
-- **CDP Traversal & Subnet Filtering:**
-  - Filter network traversal by Subnet CIDR (e.g., `10.34.11.0/24`).
-  - Filter by VLAN ID (e.g., `VLAN 100`) where the app automatically resolves the management subnet from the seed switch interface (`show interface Vlan<ID>`).
-- **Cisco Access Point (AP) Support:**
-  - **Include APs Toggle:** Easily include or exclude Access Points from backups.
-  - **Automatic AP Hardware Detection:** Detects Cisco APs (`AIR-`, `C91`, `CW91`, `CAP`, `Aironet`, `Trans-Bridge`, `WLAN`, `Access-Point`).
-  - **Subnet Bypass for APs:** APs automatically bypass switch management subnet constraints, enabling backups for APs living on dedicated wireless subnets.
-  - **Custom AP Command Profile:** Runs AP-specific commands (`show run`, `show interfaces wired 0`, `show inventory`).
-- **Device Profiles & Custom Commands:**
-  - Pre-configured profiles for **Cisco Switch (IOS / IOS-XE)** and **Cisco Nexus (NX-OS)**.
-  - Custom command editor to specify exact command sets.
-  - Optional `write memory` / configuration saving prior to backup.
-- **Modern User Interface:**
-  - Built with `CustomTkinter` featuring dark/light mode support.
-  - **Live Device Dashboard:** Displays real-time progress bars, state indicators, and connection protocol badges (`[SSH]`, `[Telnet]`, `[AP Discovered]`, `[Failed]`).
-  - **Execution Logs:** Real-time timestamped event logs.
-- **Export Options:**
-  - Download all device backups directly as a single `.zip` archive.
-  - Export raw `.txt` files to any selected local directory.
-- **Standalone Executable:**
-  - Bundled into a single portable Windows executable (`Bulk Backup Pro.exe`).
+[**Downloads**](#downloads) · [**Features**](#features) · [**Distribution Model**](#distribution-model) · [**Quick Start**](#quick-start) · [**Security**](#security) · [**Author**](#author) · [**Disclaimer**](#disclaimer)
+
+<br/>
+
+</div>
+
+> [!IMPORTANT]
+> **Enterprise Safety Guarantee:** Bulk Switch Backup Pro runs strictly non-intrusive, read-only diagnostic and show commands (`show run`, `show version`, etc.) during discovery and crawl phases. IP Phones (`SEP*`, `CP-*`, `ATA`, `78xx`, `88xx`) are automatically identified and excluded from SSH probing. Switch state is never modified without explicit operator opt-in (`write memory` checkbox).
 
 ---
 
-## Installation & Setup
+<div align="center">
 
-### Option 1: Standalone Executable (Recommended)
-Run `dist/Bulk Backup Pro.exe` directly on any 64-bit Windows machine. No Python installation required.
+<h1><a id="features"></a>Features</h1>
 
-### Option 2: Run from Source
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Majordean0303/Bulk-Switch-Backup.git
-   cd Bulk-Switch-Backup
-   ```
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Launch the application:
-   ```bash
-   python app.py
-   ```
+<table>
+  <tr>
+    <td width="50%" valign="top">
+
+#### Network Discovery & Topology
+- **Recursive CDP & LLDP Crawl** — Discovers your entire multi-tier switching fabric from a single seed switch.
+- **Universal Multi-Token Port Tokenizer** — Full support for 25G `Twe` (TwentyFiveGigE), 100G `Hu`, 40G `Fo`, 10G `Ten`/`Te`, and 1G `Gig`/`Gi`.
+- **Hierarchical Uplink Tracking** — Preserves parent switch linkage (Core $\rightarrow$ Distribution $\rightarrow$ Access) with live port-channel mapping.
+- **Collision-Proof HostKey Engine** — Canonical hostname normalization (`HostKey.Same`) preventing neighbor drops across domain tags.
+- **Multi-Command Telemetry Ingestion** — Combines `show cdp entry * protocols`, detailed CDP, tabular CDP, and LLDP detail without data loss.
+
+#### Supported Hardware & Profiles
+- **Cisco Catalyst Switches** — IOS and IOS-XE (2960, 3560, 3750, 3850, 9200, 9300, 9300X, 9400, 9500, 9600).
+- **Cisco Nexus Switches** — NX-OS (N3K, N5K, N7K, N9K).
+- **Cisco Wireless LAN Controllers** — Catalyst 9800 WLC (IOS-XE) & AireOS (5520, 8540, 3504).
+- **Cisco Access Points** — Autonomous, Lightweight, and Catalyst APs (`AIR-AP`, `CW91`, `C9105/9115/9120/9130`).
+- **Custom Command Profiles** — Define arbitrary diagnostic command batches.
+
+    </td>
+    <td width="50%" valign="top">
+
+#### Performance & Concurrency Engine
+- **High-Concurrency Async Workers** — Run parallel SSH backups across up to 30 simultaneous devices with thread throttling.
+- **Multi-Credential Vault with Fallback** — AES-encrypted credential vault with automatic failover rotation on auth rejection.
+- **Adaptive Privileged Escalation** — Intelligent `enable` prompt detection with secret injection and terminal paging suppression (`terminal length 0` / `config paging disable`).
+- **Subnet & VLAN Filtering** — Scope discovery to specific CIDR subnets or management VLANs.
+
+#### Modern Experience & Staging
+- **Zero-Friction Temporary Staging** — Backups stage into an isolated temp workspace and auto-purge on exit.
+- **On-Demand Export Options** — One-click **Save to Folder...** or **Export ZIP...** archive after execution.
+- **Windows 11 Fluent UI** — FluentAvalonia 3-way dark/light theme sync, crisp dynamic scaling via `LayoutTransformControl`.
+- **Cross-Platform Native Runtime** — Pre-compiled self-contained native builds for Windows, macOS, and Linux.
+
+    </td>
+  </tr>
+</table>
+
+</div>
 
 ---
 
-## How to Use
+<div align="center">
 
-1. **Credentials & Devices:**
-   - Enter your network **Username**, **Password**, and optional **Enable Secret**.
-   - Input your starting switch IP address(es) into the **Target Devices / Seed IPs** box (one per line) or click **Import Devices from File...**.
-2. **CDP Traversal (Optional):**
-   - Check **Enable CDP Traversal**.
-   - Select filter type (**Subnet** or **VLAN ID**) and enter the value (e.g., `10.34.11.0/24` or `100`).
-   - Check **Include APs** if you wish to include Access Points in the backup run.
-3. **Commands Profile:**
-   - Select the device profile (**Cisco Switch**, **Cisco Nexus Switch**, or **Custom**) from the *Commands* tab.
-4. **Execute & Save:**
-   - Click **START BULK BACKUP**.
-   - Watch Phase 1 map out the topology and Phase 2 execute concurrent backups.
-   - Click **SAVE AS ZIP** or **SAVE AS FILES** to export the backups.
+<h1><a id="distribution-model"></a>Distribution & Collaboration Model</h1>
+
+</div>
+
+> [!NOTE]
+> **Closed-Source Core Engine · 100% Free & Publicly Distributable Release Packages**  
+> Bulk Switch Backup Pro is engineered as an enterprise-grade commercial utility with a **closed-source core engine**, while providing **completely free, public, pre-compiled release packages** for the network community.
+> 
+> - **Free Public Releases:** Download and run on unlimited production switches with no license keys, timeouts, or telemetry tracking.
+> - **Open Public Collaboration:** Community issue tracking, feature requests, device profile templates, and test matrices are managed openly in this repository.
+> - **Enterprise Code Hardening:** Every public binary is compiled with ASLR, DEP, deterministic builds, and cryptographic SHA-256 signatures.
 
 ---
 
-## Building the Executable
+<div align="center">
 
-To build the standalone `.exe` using PyInstaller:
+<h1><a id="downloads"></a>Downloads & Installation</h1>
 
-Run the included build script:
-```cmd
-build.bat
+<a href="https://github.com/Majordean0303/Bulk-Switch-Backup/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/windows/cozy.svg" alt="Download for Windows" height="55"/></a>
+<a href="https://github.com/Majordean0303/Bulk-Switch-Backup/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/apple/cozy.svg" alt="Download for macOS" height="55"/></a>
+<a href="https://github.com/Majordean0303/Bulk-Switch-Backup/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/linux/cozy.svg" alt="Download for Linux" height="55"/></a>
+
+<br/><br/>
+
+### Public Release Artifacts (v2.5.1 Enterprise)
+
+| Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
+| :--- | :--- | :--- | :--- | :--- |
+| **Windows** | x64 (64-bit) | Standalone Executable | [`BulkSwitchBackupPro.exe`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro.exe) | `3AE90CF27248FC685224AA7E4F28BFBCBB181B2BEB1133187FAB9ACDF4727C6A` |
+| **Windows** | x64 (64-bit) | Windows Setup Wizard | [`BulkSwitchBackupPro_Setup_v2.5.0.exe`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro_Setup_v2.5.0.exe) | `3F4DDBCD409063EA117D68E3D632825FEAAF94FE7C54C24EAB669204E5ED7D41` |
+| **Windows** | x64 (64-bit) | Portable ZIP Archive | [`BulkSwitchBackupPro-win-x64.zip`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-win-x64.zip) | `9E23E8D601D2AB7502BFEB90548190F89F08BC55B2CBDD005D0AD62827A598A4` |
+| **macOS** | Apple Silicon (M1–M4) | Native `.app` (ZIP) | [`BulkSwitchBackupPro-osx-arm64.zip`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-osx-arm64.zip) | `00794B57E6C9A2977DE5CEB7705550791F28DAAA91C93A73E73A027FC063B4D5` |
+| **macOS** | Intel x64 | Native `.app` (ZIP) | [`BulkSwitchBackupPro-osx-x64.zip`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-osx-x64.zip) | `8E9FADDD71A8096AFA2BF4B59AB2DACFF8C3BCB212DB3C964FCA4BED8E5AD253` |
+| **Linux** | x64 (64-bit) | Native Binary + Desktop | [`BulkSwitchBackupPro-linux-x64.tar.gz`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-linux-x64.tar.gz) | `2600ECB6305FFCFF635863429F356067F90CC3595A5C8BC7231ADBBAF0DE32B9` |
+| **Linux** | ARM64 | Native Binary + Desktop | [`BulkSwitchBackupPro-linux-arm64.tar.gz`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-linux-arm64.tar.gz) | `E699A11E6718289678DB2F30AFDD7F6216B571E8A461A166ABDB26ACB65A961D` |
+
+</div>
+
+#### Linux Installation:
+Extract the `.tar.gz` and run the included desktop installer:
+```bash
+tar -xzf BulkSwitchBackupPro-linux-x64.tar.gz
+cd BulkSwitchBackupPro-linux-x64
+chmod +x install.sh BulkSwitchBackupPro
+./install.sh
 ```
-Or execute PyInstaller directly with the `.spec` file:
-```cmd
-python -m PyInstaller --noconfirm app.spec
-```
-The output will be saved in `dist/Bulk Backup Pro.exe`.
+
+#### macOS Installation:
+Extract the `.zip`, drag `BulkSwitchBackupPro.app` to `/Applications`, and open.
 
 ---
 
-## Author & Maintainer
-Made by **Yash Nalawde**
+<div align="center">
+
+<h1><a id="quick-start"></a>Quick Start & Workflow</h1>
+
+</div>
+
+```mermaid
+flowchart LR
+    A["Seed Switch IP\n(e.g. 10.22.36.1)"] --> B["Recursive CDP/LLDP\nDiscovery Crawl"]
+    B --> C{"Hardware Classifier"}
+    C -->|"Catalyst / Nexus"| D["Switch Backup Queue"]
+    C -->|"9800 / AireOS"| E["WLC Backup Queue"]
+    C -->|"Catalyst AP"| F["AP Backup Queue"]
+    C -->|"IP Phone (SEP/CP)"| G["Automatically Skipped"]
+    D --> H["Parallel Workers\n(Up to 30 Threads)"]
+    E --> H
+    F --> H
+    H --> I["Isolated Temp Staging\n(Auto-Purged on Exit)"]
+    I --> J["Save to Folder..."]
+    I --> K["Export ZIP..."]
+```
+
+1. **Input Seed Switch or IP List**:
+   - Provide your seed Core/Distribution switch IP address (or import a batch IP list from text file).
+2. **Configure Multi-Credential Vault**:
+   - Enter your primary network credentials and enable secret. Add fallback credentials to the encrypted vault.
+3. **Select Execution Profile**:
+   - Choose from **Cisco Switch (IOS / IOS-XE)**, **Cisco Nexus (NX-OS)**, **Cisco Catalyst 9800 WLC**, **Cisco AireOS WLC**, or **Custom Profile**.
+4. **Initiate Traversal & Backup**:
+   - Click **Start Backup**. The engine recursively maps the network topology, classifies hardware, captures configurations concurrently, and logs status in real time.
+5. **Export On Demand**:
+   - Backups are safely staged in temporary isolation. Click **Save to Folder...** to persist to your local directory or **Export ZIP...** to download a compressed archive.
+
+---
+
+<div align="center">
+
+<h1><a id="security"></a>Enterprise Security Hardening</h1>
+
+</div>
+
+Bulk Switch Backup Pro is engineered to meet strict corporate cybersecurity standards for enterprise management utilities:
+
+- **Address Space Layout Randomization (ASLR):** Compiled with `HighEntropyVA=true` preventing memory injection attacks.
+- **Data Execution Prevention (DEP):** Strict hardware-enforced code execution boundaries.
+- **Cryptographic Release Verification:** Integrated auto-updater verifies SHA-256 hashes against trusted release manifests prior to staging or execution.
+- **Least-Privilege UAC (`asInvoker`):** The application runs strictly with standard user privileges and never prompts for elevated administrator permissions during normal operation.
+- **Zero-Footprint Session Staging:** Output files remain in isolated temporary storage and are purged automatically upon process termination unless explicitly saved by the user.
+
+---
+
+<div align="center">
+
+<h1><a id="support"></a>Community & Collaboration</h1>
+
+We welcome community feedback, feature requests, and issue reports!
+
+[**Report Bug / Issue**](https://github.com/Majordean0303/Bulk-Switch-Backup/issues) · [**Request Feature**](https://github.com/Majordean0303/Bulk-Switch-Backup/issues) · [**Command Profile Proposals**](https://github.com/Majordean0303/Bulk-Switch-Backup/discussions)
+
+</div>
+
+---
+
+<div align="center">
+
+<h1><a id="author"></a>Author & Attribution</h1>
+
+Designed and engineered by **Yash Nalawde**  
+*M/s Conventus Technologies Pvt. Ltd.*
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Yash%20Nalawde-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yash-nalawde)
+[![GitHub](https://img.shields.io/badge/GitHub-Majordean0303-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Majordean0303)
+
+</div>
+
+---
+
+<div align="center">
+
+<h1><a id="disclaimer"></a>Disclaimer & Legal Notice</h1>
+
+Bulk Switch Backup Pro is an independent network administration and automation utility.
+
+- **Non-Affiliation:** Cisco, Cisco Catalyst, Cisco Nexus, Cisco AireOS, Cisco IOS, Cisco IOS-XE, and Cisco Aironet are registered trademarks of Cisco Systems, Inc. This project is not affiliated with, endorsed by, or sponsored by Cisco Systems, Inc.
+- **Operational Responsibility:** While this application incorporates strict safety mechanisms (including IP phone exclusions, paging suppression, and read-only diagnostic commands), network administrators are solely responsible for verifying command sets against their corporate change control policies before execution on production campus and datacenter networks.
+
+</div>
