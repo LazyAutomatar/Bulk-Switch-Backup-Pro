@@ -400,23 +400,34 @@ public partial class MainViewModel : ObservableObject
                     WriteConfig,
                     BackupDirectory,
                     (source, message) => Dispatcher.UIThread.Post(() => AppendLog(source, message)),
-                    (deviceIp, pct, stat, proto, hostname, isAp) => Dispatcher.UIThread.Post(() =>
+                    (deviceIp, pct, stat, proto, hostname, isAp, uplink, port) => Dispatcher.UIThread.Post(() =>
                     {
-                        var dev = Devices.FirstOrDefault(d => d.IpAddress == deviceIp);
+                        var dev = Devices.FirstOrDefault(d => d.IpAddress == deviceIp || (!string.IsNullOrEmpty(hostname) && HostKey.Same(d.Hostname, hostname)));
                         if (dev == null)
                         {
                             dev = new DeviceModel
                             {
                                 IpAddress = deviceIp,
                                 Hostname = hostname ?? deviceIp,
-                                DeviceType = isAp ? "Access Point" : "Switch"
+                                DeviceType = isAp ? "Access Point" : "Switch",
+                                UplinkDevice = uplink ?? string.Empty,
+                                Port = port ?? string.Empty
                             };
                             Devices.Add(dev);
                         }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(uplink) && string.IsNullOrEmpty(dev.UplinkDevice)) dev.UplinkDevice = uplink;
+                            if (!string.IsNullOrEmpty(port) && string.IsNullOrEmpty(dev.Port)) dev.Port = port;
+                        }
 
-                        if (!string.IsNullOrEmpty(hostname) && dev.Hostname == dev.IpAddress)
+                        if (!string.IsNullOrEmpty(hostname) && (dev.Hostname == dev.IpAddress || dev.Hostname.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase)))
                         {
                             dev.Hostname = hostname;
+                        }
+                        if (!string.IsNullOrEmpty(deviceIp) && !deviceIp.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase) && dev.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            dev.IpAddress = deviceIp;
                         }
                         dev.DeviceType = isAp ? "Access Point" : "Switch";
                         dev.Progress = pct;
@@ -438,6 +449,14 @@ public partial class MainViewModel : ObservableObject
                             dev.IsInProgress = false;
                             dev.StatusColor = "#C42B1C";
                             dev.ProtocolColor = "#E04343";
+                        }
+                        else if (stat.StartsWith("Skipped", StringComparison.OrdinalIgnoreCase))
+                        {
+                            dev.IsFailed = false;
+                            dev.IsCompleted = false;
+                            dev.IsInProgress = false;
+                            dev.StatusColor = "#D97706";
+                            dev.ProtocolColor = "#F59E0B";
                         }
                         else
                         {

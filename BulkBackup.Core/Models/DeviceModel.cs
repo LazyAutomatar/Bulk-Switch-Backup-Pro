@@ -14,6 +14,12 @@ namespace BulkBackup.Core.Models
         private string deviceType = "Switch"; // "Switch" or "Access Point"
 
         [ObservableProperty]
+        private string uplinkDevice = string.Empty;
+
+        [ObservableProperty]
+        private string port = string.Empty;
+
+        [ObservableProperty]
         private string status = "Queued";
 
         [ObservableProperty]

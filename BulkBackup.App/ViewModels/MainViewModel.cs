@@ -571,7 +571,7 @@ namespace BulkBackup.App.ViewModels
                         WriteConfig,
                         BackupDirectory,
                         (source, message) => App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, () => AppendLog(source, message)),
-                        (deviceIp, pct, stat, proto, hostname, isAp) => App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
+                        (deviceIp, pct, stat, proto, hostname, isAp, uplink, port) => App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
                         {
                             var dev = Devices.FirstOrDefault(d => d.IpAddress == deviceIp);
                             if (dev == null)
@@ -580,9 +580,16 @@ namespace BulkBackup.App.ViewModels
                                 {
                                     IpAddress = deviceIp,
                                     Hostname = hostname ?? deviceIp,
-                                    DeviceType = isAp ? "Access Point" : "Switch"
+                                    DeviceType = isAp ? "Access Point" : "Switch",
+                                    UplinkDevice = uplink ?? string.Empty,
+                                    Port = port ?? string.Empty
                                 };
                                 Devices.Add(dev);
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(uplink) && string.IsNullOrEmpty(dev.UplinkDevice)) dev.UplinkDevice = uplink;
+                                if (!string.IsNullOrEmpty(port) && string.IsNullOrEmpty(dev.Port)) dev.Port = port;
                             }
 
                             if (!string.IsNullOrEmpty(hostname) && dev.Hostname == dev.IpAddress)

@@ -1,9 +1,9 @@
 {
-    "sha256": "D276DB49A698B9241D637AFE29C73038BFF85D74F554F592C37AD2670198A8E4",
     "version": "2.5.0",
-    "releaseNotes": "Bulk Switch Backup Pro v2.5.0 Enterprise: Zero-friction temporary session staging, post-backup Save to Folder & Export ZIP choices, automated exit cleanup, ASLR/DEP code hardening, and multi-distro installers.",
-    "downloadUrl": "https://github.com/Majordean0303/Bulk-Switch-Backup/releases/download/v2.5.0/BulkSwitchBackupPro.exe",
-    "publishedAt": "2026-10-20T00:15:00Z",
     "title": "Bulk Switch Backup Pro v2.5.0 Enterprise",
-    "fileSizeBytes": 50285325
+    "releaseNotes": "Bulk Switch Backup Pro v2.5.0 Enterprise: Added 25G Twe (TwentyFiveGigE) port tokenizer support, multi-token port parsing (100G Hu, 40G Fo, 25G Twe, 10G Ten), placeholder IP collision prevention via HostKey matching, hierarchical uplink tracking, and combined CDP/LLDP telemetry ingestion.",
+    "downloadUrl": "https://github.com/Majordean0303/Bulk-Switch-Backup/releases/download/v2.5.0/BulkSwitchBackupPro.exe",
+    "publishedAt": "2026-10-20T01:30:00Z",
+    "sha256": "1FA68F5B6F3C3B0F8DDB1458F452A2A4BBBC89232DA22C7E8AFA97297A9E24B5",
+    "fileSizeBytes": 50291065
 }

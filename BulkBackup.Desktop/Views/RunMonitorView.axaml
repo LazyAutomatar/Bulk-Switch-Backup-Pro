@@ -255,11 +255,13 @@
             <!-- Devices DataGrid with Live Badges -->
             <DataGrid Grid.Row="2" ItemsSource="{Binding Devices}" Margin="0,0,0,10" AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="IP Address" Binding="{Binding IpAddress}" Width="130"/>
-                    <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="180"/>
-                    <DataGridTextColumn Header="Type" Binding="{Binding DeviceType}" Width="110"/>
-                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="90"/>
-                    <DataGridTemplateColumn Header="Progress" Width="140">
+                    <DataGridTextColumn Header="IP Address" Binding="{Binding IpAddress}" Width="125"/>
+                    <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="160"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding DeviceType}" Width="100"/>
+                    <DataGridTextColumn Header="Uplink" Binding="{Binding UplinkDevice}" Width="150"/>
+                    <DataGridTextColumn Header="Port Link" Binding="{Binding Port}" Width="130"/>
+                    <DataGridTextColumn Header="Protocol" Binding="{Binding Protocol}" Width="85"/>
+                    <DataGridTemplateColumn Header="Progress" Width="130">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate x:DataType="models:DeviceModel">
                                 <Grid ColumnDefinitions="*,40" VerticalAlignment="Center" Margin="4,0">
