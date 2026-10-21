@@ -78,6 +78,7 @@ public partial class MainViewModel : ObservableObject
     // Collection Properties
     public ObservableCollection<DeviceModel> Devices { get; } = new();
     public ObservableCollection<CredentialEntry> StoredCredentials { get; } = new();
+    [ObservableProperty] private bool hasStoredCredentials = false;
 
     // Form Inputs for Adding Credentials
     [ObservableProperty] private string newCredProfileName = string.Empty;
@@ -117,6 +118,7 @@ public partial class MainViewModel : ObservableObject
         {
             StoredCredentials.Add(cred);
         }
+        HasStoredCredentials = StoredCredentials.Count > 0;
     }
 
     partial void OnTargetIpsChanged(string value)
