@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <br/>
 
@@ -10,7 +10,7 @@
 
 <br/>
 
-[![Latest Release](https://img.shields.io/badge/Release-v2.5.1%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/Majordean0303/Bulk-Switch-Backup/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v2.5.2%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
 [![Runtime](https://img.shields.io/badge/.NET%208-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
@@ -94,23 +94,23 @@
 
 <h1><a id="downloads"></a>Downloads & Installation</h1>
 
-<a href="https://github.com/Majordean0303/Bulk-Switch-Backup/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/windows/cozy.svg" alt="Download for Windows" height="55"/></a>
-<a href="https://github.com/Majordean0303/Bulk-Switch-Backup/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/apple/cozy.svg" alt="Download for macOS" height="55"/></a>
-<a href="https://github.com/Majordean0303/Bulk-Switch-Backup/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/linux/cozy.svg" alt="Download for Linux" height="55"/></a>
+<a href="https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/windows/cozy.svg" alt="Download for Windows" height="55"/></a>
+<a href="https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/apple/cozy.svg" alt="Download for macOS" height="55"/></a>
+<a href="https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/linux/cozy.svg" alt="Download for Linux" height="55"/></a>
 
 <br/><br/>
 
-### Public Release Artifacts (v2.5.1 Enterprise)
+### Public Release Artifacts (v2.5.2 Enterprise)
 
 | Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- |
-| **Windows** | x64 (64-bit) | Standalone Executable | [`BulkSwitchBackupPro.exe`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro.exe) | `3AE90CF27248FC685224AA7E4F28BFBCBB181B2BEB1133187FAB9ACDF4727C6A` |
-| **Windows** | x64 (64-bit) | Windows Setup Wizard | [`BulkSwitchBackupPro_Setup_v2.5.0.exe`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro_Setup_v2.5.0.exe) | `3F4DDBCD409063EA117D68E3D632825FEAAF94FE7C54C24EAB669204E5ED7D41` |
-| **Windows** | x64 (64-bit) | Portable ZIP Archive | [`BulkSwitchBackupPro-win-x64.zip`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-win-x64.zip) | `9E23E8D601D2AB7502BFEB90548190F89F08BC55B2CBDD005D0AD62827A598A4` |
-| **macOS** | Apple Silicon (M1–M4) | Native `.app` (ZIP) | [`BulkSwitchBackupPro-osx-arm64.zip`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-osx-arm64.zip) | `00794B57E6C9A2977DE5CEB7705550791F28DAAA91C93A73E73A027FC063B4D5` |
-| **macOS** | Intel x64 | Native `.app` (ZIP) | [`BulkSwitchBackupPro-osx-x64.zip`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-osx-x64.zip) | `8E9FADDD71A8096AFA2BF4B59AB2DACFF8C3BCB212DB3C964FCA4BED8E5AD253` |
-| **Linux** | x64 (64-bit) | Native Binary + Desktop | [`BulkSwitchBackupPro-linux-x64.tar.gz`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-linux-x64.tar.gz) | `2600ECB6305FFCFF635863429F356067F90CC3595A5C8BC7231ADBBAF0DE32B9` |
-| **Linux** | ARM64 | Native Binary + Desktop | [`BulkSwitchBackupPro-linux-arm64.tar.gz`](https://github.com/Majordean0303/Bulk-Switch-Backup/releases/latest/download/BulkSwitchBackupPro-linux-arm64.tar.gz) | `E699A11E6718289678DB2F30AFDD7F6216B571E8A461A166ABDB26ACB65A961D` |
+| **Windows** | x64 (64-bit) | Standalone Executable | [`BulkSwitchBackupPro.exe`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro.exe) | `3AE90CF27248FC685224AA7E4F28BFBCBB181B2BEB1133187FAB9ACDF4727C6A` |
+| **Windows** | x64 (64-bit) | Windows Setup Wizard | [`BulkSwitchBackupPro_Setup_v2.5.0.exe`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro_Setup_v2.5.0.exe) | `3F4DDBCD409063EA117D68E3D632825FEAAF94FE7C54C24EAB669204E5ED7D41` |
+| **Windows** | x64 (64-bit) | Portable ZIP Archive | [`BulkSwitchBackupPro-win-x64.zip`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-win-x64.zip) | `9E23E8D601D2AB7502BFEB90548190F89F08BC55B2CBDD005D0AD62827A598A4` |
+| **macOS** | Apple Silicon (M1–M4) | Native `.app` (ZIP) | [`BulkSwitchBackupPro-osx-arm64.zip`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-osx-arm64.zip) | `00794B57E6C9A2977DE5CEB7705550791F28DAAA91C93A73E73A027FC063B4D5` |
+| **macOS** | Intel x64 | Native `.app` (ZIP) | [`BulkSwitchBackupPro-osx-x64.zip`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-osx-x64.zip) | `8E9FADDD71A8096AFA2BF4B59AB2DACFF8C3BCB212DB3C964FCA4BED8E5AD253` |
+| **Linux** | x64 (64-bit) | Native Binary + Desktop | [`BulkSwitchBackupPro-linux-x64.tar.gz`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-linux-x64.tar.gz) | `2600ECB6305FFCFF635863429F356067F90CC3595A5C8BC7231ADBBAF0DE32B9` |
+| **Linux** | ARM64 | Native Binary + Desktop | [`BulkSwitchBackupPro-linux-arm64.tar.gz`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-linux-arm64.tar.gz) | `E699A11E6718289678DB2F30AFDD7F6216B571E8A461A166ABDB26ACB65A961D` |
 
 </div>
 
@@ -185,7 +185,7 @@ Bulk Switch Backup Pro is engineered to meet strict corporate cybersecurity stan
 
 We welcome community feedback, feature requests, and issue reports!
 
-[**Report Bug / Issue**](https://github.com/Majordean0303/Bulk-Switch-Backup/issues) · [**Request Feature**](https://github.com/Majordean0303/Bulk-Switch-Backup/issues) · [**Command Profile Proposals**](https://github.com/Majordean0303/Bulk-Switch-Backup/discussions)
+[**Report Bug / Issue**](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/issues) · [**Request Feature**](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/issues) · [**Command Profile Proposals**](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/discussions)
 
 </div>
 
