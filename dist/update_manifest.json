@@ -1,9 +1,9 @@
-{
-    "version": "2.5.1",
-    "title": "Bulk Switch Backup Pro v2.5.1 Enterprise",
-    "releaseNotes": "Bulk Switch Backup Pro v2.5.1 Enterprise: 25G Twe (TwentyFiveGigE) port tokenizer support, multi-token port parsing (100G Hu, 40G Fo, 25G Twe, 10G Ten), placeholder IP collision prevention via HostKey matching, hierarchical uplink tracking, and combined CDP/LLDP telemetry ingestion.",
-    "downloadUrl": "https://github.com/Majordean0303/Bulk-Switch-Backup/releases/download/v2.5.1/BulkSwitchBackupPro.exe",
-    "publishedAt": "2026-10-20T01:45:00Z",
-    "sha256": "3AE90CF27248FC685224AA7E4F28BFBCBB181B2BEB1133187FAB9ACDF4727C6A",
-    "fileSizeBytes": 50291066
+﻿{
+    "version":  "2.5.2",
+    "title":  "Bulk Switch Backup Pro v2.5.2 Enterprise",
+    "releaseNotes":  "Bulk Switch Backup Pro v2.5.2: Restructured live DataGrid status column, dynamic theme-aware badge pills with SurfaceStroke border, high-contrast foreground legibility in light \u0026 dark themes, and Fluent Classes=\u0027accent\u0027 action buttons.",
+    "downloadUrl":  "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v2.5.2/BulkSwitchBackupPro.exe",
+    "publishedAt":  "2026-10-21T10:31:01Z",
+    "sha256":  "82B88240BFE864F69C52CE6346FB8783C30CA6BB9954BBFE151C2D69D6B14215",
+    "fileSizeBytes":  50291304
 }
