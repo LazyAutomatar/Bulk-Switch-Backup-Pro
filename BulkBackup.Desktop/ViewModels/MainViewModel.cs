@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -25,7 +25,7 @@ public partial class MainViewModel : ObservableObject
     private CancellationTokenSource? _cts;
 
     // Application & Developer Details
-    [ObservableProperty] private string appVersion = "2.5.0 Enterprise";
+    [ObservableProperty] private string appVersion = "2.5.1 Enterprise";
     [ObservableProperty] private string framework = ".NET 8.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";

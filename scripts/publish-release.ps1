@@ -47,7 +47,7 @@ if ($existingTags) {
     throw "Tag $tag already exists in local repository!"
 }
 
-git tag -a $tag -m "Release $tag: Aggregated production build"
+git tag -a $tag -m "Release ${tag} - Aggregated production build"
 Write-Host " Created tag $tag." -ForegroundColor Green
 
 # 4. Push tag
