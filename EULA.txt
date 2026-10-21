@@ -1,0 +1,70 @@
+END-USER LICENSE AGREEMENT (EULA) FOR BULK SWITCH BACKUP PRO
+================================================================================
+IMPORTANT: PLEASE READ THE TERMS AND CONDITIONS OF THIS LICENSE AGREEMENT 
+CAREFULLY BEFORE INSTALLING, COPYING, OR USING BULK SWITCH BACKUP PRO.
+
+Copyright (c) 2026 Yash Nalawde. All rights reserved.
+Official Distribution Channel: https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro
+================================================================================
+
+1. GRANT OF LICENSE (CLOSED SOURCE FREEWARE)
+Yash Nalawde ("Licensor") hereby grants you a personal,
+non-exclusive, non-transferable, royalty-free license to download, install, and 
+run the official binary releases of Bulk Switch Backup Pro ("Software") for 
+both commercial and personal use, including enterprise configuration backups, 
+fleet disaster recovery audits, consulting engagements, and internal evaluations.
+
+2. RESTRICTIONS
+a. Proprietary & Closed Source: The Software is protected by copyright and 
+   intellectual property laws. The Software is licensed as compiled binary 
+   freeware. You shall not decompile, disassemble, reverse engineer, decrypt, 
+   or attempt to derive the source code of the Software or any portion thereof,
+   except to the extent permitted by mandatory applicable law.
+b. No Resale or White-Labeling: You may not sell, rent, lease, sub-license, or 
+   charge commercial fees for the distribution of the Software binary, installer, 
+   or documentation without prior written permission from the Licensor.
+c. Integrity & Notices: You may not modify, alter, or remove any copyright 
+   notices, branding, digital signatures, or proprietary markings from the 
+   Software, its setup packages, or its generated output files and logs.
+d. Unmodified Redistribution: Redistribution of the official, unmodified 
+   binary installers and zip packages is permitted provided that this EULA 
+   remains attached and full credit is attributed to the Licensor.
+
+3. NETWORK SAFETY & READ-ONLY EXTRACTION ASSURANCE
+Bulk Switch Backup Pro is engineered strictly as a non-disruptive, read-only 
+diagnostic and backup utility. Configuration extraction is confined to 
+standard read-only diagnostic commands (e.g., "show running-config", "show version"). 
+Destructive and write commands are suppressed during execution to prevent unexpected 
+state alterations on target network devices.
+
+4. CREDENTIAL PRIVACY & TELEMETRY
+Saved credentials in the application vault are encrypted locally on the host 
+machine using the Windows Data Protection API (DPAPI) tied to the current user. 
+No credentials, device configurations, network topology records, or customer 
+telemetry are ever transmitted to the Licensor or third parties.
+
+5. DISCLAIMER OF WARRANTIES
+THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF ANY 
+KIND, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING, WITHOUT 
+LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+PURPOSE, AND NON-INFRINGEMENT. LICENSOR DOES NOT WARRANT THAT THE FUNCTIONS 
+CONTAINED IN THE SOFTWARE WILL MEET YOUR REQUIREMENTS OR THAT THE OPERATION OF 
+THE SOFTWARE WILL BE UNINTERRUPTED OR ERROR-FREE.
+
+6. LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL YASH 
+NALAWDE, HIS CONTRIBUTORS, OR AFFILIATES BE LIABLE FOR ANY SPECIAL, INCIDENTAL, 
+INDIRECT, OR CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, 
+DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF NETWORK 
+ACCESS, LOSS OF DATA, OR ANY OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF 
+OR INABILITY TO USE THE SOFTWARE, EVEN IF LICENSOR HAS BEEN ADVISED OF THE 
+POSSIBILITY OF SUCH DAMAGES.
+
+7. GOVERNING LAW
+This Agreement shall be governed by and construed in accordance with the laws of 
+India, without giving effect to any principles of conflicts of law.
+
+================================================================================
+For licensing inquiries, bug reporting, or hardware platform requests:
+https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/issues
+================================================================================
