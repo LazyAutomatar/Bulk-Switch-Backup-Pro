@@ -108,7 +108,7 @@ public partial class MainViewModel : ObservableObject
             }
         };
 
-        AppendLog("System", "Bulk Switch Backup Pro v2.5.0 Enterprise ready. Powered by Avalonia UI 11.");
+        AppendLog("System", "Bulk Switch Backup Pro v2.5.2 Enterprise ready. Powered by Avalonia UI 11.");
     }
 
     public void RefreshStoredCredentials()
@@ -800,3 +800,4 @@ public partial class MainViewModel : ObservableObject
         }
     }
 }
+
