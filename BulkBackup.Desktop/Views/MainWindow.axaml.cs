@@ -27,6 +27,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         _serviceProvider = null!;
         _navigationService = null!;
+        UpdateTitleBarMetrics();
     }
 
     public MainWindow(IServiceProvider serviceProvider, MainWindowViewModel viewModel, INavigationService navigationService, AppState appState)
@@ -40,19 +41,7 @@ public partial class MainWindow : Window
         _navigationService.Navigated += OnNavigated;
         RootNavigation.SelectionChanged += OnNavigationSelectionChanged;
 
-        if (OperatingSystem.IsWindows())
-        {
-            TitleBarTrailingContent.Margin = new Thickness(0, 0, 140, 0);
-        }
-        else if (OperatingSystem.IsMacOS())
-        {
-            TitleBarLeadingContent.Margin = new Thickness(76, 0, 0, 0);
-            TitleBarTrailingContent.Margin = new Thickness(0, 0, 12, 0);
-        }
-        else
-        {
-            TitleBarTrailingContent.Margin = new Thickness(0, 0, 12, 0);
-        }
+        UpdateTitleBarMetrics();
 
         // High-DPI auto detection & scaling subscription
         ScalingChanged += (s, e) =>
@@ -135,6 +124,30 @@ public partial class MainWindow : Window
                     return;
                 }
             }
+        }
+    }
+
+    private void UpdateTitleBarMetrics()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            // Windows: Caption buttons take ~138px in top-right. 142px provides a clean ~10-12px gutter.
+            TitleBarLeadingContent.Margin = new Thickness(14, 0, 0, 0);
+            TitleBarTrailingContent.Margin = new Thickness(0, 0, 142, 0);
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            // Apple macOS: Traffic lights (Close/Minimize/Zoom) are on the top-left (0..72px).
+            // 78px clearance prevents any overlap with the traffic lights.
+            // Right side has no window controls, so standard 14px padding.
+            TitleBarLeadingContent.Margin = new Thickness(78, 0, 0, 0);
+            TitleBarTrailingContent.Margin = new Thickness(0, 0, 14, 0);
+        }
+        else
+        {
+            // Linux: Standard symmetric 14px padding.
+            TitleBarLeadingContent.Margin = new Thickness(14, 0, 0, 0);
+            TitleBarTrailingContent.Margin = new Thickness(0, 0, 14, 0);
         }
     }
 
