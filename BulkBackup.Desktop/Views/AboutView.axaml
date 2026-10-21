@@ -60,7 +60,7 @@
                         </Button>
 
                         <Button Command="{Binding CheckForUpdatesCommand}" 
-                                Background="#0284C7" Foreground="#FFFFFF"
+                                Background="{DynamicResource AccentFillColorDefaultBrush}" Foreground="#FFFFFF"
                                 IsEnabled="{Binding !IsCheckingUpdate}"
                                 Height="36" Padding="14,0" Margin="0,0,10,6" Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
