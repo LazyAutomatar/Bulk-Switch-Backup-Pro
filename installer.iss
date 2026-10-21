@@ -1,5 +1,5 @@
 #define MyAppName "Bulk Switch Backup Pro"
-#define MyAppVersion "2.5.0"
+#define MyAppVersion "2.5.2"
 #define MyAppPublisher "Yash Nalawde"
 #define MyAppURL "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro"
 #define MyAppExeName "BulkSwitchBackupPro.exe"
@@ -48,3 +48,4 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
