@@ -45,5 +45,8 @@ namespace BulkBackup.Core.Models
 
         [ObservableProperty]
         private bool isInProgress = false;
+
+        [ObservableProperty]
+        private string elapsedTime = "00:00";
     }
 }

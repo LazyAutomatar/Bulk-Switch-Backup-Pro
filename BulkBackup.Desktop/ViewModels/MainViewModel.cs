@@ -69,6 +69,12 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty] private string lastBackupDirectory = string.Empty;
 
+    // Session Telemetry & Runtime Elapsed Tracking
+    [ObservableProperty] private bool showSessionBanner = false;
+    [ObservableProperty] private string sessionElapsedTime = "00:00";
+    private readonly Stopwatch _sessionStopwatch = new();
+    private readonly DispatcherTimer _sessionTimer = new();
+
     // Collection Properties
     public ObservableCollection<DeviceModel> Devices { get; } = new();
     public ObservableCollection<CredentialEntry> StoredCredentials { get; } = new();
@@ -90,6 +96,16 @@ public partial class MainViewModel : ObservableObject
 
         RefreshStoredCredentials();
         LoadProfileCommands(0);
+
+        _sessionTimer.Interval = TimeSpan.FromSeconds(1);
+        _sessionTimer.Tick += (s, e) =>
+        {
+            if (_sessionStopwatch.IsRunning)
+            {
+                var ts = _sessionStopwatch.Elapsed;
+                SessionElapsedTime = ts.Hours > 0 ? $"{ts.Hours:D2}:{ts.Minutes:D2}:{ts.Seconds:D2}" : $"{ts.Minutes:D2}:{ts.Seconds:D2}";
+            }
+        };
 
         AppendLog("System", "Bulk Switch Backup Pro v2.5.0 Enterprise ready. Powered by Avalonia UI 11.");
     }
@@ -366,6 +382,10 @@ public partial class MainViewModel : ObservableObject
 
         UpdateMetrics();
         IsRunning = true;
+        ShowSessionBanner = true;
+        _sessionStopwatch.Restart();
+        _sessionTimer.Start();
+        SessionElapsedTime = "00:00";
         RunningStatusSummary = $"Starting backup across {ips.Count} target(s)...";
         _appState.UpdateRunningStatus(true, OverallProgress, RunningStatusSummary);
         _cts = new CancellationTokenSource();
@@ -491,6 +511,8 @@ public partial class MainViewModel : ObservableObject
         }
         finally
         {
+            _sessionStopwatch.Stop();
+            _sessionTimer.Stop();
             IsRunning = false;
             foreach (var d in Devices)
             {
