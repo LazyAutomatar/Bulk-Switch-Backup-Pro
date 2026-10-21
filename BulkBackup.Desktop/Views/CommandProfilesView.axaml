@@ -8,9 +8,21 @@
              x:Class="BulkBackup.Desktop.Views.CommandProfilesView"
              x:DataType="vm:MainViewModel">
 
-    <Grid RowDefinitions="Auto,*" Margin="16,14,16,14">
+    <Grid RowDefinitions="Auto,Auto,*" Margin="16,14,16,14">
+        <!-- Safety Guard Banner -->
+        <Border Grid.Row="0" CornerRadius="8" Padding="14,10" Margin="0,0,0,12"
+                Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                BorderBrush="{DynamicResource SystemFillColorCautionBrush}" BorderThickness="1">
+            <DockPanel LastChildFill="True">
+                <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Help" FontSize="18"
+                               Foreground="{DynamicResource SystemFillColorCautionBrush}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <TextBlock Text="Read-only diagnostic policy enforced: configuration push and destructive commands (configure terminal, write, copy, reload, erase, debug, clear) are suppressed at execution time."
+                           FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+            </DockPanel>
+        </Border>
+
         <!-- Top Bar: Cohesive Toolbar -->
-        <Border Grid.Row="0"
+        <Border Grid.Row="1"
                 Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1" CornerRadius="8"
@@ -51,7 +63,7 @@
         </Border>
 
         <!-- Custom Commands Editor Area -->
-        <Border Grid.Row="1"
+        <Border Grid.Row="2"
                 Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1" CornerRadius="8" Padding="14"
