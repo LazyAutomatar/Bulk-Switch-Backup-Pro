@@ -1,4 +1,4 @@
-name: Release Pipeline
+﻿name: Release Pipeline
 
 # Builds from this PRIVATE repo and publishes the release assets to the PUBLIC
 # releases repo (RELEASES_REPO). Needs the RELEASES_PAT secret: a fine-grained
@@ -93,7 +93,6 @@ jobs:
             dist/update_manifest.json
             dist/BulkSwitchBackup*.exe
             dist/BulkSwitchBackup*.zip
-            dist/*.cer
 
       - name: Sync documentation, EULA, and assets to public repo
         shell: pwsh
