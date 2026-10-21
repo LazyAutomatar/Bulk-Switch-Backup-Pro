@@ -1,9 +1,9 @@
 {
-    "version":  "2.5.2",
-    "title":  "Bulk Switch Backup Pro v2.5.2 Enterprise",
-    "releaseNotes":  "Bulk Switch Backup Pro v2.5.2: Restructured live DataGrid status column, dynamic theme-aware badge pills with SurfaceStroke border, high-contrast foreground legibility in light & dark themes, and Fluent Classes='accent' action buttons.",
-    "downloadUrl":  "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v2.5.2/BulkSwitchBackupPro.exe",
-    "publishedAt":  "2026-10-21T12:47:00Z",
-    "sha256":  "39A13B1DE2725E77109A542CCDC4CF19FDA19DBC07F6445BBF339F33FCB7554A",
-    "fileSizeBytes":  50299639
+    "version":  "2.5.3",
+    "title":  "Bulk Switch Backup Pro v2.5.3 Enterprise",
+    "releaseNotes":  "Bulk Switch Backup Pro v2.5.3: In-app auto-update verification build. Enhanced version reporting, dynamic theme-aware badge pills, and automated GitHub releases workflow pipeline.",
+    "downloadUrl":  "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v2.5.3/BulkSwitchBackupPro.exe",
+    "publishedAt":  "2026-10-21T13:07:00Z",
+    "sha256":  "00D77CCD77193FEF4EC5B8D7642AABDE8D6B0E0DD83A4B57BD34E7DF42C2A980",
+    "fileSizeBytes":  50299646
 }

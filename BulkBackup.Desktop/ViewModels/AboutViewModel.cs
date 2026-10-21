@@ -13,7 +13,7 @@ public partial class AboutViewModel : ObservableObject
 {
     private readonly UpdateService _updateService;
 
-    [ObservableProperty] private string appVersion = "2.5.2 Enterprise";
+    [ObservableProperty] private string appVersion = "2.5.3 Enterprise";
     [ObservableProperty] private string framework = ".NET 8.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
@@ -170,4 +170,5 @@ public partial class AboutViewModel : ObservableObject
         catch { }
     }
 }
+
 

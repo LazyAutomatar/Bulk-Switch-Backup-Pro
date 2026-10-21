@@ -134,14 +134,14 @@ function Publish-Target {
             Write-Host "`n>>> [Building Windows Setup Installer (exe)]..." -ForegroundColor Yellow
             & $iscc "$issScript" /Q
             if ($LASTEXITCODE -eq 0) {
-                $setupVer = Join-Path $DistDir "BulkSwitchBackupPro_Setup_v2.5.2.exe"
+                $setupVer = Join-Path $DistDir "BulkSwitchBackupPro_Setup_v2.5.3.exe"
                 $setupGen = Join-Path $DistDir "BulkSwitchBackupPro_Setup.exe"
                 if (Test-Path $setupVer) {
                     Copy-Item $setupVer -Destination $setupGen -Force
                     $setupSize = [math]::Round((Get-Item $setupVer).Length / 1MB, 2)
                     $results.Add([PSCustomObject]@{
                         Platform = "Windows Installer (.exe)"
-                        Package = "dist\BulkSwitchBackupPro_Setup_v2.5.2.exe"
+                        Package = "dist\BulkSwitchBackupPro_Setup_v2.5.3.exe"
                         Size = "$setupSize MB"
                     })
                 }
@@ -266,4 +266,5 @@ Write-Host "=================================================================" -
 
 $results | Format-Table -Property Platform, Package, Size -AutoSize
 Write-Host "All distribution packages ready in: $DistDir`n" -ForegroundColor Cyan
+
 
