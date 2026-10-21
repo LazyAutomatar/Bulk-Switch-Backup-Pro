@@ -1,0 +1,131 @@
+name: Release Pipeline
+
+# Builds from this PRIVATE repo and publishes the release assets to the PUBLIC
+# releases repo (RELEASES_REPO). Needs the RELEASES_PAT secret: a fine-grained
+# token with "Contents: Read and write" on RELEASES_REPO only.
+#
+# Release:  git tag v2.5.0 && git push origin v2.5.0
+# Beta:     git tag v2.5.0-beta.1 && git push origin v2.5.0-beta.1  (published as pre-release)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for release (e.g. v2.5.0)'
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  RELEASES_REPO: LazyAutomatar/Bulk-Switch-Backup-Pro
+
+jobs:
+  build-and-release:
+    name: Build & Publish Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Resolve version from tag
+        id: ver
+        shell: pwsh
+        env:
+          TAG_NAME: ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name }}
+        run: |
+          if ($env:TAG_NAME -notmatch '^v\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$') {
+            throw "Bad tag '$($env:TAG_NAME)'. Use vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-beta.1"
+          }
+          $version = $env:TAG_NAME.TrimStart('v')
+          "tag=$($env:TAG_NAME)" >> $env:GITHUB_OUTPUT
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "prerelease=$($version.Contains('-').ToString().ToLower())" >> $env:GITHUB_OUTPUT
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) {
+            choco install innosetup -y --no-progress
+          }
+
+      - name: Run Cross-Compiler Pipeline
+        shell: pwsh
+        run: |
+          ./publish-all.ps1 -Configuration Release -Version "${{ steps.ver.outputs.version }}" -Repo "$env:RELEASES_REPO"
+
+      - name: Verify artifacts
+        shell: pwsh
+        run: |
+          foreach ($f in "dist/update_manifest.json", "dist/BulkSwitchBackup_Setup.exe", "dist/BulkSwitchBackup-win-x64.zip") {
+            if (-not (Test-Path $f)) { 
+              Write-Host "Warning: Checking artifact $f" 
+            }
+          }
+          if (Test-Path "dist/update_manifest.json") {
+            $m = Get-Content dist/update_manifest.json -Raw | ConvertFrom-Json
+            Write-Host "Manifest version: $($m.version)"
+          }
+
+      - name: Publish to public releases repo
+        uses: softprops/action-gh-release@v2
+        with:
+          repository: ${{ env.RELEASES_REPO }}
+          token: ${{ secrets.RELEASES_PAT }}
+          tag_name: ${{ steps.ver.outputs.tag }}
+          name: "Bulk Switch Backup Pro ${{ steps.ver.outputs.tag }}"
+          draft: false
+          prerelease: ${{ steps.ver.outputs.prerelease == 'true' }}
+          generate_release_notes: true
+          fail_on_unmatched_files: false
+          files: |
+            dist/update_manifest.json
+            dist/BulkSwitchBackup*.exe
+            dist/BulkSwitchBackup*.zip
+            dist/*.cer
+
+      - name: Sync documentation, EULA, and assets to public repo
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_PAT }}
+          REPO: ${{ env.RELEASES_REPO }}
+        run: |
+          Write-Host "Syncing documentation and EULA to $env:REPO..."
+          $tmpDir = Join-Path $env:RUNNER_TEMP "public-repo-sync"
+          if (Test-Path $tmpDir) { Remove-Item -Recurse -Force $tmpDir }
+          git clone "https://x-access-token:${env:GH_TOKEN}@github.com/$env:REPO.git" $tmpDir
+          
+          if (Test-Path "README.md") { Copy-Item "README.md" "$tmpDir\README.md" -Force }
+          if (Test-Path "EULA.txt") { Copy-Item "EULA.txt" "$tmpDir\EULA.txt" -Force }
+          if (Test-Path "LICENSE.md") { Copy-Item "LICENSE.md" "$tmpDir\LICENSE.md" -Force }
+          if (Test-Path "CHANGELOG.md") { Copy-Item "CHANGELOG.md" "$tmpDir\CHANGELOG.md" -Force }
+          if (Test-Path "Logo.png") { Copy-Item "Logo.png" "$tmpDir\Logo.png" -Force }
+          if (Test-Path "Assets") {
+            if (-not (Test-Path "$tmpDir\Assets")) { New-Item -ItemType Directory -Path "$tmpDir\Assets" -Force }
+            Copy-Item "Assets\*" "$tmpDir\Assets" -Recurse -Force
+          }
+          
+          Push-Location $tmpDir
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          $hasChanges = (git status --porcelain).Length -gt 0
+          if ($hasChanges) {
+            git commit -m "docs: sync README, EULA, and release assets for ${{ steps.ver.outputs.tag }}"
+            git push origin main
+            Write-Host "Successfully synced README, EULA, and assets to $env:REPO" -ForegroundColor Green
+          } else {
+            Write-Host "Public repository docs are already up to date." -ForegroundColor Cyan
+          }
+          Pop-Location

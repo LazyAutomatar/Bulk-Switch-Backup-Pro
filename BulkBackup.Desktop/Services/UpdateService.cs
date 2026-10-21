@@ -94,7 +94,7 @@ public class UpdateService
     };
 
     public const string DefaultCurrentVersion = "2.5.0";
-    public const string GitHubRepo = "Majordean0303/Bulk-Switch-Backup";
+    public const string GitHubRepo = "LazyAutomatar/Bulk-Switch-Backup-Pro";
 
     static UpdateService()
     {
