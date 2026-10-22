@@ -49,7 +49,7 @@ function Publish-Target {
     )
 
     Write-Host "`n>>> [Building $DisplayName] RID: $Rid..." -ForegroundColor Yellow
-    $publishOut = Join-Path $ProjectDir "bin\$Configuration\net8.0\$Rid\publish"
+    $publishOut = Join-Path $ProjectDir "bin\$Configuration\net10.0\$Rid\publish"
 
     dotnet publish "$ProjectDir\BulkBackup.Desktop.csproj" `
         -c $Configuration `

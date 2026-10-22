@@ -1,0 +1,7 @@
+Local Interface: GigabitEthernet1/0/1
+Chassis id: 0011.2233.4455
+Port id: GigabitEthernet1/0/48
+System Name: ACCESS-02.example.test
+System Description: cisco C9300-24P
+System Capabilities: Bridge
+Management Address: 192.0.2.2
