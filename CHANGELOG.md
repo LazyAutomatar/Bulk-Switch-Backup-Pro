@@ -26,3 +26,6 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 - Preserve completed backup exports after cancellation and dispose session cancellation sources.
 - Align packaging parameters, installer version, release artifact names and update-manifest generation; use native tar on Unix.
+
+### Serial migration handoff
+- Add the nine-app review dashboard with independent draft PRs, validation counts, topology provenance and the explicit firmware build-only exception.

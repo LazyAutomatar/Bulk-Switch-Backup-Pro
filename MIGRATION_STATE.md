@@ -77,3 +77,7 @@ route); its CLI tests remain **SKIPPED — requested exception**.
 - Fixed partial-result export availability after cancellation and packaging/workflow contracts identified above.
 - Native Windows/macOS rendering, real-device runs, installer execution, and non-Windows persistent credential-vault parity remain manual review items. Existing Windows DPAPI storage is preserved; use direct session credentials on other platforms.
 - Continue with CiscoTechSupportAnalyzer after the updated local core/build check.
+
+## Nine-app continuation complete
+
+The user's later instruction authorized continuing through all nine applications before morning review. See `MIGRATION_OVERVIEW.md` for all draft PRs, per-app test counts and hardware/native UI gates. The first eight have 330 core and 14 headless UI checks; firmware retains the explicit build/static-only exception. No main branches or releases were advanced.
