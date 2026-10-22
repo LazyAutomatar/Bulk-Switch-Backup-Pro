@@ -26,6 +26,7 @@
 ## 2. UI Architecture & Design Language
 
 ### 2.1 Technology Stack & Core Frameworks
+- **Runtime:** **.NET 10 LTS**, with SDK selection in `global.json`.
 - **Framework:** **Avalonia UI 11.2.5** (Cross-platform for Windows, macOS, and Linux) with SkiaSharp rendering.
 - **Controls & Styling:** **FluentAvaloniaUI 2.1.0** (faithful implementation of Windows 11 Fluent Design / WinUI 3 controls).
 - **MVVM Architecture:** **CommunityToolkit.Mvvm 8.4.2** (`[ObservableProperty]`, `[RelayCommand]`, `ObservableObject`).
@@ -60,7 +61,15 @@ Window metrics are adjusted dynamically at runtime in `MainWindow.axaml.cs` via 
 - **Workflow During Development/Fixes:**
   1. Make code edits.
   2. Verify with `.\scripts\test-all.ps1`.
-  3. Commit to `main` without creating tags.
+  3. Commit to the active `migration/avalonia/<app>` branch without creating tags; open a draft PR and leave `main` unchanged until review/merge.
 - **Workflow When Ready to Deploy a Release Milestone:**
   1. Run `.\scripts\prepare-release.ps1 -Version X.Y.Z`.
   2. Publish the coordinated release with `.\scripts\publish-release.ps1 -Version X.Y.Z -ConfirmPublish`.
+
+## 4. Serial Migration and Offline Validation
+
+- Read `MIGRATION_STATE.md` for the active checkpoint and `MIGRATION_ROADMAP.md` for the nine-app sequence and locked decisions.
+- Run `./scripts/test-core.ps1` for offline core validation; use `-Filter 'FullyQualifiedName~Cancellation' -NoRestore` for focused checks.
+- Run `./scripts/test-all.ps1` for the full core gate and Avalonia desktop build. A successful build alone is not a passing test suite.
+- Validation artifacts live under ignored `artifacts/`. The core runner prints counts and failing test names, and rejects zero executed tests.
+- Tests inject `IBackupTransport` and use synthetic documentation-network addresses. Do not replace these with live-device calls or real credentials.
