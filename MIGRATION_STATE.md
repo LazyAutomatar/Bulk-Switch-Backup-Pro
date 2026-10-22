@@ -69,3 +69,11 @@ handover app use selective, provenance-tracked topology upgrades, not a shared
 package rewrite. Firmware must apply `pnpa service discovery stop` immediately
 on privileged connection/reconnection (or an explicitly configured management
 route); its CLI tests remain **SKIPPED — requested exception**.
+
+## Continued execution (22 October 2026)
+
+- Morning review is owned by the user; continue serial implementation of the remaining apps without waiting for a merge.
+- Core checkpoint CI passed on Linux, Windows and macOS (PR #1).
+- Fixed partial-result export availability after cancellation and packaging/workflow contracts identified above.
+- Native Windows/macOS rendering, real-device runs, installer execution, and non-Windows persistent credential-vault parity remain manual review items. Existing Windows DPAPI storage is preserved; use direct session credentials on other platforms.
+- Continue with CiscoTechSupportAnalyzer after the updated local core/build check.

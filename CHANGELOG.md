@@ -23,3 +23,6 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 - Write completed backup files through temporary siblings and preserve earlier backups when capture fails.
 - Apply branding-audit directory exclusions on both Unix and Windows paths.
 - Pin the patched Tmds.DBus.Protocol 0.21.3 backport instead of Avalonia's vulnerable transitive version.
+
+- Preserve completed backup exports after cancellation and dispose session cancellation sources.
+- Align packaging parameters, installer version, release artifact names and update-manifest generation; use native tar on Unix.

@@ -68,9 +68,9 @@ jobs:
       - name: Verify artifacts
         shell: pwsh
         run: |
-          foreach ($f in "dist/update_manifest.json", "dist/BulkSwitchBackup_Setup.exe", "dist/BulkSwitchBackup-win-x64.zip") {
-            if (-not (Test-Path $f)) { 
-              Write-Host "Warning: Checking artifact $f" 
+          foreach ($f in "dist/update_manifest.json", "dist/BulkSwitchBackupPro_Setup.exe", "dist/BulkSwitchBackupPro-win-x64.zip") {
+            if (-not (Test-Path $f)) {
+              throw "Missing release artifact $f"
             }
           }
           if (Test-Path "dist/update_manifest.json") {
@@ -91,8 +91,8 @@ jobs:
           fail_on_unmatched_files: false
           files: |
             dist/update_manifest.json
-            dist/BulkSwitchBackup*.exe
-            dist/BulkSwitchBackup*.zip
+            dist/BulkSwitchBackupPro*.exe
+            dist/BulkSwitchBackupPro*.zip
 
       - name: Sync documentation, EULA, and assets to public repo
         shell: pwsh
@@ -104,7 +104,7 @@ jobs:
           $tmpDir = Join-Path $env:RUNNER_TEMP "public-repo-sync"
           if (Test-Path $tmpDir) { Remove-Item -Recurse -Force $tmpDir }
           git clone "https://x-access-token:${env:GH_TOKEN}@github.com/$env:REPO.git" $tmpDir
-          
+
           if (Test-Path "README.md") { Copy-Item "README.md" "$tmpDir\README.md" -Force }
           if (Test-Path "EULA.txt") { Copy-Item "EULA.txt" "$tmpDir\EULA.txt" -Force }
           if (Test-Path "LICENSE.md") { Copy-Item "LICENSE.md" "$tmpDir\LICENSE.md" -Force }
@@ -114,7 +114,7 @@ jobs:
             if (-not (Test-Path "$tmpDir\Assets")) { New-Item -ItemType Directory -Path "$tmpDir\Assets" -Force }
             Copy-Item "Assets\*" "$tmpDir\Assets" -Recurse -Force
           }
-          
+
           Push-Location $tmpDir
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

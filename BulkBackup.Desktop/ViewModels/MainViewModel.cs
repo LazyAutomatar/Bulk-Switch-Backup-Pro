@@ -513,6 +513,9 @@ public partial class MainViewModel : ObservableObject
         }
         finally
         {
+            HasCompletedBackups = Directory.Exists(LastBackupDirectory) && Directory.EnumerateFiles(LastBackupDirectory, "*.txt").Any();
+            _cts?.Dispose();
+            _cts = null;
             _sessionStopwatch.Stop();
             _sessionTimer.Stop();
             IsRunning = false;
