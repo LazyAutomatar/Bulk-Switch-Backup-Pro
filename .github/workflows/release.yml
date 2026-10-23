@@ -40,6 +40,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Load and validate public code-signing identity
+        if: (github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name) != 'v3.0.2'
         shell: pwsh
         env:
           SIGNING_PFX_BASE64: ${{ secrets.WINDOWS_SIGNING_PFX_BASE64 }}
@@ -79,11 +80,35 @@ jobs:
           }
 
       - name: Run Cross-Compiler Pipeline
+        if: (github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name) != 'v3.0.2'
         shell: pwsh
         env:
           CERT_PASS: ${{ secrets.WINDOWS_SIGNING_PFX_PASSWORD }}
         run: |
           ./publish-all.ps1 -Configuration Release -Version "${{ steps.ver.outputs.version }}" -Repo "$env:RELEASES_REPO"
+
+      - name: Retrieve locally signed Windows packages for owner-authorized v3.0.2
+        if: steps.ver.outputs.tag == 'v3.0.2'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_PAT }}
+        run: |
+          New-Item -ItemType Directory -Path dist -Force | Out-Null
+          gh release download v3.0.2 --repo "$env:RELEASES_REPO" --dir dist --clobber --pattern '*.exe' --pattern '*win-x64.zip' --pattern 'update_manifest.json' --pattern '*.cer'
+          if ($LASTEXITCODE -ne 0) { throw 'Locally signed draft artifacts are required.' }
+          foreach ($file in @('BulkSwitchBackupPro.exe', 'BulkSwitchBackupPro_Setup.exe', 'BulkSwitchBackupPro_Setup_v3.0.2.exe')) {
+            $path = Join-Path dist $file
+            $signature = Get-AuthenticodeSignature -LiteralPath $path
+            if ($signature.SignerCertificate.Thumbprint -ne '6C7AA04A7196660417CCE9B5C5BD42ED84408366' -or $null -eq $signature.TimeStamperCertificate -or $signature.Status -notin @('Valid', 'NotTrusted', 'UnknownError')) {
+              throw "Unexpected signature on $file"
+            }
+            if ((Get-Item -LiteralPath $path).VersionInfo.CompanyName -ne 'Yash Nalawde') { throw "Incorrect author on $file" }
+          }
+          $manifest = Get-Content dist/update_manifest.json -Raw | ConvertFrom-Json
+          if ($manifest.version -ne '3.0.2' -or $manifest.sha256 -ne (Get-FileHash dist/BulkSwitchBackupPro_Setup.exe -Algorithm SHA256).Hash.ToLowerInvariant() -or $manifest.fileSizeBytes -ne (Get-Item dist/BulkSwitchBackupPro_Setup.exe).Length) { throw 'Installer manifest mismatch.' }
+          Write-Warning 'Owner-authorized self-signed release: Windows trust warnings remain expected. Private signing key stays on the owner laptop.'
+          ./publish-all.ps1 -Target mac -Configuration Release -Version 3.0.2 -Repo "$env:RELEASES_REPO"
+          ./publish-all.ps1 -Target linux -Configuration Release -Version 3.0.2 -Repo "$env:RELEASES_REPO"
 
       - name: Extract version-specific release notes
         shell: pwsh
@@ -119,6 +144,7 @@ jobs:
             dist/BulkSwitchBackupPro*.exe
             dist/BulkSwitchBackupPro*.zip
             dist/BulkSwitchBackupPro*.tar.gz
+            dist/BulkSwitchBackupPro*.cer
 
       - name: Sync documentation, EULA, and assets to public repo
         shell: pwsh
@@ -145,8 +171,8 @@ jobs:
           }
 
           Push-Location $tmpDir
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "Yash Nalawde"
+          git config user.email "146139825+Majordean0303@users.noreply.github.com"
           git add -A
           $hasChanges = (git status --porcelain).Length -gt 0
           if ($hasChanges) {

@@ -1,9 +1,9 @@
 {
-    "version":  "2.5.3",
-    "title":  "Bulk Switch Backup Pro v2.5.3 Enterprise",
-    "releaseNotes":  "Bulk Switch Backup Pro v2.5.3: In-app auto-update verification build. Enhanced version reporting, dynamic theme-aware badge pills, and automated GitHub releases workflow pipeline.",
-    "downloadUrl":  "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v2.5.3/BulkSwitchBackupPro.exe",
-    "publishedAt":  "2026-10-21T13:07:00Z",
-    "sha256":  "00D77CCD77193FEF4EC5B8D7642AABDE8D6B0E0DD83A4B57BD34E7DF42C2A980",
-    "fileSizeBytes":  50299646
+  "version": "3.0.2",
+  "title": "Bulk Switch Backup Pro 3.0.2",
+  "releaseNotes": "### Packaging\n- Sign the Windows application before archiving/embedding it, sign the setup installer, verify publisher signatures and timestamps, and generate update hashes after signing.\n- Keep Yash Nalawde as author and installer publisher. This owner-authorized public release uses a timestamped self-signed certificate; Windows may still show Unknown publisher or SmartScreen warnings. Future releases require trusted signing by default.\n\n### Fixed\n- Keep title-bar zoom controls from initiating window dragging or double-click maximization.\n- Fit initial window bounds to the monitor working area at its display density, including smaller high-DPI screens.\n- Keep the header unscaled and visible while zoomed content scrolls; adapt navigation and secondary header badges to the available width.",
+  "publishedAt": "2026-10-23T09:09:29.1492613Z",
+  "downloadUrl": "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.2/BulkSwitchBackupPro_Setup.exe",
+  "sha256": "57bc5bb890b5f78065fe97b0da61c0915d98d5d6e86db4aaeee1eb34c1c55b31",
+  "fileSizeBytes": 47377440
 }

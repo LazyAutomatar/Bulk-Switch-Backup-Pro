@@ -14,7 +14,7 @@ public partial class AboutViewModel : ObservableObject
 {
     private readonly IUpdateService _updateService;
 
-    [ObservableProperty] private string appVersion = "3.0.1 Enterprise";
+    [ObservableProperty] private string appVersion = "3.0.2 Enterprise";
     [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";

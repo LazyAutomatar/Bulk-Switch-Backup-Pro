@@ -3,6 +3,7 @@ param(
     [string]$Target = "all",
     [string]$Configuration = "Release",
     [string]$Version,
+    [switch]$AllowDevelopmentCertificate,
     [ValidatePattern('^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$')][string]$Repo = "LazyAutomatar/Bulk-Switch-Backup-Pro"
 )
 
@@ -43,7 +44,7 @@ function Get-InnoCompiler {
 
 $buildWin = $Target -eq "all" -or $Target -eq "win" -or $Target -eq "win-x64"
 if ($buildWin) {
-    & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -CheckCertificateOnly
+    & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -CheckCertificateOnly -AllowDevelopmentCertificate:$AllowDevelopmentCertificate
 }
 $buildMacArm = $Target -eq "all" -or $Target -eq "mac" -or $Target -eq "osx-arm64"
 $buildMacX64 = $Target -eq "all" -or $Target -eq "mac" -or $Target -eq "osx-x64"
@@ -93,7 +94,7 @@ function Publish-Target {
         # Sync standalone .exe to dist root
         $mainExe = Join-Path $winTargetDir "BulkSwitchBackupPro.exe"
         if (Test-Path $mainExe) {
-            & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $mainExe
+            & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $mainExe -AllowDevelopmentCertificate:$AllowDevelopmentCertificate
             $destExe = Join-Path $DistDir "BulkSwitchBackupPro.exe"
             for ($attempt = 1; $attempt -le 5; $attempt++) {
                 try {
@@ -149,7 +150,7 @@ function Publish-Target {
                 $setupVer = Join-Path $DistDir "BulkSwitchBackupPro_Setup_v$Version.exe"
                 $setupGen = Join-Path $DistDir "BulkSwitchBackupPro_Setup.exe"
                 if (Test-Path $setupVer) {
-                    & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $setupVer
+                    & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $setupVer -AllowDevelopmentCertificate:$AllowDevelopmentCertificate
                     Copy-Item $setupVer -Destination $setupGen -Force
                     $setupSize = [math]::Round((Get-Item $setupVer).Length / 1MB, 2)
                     $results.Add([PSCustomObject]@{

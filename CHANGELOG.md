@@ -4,9 +4,11 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.0.2] - 2026-10-23
+
 ### Packaging
 - Sign the Windows application before archiving/embedding it, sign the setup installer, verify publisher signatures and timestamps, and generate update hashes after signing.
-- Require a trusted signing identity for public releases; support explicitly requested self-signed development installers without changing machine trust stores.
+- Keep Yash Nalawde as author and installer publisher. This owner-authorized public release uses a timestamped self-signed certificate; Windows may still show Unknown publisher or SmartScreen warnings. Future releases require trusted signing by default.
 
 ### Fixed
 - Keep title-bar zoom controls from initiating window dragging or double-click maximization.

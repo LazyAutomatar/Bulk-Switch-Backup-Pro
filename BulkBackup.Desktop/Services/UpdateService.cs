@@ -98,7 +98,7 @@ public class UpdateService : IUpdateService
         Timeout = TimeSpan.FromSeconds(15)
     };
 
-    public const string DefaultCurrentVersion = "3.0.1";
+    public const string DefaultCurrentVersion = "3.0.2";
     public const string GitHubRepo = "LazyAutomatar/Bulk-Switch-Backup-Pro";
 
     static UpdateService()
