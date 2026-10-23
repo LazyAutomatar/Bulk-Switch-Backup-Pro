@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -78,6 +79,9 @@ public class GitHubAssetDto
 
     [JsonPropertyName("size")]
     public long Size { get; set; }
+
+    [JsonPropertyName("digest")]
+    public string? Digest { get; set; }
 }
 
 public class GitHubTagDto
@@ -86,14 +90,15 @@ public class GitHubTagDto
     public string Name { get; set; } = string.Empty;
 }
 
-public class UpdateService
+public class UpdateService : IUpdateService
 {
+    public bool SupportsInstallation => OperatingSystem.IsWindows();
     private static readonly HttpClient HttpClient = new()
     {
         Timeout = TimeSpan.FromSeconds(15)
     };
 
-    public const string DefaultCurrentVersion = "2.5.4";
+    public const string DefaultCurrentVersion = "3.0.0";
     public const string GitHubRepo = "LazyAutomatar/Bulk-Switch-Backup-Pro";
 
     static UpdateService()
@@ -229,37 +234,7 @@ public class UpdateService
                 };
             }
 
-            string cleanLatest = release.TagName.TrimStart('v', 'V');
-            bool isNewer = CompareVersions(cleanLatest, currentVer) > 0;
-
-            // Find executable asset (.exe)
-            string? downloadUrl = null;
-            long fileSize = 0;
-            if (release.Assets != null)
-            {
-                foreach (var asset in release.Assets)
-                {
-                    if (asset.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-                    {
-                        downloadUrl = asset.BrowserDownloadUrl;
-                        fileSize = asset.Size;
-                        break;
-                    }
-                }
-            }
-
-            return new UpdateInfo
-            {
-                CurrentVersion = currentVer,
-                LatestVersion = cleanLatest,
-                IsUpdateAvailable = isNewer,
-                Title = release.Name ?? $"Version {cleanLatest}",
-                ReleaseNotes = release.Body ?? string.Empty,
-                DownloadUrl = downloadUrl,
-                PublishedAt = release.PublishedAt,
-                FileSizeBytes = fileSize,
-                ErrorMessage = null
-            };
+            return DescribeRelease(release, currentVer);
         }
         catch (Exception ex)
         {
@@ -271,6 +246,28 @@ public class UpdateService
                 ErrorMessage = $"GitHub update check failed: {ex.Message}"
             };
         }
+    }
+
+    public static UpdateInfo DescribeRelease(GitHubReleaseDto release, string currentVersion)
+    {
+        string version = release.TagName.TrimStart('v', 'V');
+        var installer = release.Assets.FirstOrDefault(asset => asset.Name.Equals(
+            "BulkSwitchBackupPro_Setup.exe", StringComparison.OrdinalIgnoreCase))
+            ?? release.Assets.FirstOrDefault(asset => asset.Name.Equals(
+                $"BulkSwitchBackupPro_Setup_v{version}.exe", StringComparison.OrdinalIgnoreCase));
+        string? checksum = installer?.Digest;
+        checksum = checksum?.StartsWith("sha256:", StringComparison.OrdinalIgnoreCase) == true
+            ? checksum[7..] : null;
+        if (checksum != null && (checksum.Length != 64 || !checksum.All(Uri.IsHexDigit))) checksum = null;
+        return new UpdateInfo
+        {
+            CurrentVersion = currentVersion, LatestVersion = version,
+            IsUpdateAvailable = CompareVersions(version, currentVersion) > 0,
+            Title = release.Name, PublishedAt = release.PublishedAt,
+            ReleaseNotes = ChangelogService.NotesForVersion(version, release.Body),
+            DownloadUrl = installer?.BrowserDownloadUrl, FileSizeBytes = installer?.Size ?? 0,
+            Sha256 = checksum
+        };
     }
 
     private async Task<UpdateInfo?> CheckGitHubTagsAsync(string currentVer, CancellationToken ct)
@@ -308,7 +305,7 @@ public class UpdateService
                 IsUpdateAvailable = isNewer,
                 Title = $"Version {latestTag}",
                 ReleaseNotes = isNewer ? $"New release tag v{latestTag} available on GitHub." : string.Empty,
-                DownloadUrl = isNewer ? $"https://github.com/{GitHubRepo}/releases/download/v{latestTag}/BulkSwitchBackupPro.exe" : null,
+                DownloadUrl = null, // A tag alone does not prove a package has been published.
                 ErrorMessage = null
             };
         }
@@ -436,6 +433,7 @@ public class UpdateService
     /// </summary>
     public void LaunchInstallerAndExit(string installerPath)
     {
+        if (!SupportsInstallation) throw new PlatformNotSupportedException("Download the matching package from the releases page on macOS or Linux.");
         if (!File.Exists(installerPath))
         {
             throw new FileNotFoundException("Installer executable was not found.", installerPath);

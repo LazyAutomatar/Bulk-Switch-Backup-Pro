@@ -69,6 +69,10 @@ jobs:
         run: |
           ./publish-all.ps1 -Configuration Release -Version "${{ steps.ver.outputs.version }}" -Repo "$env:RELEASES_REPO"
 
+      - name: Extract version-specific release notes
+        shell: pwsh
+        run: ./scripts/release-notes.ps1 -Version "${{ steps.ver.outputs.version }}" -OutputPath artifacts/release-notes.md
+
       - name: Verify artifacts
         shell: pwsh
         run: |
@@ -91,7 +95,7 @@ jobs:
           name: "Bulk Switch Backup Pro ${{ steps.ver.outputs.tag }}"
           draft: false
           prerelease: ${{ steps.ver.outputs.prerelease == 'true' }}
-          body_path: CHANGELOG.md
+          body_path: artifacts/release-notes.md
           generate_release_notes: false
           fail_on_unmatched_files: false
           files: |
@@ -115,6 +119,9 @@ jobs:
           if (Test-Path "EULA.txt") { Copy-Item "EULA.txt" "$tmpDir\EULA.txt" -Force }
           if (Test-Path "LICENSE.md") { Copy-Item "LICENSE.md" "$tmpDir\LICENSE.md" -Force }
           if (Test-Path "CHANGELOG.md") { Copy-Item "CHANGELOG.md" "$tmpDir\CHANGELOG.md" -Force }
+          if (Test-Path "PLATFORM_SUPPORT.md") { Copy-Item "PLATFORM_SUPPORT.md" "$tmpDir\PLATFORM_SUPPORT.md" -Force }
+          New-Item -ItemType Directory -Path "$tmpDir\dist" -Force | Out-Null
+          Copy-Item "dist/update_manifest.json" "$tmpDir\dist\update_manifest.json" -Force
           if (Test-Path "Logo.png") { Copy-Item "Logo.png" "$tmpDir\Logo.png" -Force }
           if (Test-Path "Assets") {
             if (-not (Test-Path "$tmpDir\Assets")) { New-Item -ItemType Directory -Path "$tmpDir\Assets" -Force }

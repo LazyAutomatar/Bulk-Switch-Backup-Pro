@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -11,24 +12,29 @@ namespace BulkBackup.Desktop.ViewModels;
 
 public partial class AboutViewModel : ObservableObject
 {
-    private readonly UpdateService _updateService;
+    private readonly IUpdateService _updateService;
 
-    [ObservableProperty] private string appVersion = "2.5.4 Enterprise";
+    [ObservableProperty] private string appVersion = "3.0.0 Enterprise";
     [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
     [ObservableProperty] private string developerGitHub = "https://github.com/Majordean0303";
 
     // Auto-Update Management
-    [ObservableProperty] private bool isCheckingUpdate;
-    [ObservableProperty] private bool isDownloadingUpdate;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanReviewUpdate))] private bool isCheckingUpdate;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanReviewUpdate))] private bool isDownloadingUpdate;
     [ObservableProperty] private double downloadProgress;
     [ObservableProperty] private string updateStatusText = string.Empty;
     [ObservableProperty] private bool hasUpdateMessage;
-    [ObservableProperty] private bool isUpdateAvailable;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanReviewUpdate))] private bool isUpdateAvailable;
     [ObservableProperty] private string latestVersion = string.Empty;
     [ObservableProperty] private string releaseNotes = string.Empty;
     [ObservableProperty] private string customManifestUrl = string.Empty;
+    [ObservableProperty] private bool isReviewingUpdate;
+    public bool CanInstallUpdates => _updateService.SupportsInstallation;
+    public bool CanReviewUpdate => CanInstallUpdates && IsUpdateAvailable && !IsCheckingUpdate &&
+        !IsDownloadingUpdate && !string.IsNullOrWhiteSpace(_latestUpdateInfo?.DownloadUrl);
+    public ObservableCollection<ChangelogEntry> ChangelogHistory { get; } = new();
 
     private UpdateInfo? _latestUpdateInfo;
 
@@ -38,9 +44,10 @@ public partial class AboutViewModel : ObservableObject
         "Logs"
     );
 
-    public AboutViewModel(UpdateService updateService)
+    public AboutViewModel(IUpdateService updateService)
     {
         _updateService = updateService;
+        foreach (var entry in ChangelogService.LoadInstalledHistory()) ChangelogHistory.Add(entry);
     }
 
     public AboutViewModel() : this(new UpdateService()) { }
@@ -54,6 +61,10 @@ public partial class AboutViewModel : ObservableObject
         HasUpdateMessage = true;
         UpdateStatusText = "Checking for new releases...";
         IsUpdateAvailable = false;
+        IsReviewingUpdate = false;
+        _latestUpdateInfo = null;
+        LatestVersion = string.Empty;
+        ReleaseNotes = string.Empty;
 
         try
         {
@@ -73,7 +84,8 @@ public partial class AboutViewModel : ObservableObject
             {
                 IsUpdateAvailable = true;
                 LatestVersion = result.LatestVersion;
-                ReleaseNotes = result.ReleaseNotes;
+                ReleaseNotes = ChangelogService.NotesForVersion(result.LatestVersion, result.ReleaseNotes);
+                SyncIncomingVersionToChangelog(result.LatestVersion, ReleaseNotes, result.PublishedAt);
                 UpdateStatusText = $"New version available: v{result.LatestVersion}!";
             }
             else
@@ -94,11 +106,37 @@ public partial class AboutViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ReviewUpdate()
+    {
+        if (CanReviewUpdate) IsReviewingUpdate = true;
+    }
+
+    [RelayCommand]
+    private void CancelUpdateReview() => IsReviewingUpdate = false;
+
+    public void SyncIncomingVersionToChangelog(string version, string notes, DateTime? publishedAt = null)
+    {
+        string tag = "v" + version.Trim().TrimStart('v', 'V');
+        if (tag == "v") return;
+        var incoming = new ChangelogEntry(tag, publishedAt?.ToString("yyyy-MM-dd") ?? "Upcoming release",
+            ChangelogService.NotesForVersion(version, notes));
+        for (int i = 0; i < ChangelogHistory.Count; i++)
+        {
+            if (!string.Equals(ChangelogHistory[i].VersionTag, tag, StringComparison.OrdinalIgnoreCase)) continue;
+            ChangelogHistory[i] = incoming;
+            return;
+        }
+        ChangelogHistory.Insert(0, incoming);
+    }
+
+    [RelayCommand]
     private async Task DownloadAndInstallUpdateAsync()
     {
-        if (_latestUpdateInfo == null || !_latestUpdateInfo.IsUpdateAvailable || IsDownloadingUpdate) return;
+        if (_latestUpdateInfo == null || !_latestUpdateInfo.IsUpdateAvailable || IsDownloadingUpdate ||
+            IsCheckingUpdate || !IsReviewingUpdate || !CanInstallUpdates) return;
 
         IsDownloadingUpdate = true;
+        IsReviewingUpdate = false;
         DownloadProgress = 0.0;
         UpdateStatusText = "Downloading update package...";
 
@@ -120,6 +158,13 @@ public partial class AboutViewModel : ObservableObject
             UpdateStatusText = $"Download failed: {ex.Message}";
             IsDownloadingUpdate = false;
         }
+    }
+
+    [RelayCommand]
+    private void OpenReleases()
+    {
+        try { Process.Start(new ProcessStartInfo("https://github.com/" + UpdateService.GitHubRepo + "/releases") { UseShellExecute = true }); }
+        catch (Exception ex) { UpdateStatusText = $"Could not open releases: {ex.Message}"; }
     }
 
     [RelayCommand]

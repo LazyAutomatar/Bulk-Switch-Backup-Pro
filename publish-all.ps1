@@ -15,6 +15,7 @@ if (-not $Version) {
     $Version = [string]$project.Project.PropertyGroup.Version
 }
 if ($Version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$') { throw "Invalid release version." }
+$releaseNotes = & (Join-Path $ScriptDir 'scripts/release-notes.ps1') -Version $Version
 
 if (-not (Test-Path $DistDir)) {
     New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
@@ -282,7 +283,7 @@ if ($buildWin) {
     if (-not (Test-Path $installer)) { throw 'Windows update manifest requires a successfully built Inno Setup installer.' }
     $manifest = [ordered]@{
         version = $Version; title = "Bulk Switch Backup Pro $Version"
-        releaseNotes = "See CHANGELOG.md for release details."
+        releaseNotes = $releaseNotes
         publishedAt = [DateTime]::UtcNow.ToString('o')
         downloadUrl = "https://github.com/$Repo/releases/download/v$Version/BulkSwitchBackupPro_Setup.exe"
         sha256 = (Get-FileHash $installer -Algorithm SHA256).Hash.ToLowerInvariant()

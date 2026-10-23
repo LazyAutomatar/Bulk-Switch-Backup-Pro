@@ -9,11 +9,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="Avalonia.Headless.XUnit" Version="11.2.5" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <ProjectReference Include="../BulkBackup.Core/BulkBackup.Core.csproj" />
+    <ProjectReference Include="../BulkBackup.Desktop/BulkBackup.Desktop.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Fixtures/**" CopyToOutputDirectory="PreserveNewest" />

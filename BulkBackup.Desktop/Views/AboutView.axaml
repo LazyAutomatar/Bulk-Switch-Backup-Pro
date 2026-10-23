@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:vm="using:BulkBackup.Desktop.ViewModels"
+             xmlns:services="using:BulkBackup.Desktop.Services"
              mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="1050"
              x:Class="BulkBackup.Desktop.Views.AboutView"
              x:DataType="vm:AboutViewModel">
@@ -40,7 +41,7 @@
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Framework}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Supported Platforms:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Cisco Catalyst (IOS / IOS-XE), Nexus (NX-OS), Catalyst 9800 &amp; AireOS WLCs, Aironet &amp; Catalyst APs" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8" TextWrapping="Wrap"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Auto OS detection across 29 CLI families: Cisco, Arista, Juniper, Aruba, HPE, Dell, Extreme and more. See the platform support matrix for firmware limits." Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8" TextWrapping="Wrap"/>
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Discovery Mode:" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="Direct IP &amp; CIDR subnet range input or autonomous recursive CDP/LLDP topology crawl" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8" TextWrapping="Wrap"/>
@@ -83,25 +84,68 @@
 
                             <!-- Upgrade Action (Visible only when update is available) -->
                             <StackPanel Margin="0,10,0,0" IsVisible="{Binding IsUpdateAvailable}">
-                                <TextBlock Text="{Binding ReleaseNotes}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,10" MaxHeight="80"/>
+                                <TextBlock Text="{Binding LatestVersion, StringFormat='{}Available release: v{0}'}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,12">
+                                    <SelectableTextBlock x:Name="IncomingReleaseNotes" Text="{Binding ReleaseNotes}" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap"/>
+                                </ScrollViewer>
 
                                 <ProgressBar Value="{Binding DownloadProgress}" Maximum="1.0" Height="6" Margin="0,0,0,10"
                                              Foreground="{DynamicResource AccentFillColorDefaultBrush}"
                                              IsVisible="{Binding IsDownloadingUpdate}"/>
 
-                                <Button Command="{Binding DownloadAndInstallUpdateCommand}"
-                                        Background="{DynamicResource AccentFillColorDefaultBrush}" Foreground="#FFFFFF"
-                                        IsEnabled="{Binding !IsDownloadingUpdate}"
+                                <Button Command="{Binding ReviewUpdateCommand}"
+                                        IsVisible="{Binding CanInstallUpdates}"
+                                        IsEnabled="{Binding CanReviewUpdate}"
                                         Height="36" Padding="16,0" HorizontalAlignment="Left" Cursor="Hand">
                                     <StackPanel Orientation="Horizontal">
-                                        <ui:SymbolIcon Symbol="Save" FontSize="15" Margin="0,0,8,0" Foreground="#FFFFFF"/>
-                                        <TextBlock Text="Download &amp; Install Update" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                                        <ui:SymbolIcon Symbol="Document" FontSize="15" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Review Update" FontWeight="SemiBold"/>
                                     </StackPanel>
                                 </Button>
+                                <Border x:Name="UpdateReviewPanel" IsVisible="{Binding IsReviewingUpdate}" Padding="16" Margin="0,12,0,0" CornerRadius="8"
+                                        BorderThickness="1" BorderBrush="{DynamicResource AccentFillColorDefaultBrush}">
+                                    <StackPanel Spacing="10">
+                                        <TextBlock Text="{Binding LatestVersion, StringFormat='{}Upgrade to v{0}?'}" FontWeight="Bold"/>
+                                        <TextBlock Text="Review the release notes above. Continuing downloads the installer and closes this app to run the upgrade. Save your backup exports first." TextWrapping="Wrap"/>
+                                        <WrapPanel>
+                                            <Button Content="Download &amp; Install" Command="{Binding DownloadAndInstallUpdateCommand}" Margin="0,0,10,6"/>
+                                            <Button Content="Cancel" Command="{Binding CancelUpdateReviewCommand}" Margin="0,0,0,6"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </Border>
+                                <Button Content="Open Release Downloads" Command="{Binding OpenReleasesCommand}" HorizontalAlignment="Left" Margin="0,10,0,0"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
                 </StackPanel>
+            </Border>
+
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="8" Margin="0,0,0,16" Padding="20">
+                <Expander x:Name="ChangelogExpander" Header="Release Changelog &amp; History" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Installed release history is available offline. Check for updates to preview the next release before upgrading."
+                                   TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <ScrollViewer MaxHeight="480" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding ChangelogHistory}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="services:ChangelogEntry">
+                                        <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="6" Padding="14" Margin="0,0,0,12">
+                                            <StackPanel Spacing="8">
+                                                <WrapPanel>
+                                                    <TextBlock Text="{Binding VersionTag}" FontWeight="Bold" Margin="0,0,14,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                                    <TextBlock Text="{Binding ReleaseDate}" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                                </WrapPanel>
+                                                <SelectableTextBlock Text="{Binding Notes}" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Expander>
             </Border>
 
             <!-- Card 2: Developer Details Card -->

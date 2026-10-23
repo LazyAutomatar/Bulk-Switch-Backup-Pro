@@ -45,6 +45,7 @@ public partial class App : Application
         services.AddSingleton<AppState>();
         services.AddSingleton<CredentialStore>();
         services.AddSingleton<UpdateService>();
+        services.AddSingleton<IUpdateService>(provider => provider.GetRequiredService<UpdateService>());
         services.AddSingleton<IDialogService, AvaloniaDialogService>();
         services.AddSingleton<INavigationService, NavigationService>();
 
