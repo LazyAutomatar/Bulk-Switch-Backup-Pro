@@ -9,8 +9,8 @@ public class ChangelogAndUpdateTests
     public void PackagedHistoryIncludesCurrentAndPreviousReleaseOffline()
     {
         var history = ChangelogService.LoadInstalledHistory();
-        Assert.Equal("v3.0.0", history[0].VersionTag);
-        Assert.Contains("29 CLI families", history[0].Notes);
+        Assert.Equal("v" + UpdateService.DefaultCurrentVersion, history[0].VersionTag);
+        Assert.Contains(history, entry => entry.Notes.Contains("29 CLI families"));
         Assert.Contains(history, entry => entry.VersionTag == "v2.5.4");
         Assert.DoesNotContain(history, entry => entry.VersionTag.Contains("Unreleased"));
     }

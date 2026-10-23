@@ -59,6 +59,7 @@ public partial class App : Application
         services.AddTransient<RunMonitorView>();
         services.AddTransient<CredentialsView>();
         services.AddTransient<CommandProfilesView>();
+        services.AddTransient<CommandResultsView>();
         services.AddTransient<AboutView>();
     }
 }

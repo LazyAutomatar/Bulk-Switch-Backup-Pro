@@ -140,6 +140,11 @@
                             <ui:SymbolIconSource Symbol="Document"/>
                         </ui:NavigationViewItem.IconSource>
                     </ui:NavigationViewItem>
+                    <ui:NavigationViewItem Content="Command Results" Tag="Results">
+                        <ui:NavigationViewItem.IconSource>
+                            <ui:SymbolIconSource Symbol="Document"/>
+                        </ui:NavigationViewItem.IconSource>
+                    </ui:NavigationViewItem>
                 </ui:NavigationView.MenuItems>
 
                 <ui:NavigationView.FooterMenuItems>

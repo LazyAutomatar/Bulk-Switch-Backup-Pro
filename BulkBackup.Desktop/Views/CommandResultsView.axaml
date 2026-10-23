@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:BulkBackup.Desktop.ViewModels" xmlns:controls="using:BulkBackup.Desktop.Controls"
+             x:Class="BulkBackup.Desktop.Views.CommandResultsView" x:DataType="vm:MainViewModel">
+    <UserControl.Styles>
+        <Style Selector="ScrollBar"><Setter Property="Opacity" Value="1"/></Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="Auto,Auto,2*,*" Margin="20">
+        <StackPanel Spacing="6" Margin="0,0,0,14">
+            <TextBlock Text="Command Results" FontSize="24" FontWeight="Bold"/>
+            <TextBlock Text="Failed command attempts from the current run. Working commands continue after CLI rejections. Partial diagnostics can be exported with the other backup files; they are not complete configuration backups."
+                       TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+        </StackPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,14">
+            <TextBox x:Name="FailureSearch" Text="{Binding CommandFailureFilter}" Watermark="Filter by device IP, hostname, command or error"/>
+            <TextBlock Grid.Column="1" Margin="16,0" VerticalAlignment="Center" Text="{Binding CommandFailureCount, StringFormat='{}{0} failed attempts'}"/>
+            <Button Grid.Column="2" Content="Export failed commands" Command="{Binding ExportCommandFailuresCommand}" IsEnabled="{Binding HasCommandFailures}"/>
+        </Grid>
+        <controls:ResultsDataGrid x:Name="FailedCommandsTable" Grid.Row="2" ItemsSource="{Binding VisibleCommandFailures}"
+                                 SelectedItem="{Binding SelectedCommandFailure}" IsReadOnly="True" AutoGenerateColumns="False"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Time" Binding="{Binding Time, StringFormat='{}{0:HH:mm:ss}'}" Width="100"/>
+                <DataGridTextColumn Header="Device IP" Binding="{Binding IpAddress}" Width="150"/>
+                <DataGridTextColumn Header="Hostname" Binding="{Binding Hostname}" Width="190"/>
+                <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*" MinWidth="280"/>
+                <DataGridTextColumn Header="Error" Binding="{Binding Error}" Width="150"/>
+            </DataGrid.Columns>
+        </controls:ResultsDataGrid>
+        <StackPanel Grid.Row="2" IsVisible="{Binding !HasCommandFailures}" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+            <TextBlock Text="No failed commands recorded yet."/>
+        </StackPanel>
+        <Grid Grid.Row="3" RowDefinitions="Auto,*" Margin="0,14,0,0">
+            <TextBlock Text="{Binding SelectedCommandFailure.Command, TargetNullValue='Select a failed command to inspect the device response.'}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+            <TextBox x:Name="FailedCommandResponse" Grid.Row="1" Text="{Binding SelectedCommandFailure.Response}" IsReadOnly="True"
+                     AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas, Cascadia Code, Courier New"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        </Grid>
+    </Grid>
+</UserControl>

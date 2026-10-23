@@ -37,7 +37,7 @@ public class AboutViewTests
             Assert.False(expander.IsExpanded);
             expander.IsExpanded = true;
             Assert.NotEmpty(vm.ChangelogHistory);
-            Assert.Equal("v3.0.0", vm.ChangelogHistory[0].VersionTag);
+            Assert.Equal("v" + BulkBackup.Desktop.Services.UpdateService.DefaultCurrentVersion, vm.ChangelogHistory[0].VersionTag);
             await vm.CheckForUpdatesCommand.ExecuteAsync(null);
             Dispatcher.UIThread.RunJobs();
             Assert.Equal("New features", view.FindControl<SelectableTextBlock>("IncomingReleaseNotes")!.Text);

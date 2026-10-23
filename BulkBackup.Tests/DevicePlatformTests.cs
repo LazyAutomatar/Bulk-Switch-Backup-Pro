@@ -140,7 +140,9 @@ public sealed class DevicePlatformTests : IDisposable
         await Run();
         Assert.Equal(original, File.ReadAllText(file));
         Assert.DoesNotContain(_statuses, s => s.StartsWith("Completed"));
-        Assert.Single(Directory.GetFiles(_directory));
+        string partial = Assert.Single(Directory.GetFiles(_directory, "*.partial-diagnostics.txt"));
+        Assert.Contains("NOT A COMPLETE CONFIGURATION BACKUP", File.ReadAllText(partial));
+        Assert.Contains(_statuses, s => s.StartsWith("Partial diagnostics saved"));
     }
 
     [Fact]

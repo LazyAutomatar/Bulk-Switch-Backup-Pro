@@ -19,6 +19,7 @@ public partial class MainWindow : Window
         { "Run", typeof(RunMonitorView) },
         { "Credentials", typeof(CredentialsView) },
         { "Profiles", typeof(CommandProfilesView) },
+        { "Results", typeof(CommandResultsView) },
         { "About", typeof(AboutView) }
     };
 

@@ -1,4 +1,7 @@
 using Avalonia.Controls;
+using Avalonia;
+using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -119,7 +122,45 @@ public class RunMonitorAndProfilesTests
             Dispatcher.UIThread.RunJobs();
             Assert.True(popup.MinWidth >= 520);
             Assert.True(popup.Child!.Bounds.Width >= 500);
+            Assert.Equal(PlacementMode.BottomEdgeAlignedLeft, popup.Placement);
+            Assert.Equal(0, popup.HorizontalOffset);
             selector.IsDropDownOpen = false;
+            Dispatcher.UIThread.RunJobs();
+            var horizontal = grid.GetVisualDescendants().OfType<ScrollBar>().First(b => b.Orientation == Orientation.Horizontal && b.Maximum > 0);
+            double initialOffset = horizontal.Value;
+            var wheelPoint = horizontal.TranslatePoint(new Point(horizontal.Bounds.Width / 2, horizontal.Bounds.Height / 2), window)!.Value;
+            window.MouseWheel(wheelPoint, new Vector(0, -1), RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(horizontal.Value > initialOffset, "Wheel over the horizontal scrollbar must move the table.");
+            double afterBar = horizontal.Value;
+            var cellPoint = grid.TranslatePoint(new Point(500, 70), window)!.Value;
+            window.MouseWheel(cellPoint, new Vector(0, -1), RawInputModifiers.Shift);
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(horizontal.Value > afterBar, "Shift+wheel must scroll the table horizontally.");
+        }
+        finally { window.Close(); }
+    }
+
+    [AvaloniaFact]
+    public void FailedCommandViewFiltersDevicesAndShowsRawRejection()
+    {
+        using var fixture = new UiFixture();
+        var vm = fixture.ViewModel;
+        vm.RecordCommandFailure(new(DateTimeOffset.Now, "192.0.2.1", "ACCESS", "show running-config", "Rejected", "% Authorization failed"));
+        vm.RecordCommandFailure(new(DateTimeOffset.Now, "192.0.2.2", "CORE", "show vlan", "Rejected", "% Invalid input"));
+        var view = new CommandResultsView(vm);
+        var window = new Window { Width = 1200, Height = 800, Content = view };
+        try
+        {
+            window.Show();
+            Assert.Equal(2, vm.CommandFailureCount);
+            vm.CommandFailureFilter = "192.0.2.2";
+            Dispatcher.UIThread.RunJobs();
+            Assert.Single(vm.VisibleCommandFailures);
+            Assert.Equal("% Invalid input", view.FindControl<TextBox>("FailedCommandResponse")!.Text);
+            Capture(window, "command-results");
+            vm.CommandFailureFilter = "running-config";
+            Assert.Equal("192.0.2.1", Assert.Single(vm.VisibleCommandFailures).IpAddress);
         }
         finally { window.Close(); }
     }

@@ -19,6 +19,10 @@ public class ProfileComboBox : ComboBox
             if (popup == null) return;
             popup.MinWidth = 520;
             popup.Width = Math.Max(520, Bounds.Width);
+            popup.PlacementTarget = this;
+            popup.Placement = PlacementMode.BottomEdgeAlignedLeft;
+            popup.HorizontalOffset = 0;
+            popup.VerticalOffset = 4;
         };
     }
 }

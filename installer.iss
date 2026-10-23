@@ -1,6 +1,6 @@
 #define MyAppName "Bulk Switch Backup Pro"
 #ifndef MyAppVersion
-#define MyAppVersion "3.0.0"
+#define MyAppVersion "3.0.1"
 #endif
 #define MyAppPublisher "Yash Nalawde"
 #define MyAppURL "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro"

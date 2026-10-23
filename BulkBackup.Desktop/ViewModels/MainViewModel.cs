@@ -22,10 +22,18 @@ public partial class MainViewModel : ObservableObject
     private readonly CredentialStore _credStore;
     private readonly IDialogService _dialogService;
     private readonly AppState _appState;
+    private readonly INavigationService? _navigationService;
+    public ObservableCollection<CommandFailure> CommandFailures { get; } = new();
+    public ObservableCollection<CommandFailure> VisibleCommandFailures { get; } = new();
+    [ObservableProperty] private CommandFailure? selectedCommandFailure;
+    [ObservableProperty] private DeviceModel? selectedDevice;
+    [ObservableProperty] private string commandFailureFilter = string.Empty;
+    public int CommandFailureCount => CommandFailures.Count;
+    public bool HasCommandFailures => CommandFailureCount > 0;
     private CancellationTokenSource? _cts;
 
     // Application & Developer Details
-    [ObservableProperty] private string appVersion = "3.0.0 Enterprise";
+    [ObservableProperty] private string appVersion = "3.0.1 Enterprise";
     [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
@@ -111,11 +119,12 @@ public partial class MainViewModel : ObservableObject
     // Live Execution Console Stream
     [ObservableProperty] private string logs = string.Empty;
 
-    public MainViewModel(CredentialStore credStore, IDialogService dialogService, AppState appState)
+    public MainViewModel(CredentialStore credStore, IDialogService dialogService, AppState appState, INavigationService? navigationService = null)
     {
         _credStore = credStore;
         _dialogService = dialogService;
         _appState = appState;
+        _navigationService = navigationService;
 
         RefreshStoredCredentials();
         LoadProfileCommands(SelectedProfileIndex);
@@ -456,6 +465,12 @@ public partial class MainViewModel : ObservableObject
         }
 
         var engine = new NetworkEngine();
+        CommandFailures.Clear();
+        VisibleCommandFailures.Clear();
+        SelectedCommandFailure = null;
+        OnPropertyChanged(nameof(CommandFailureCount));
+        OnPropertyChanged(nameof(HasCommandFailures));
+        engine.CommandFailed += RecordCommandFailure;
         // All accesses occur on the UI thread; workers only post immutable update values.
         var devicesByIp = Devices.ToDictionary(d => d.IpAddress, StringComparer.OrdinalIgnoreCase);
         var placeholdersByName = new Dictionary<string, DeviceModel>(StringComparer.OrdinalIgnoreCase);
@@ -526,7 +541,7 @@ public partial class MainViewModel : ObservableObject
                             dev.StatusColor = "#107C41";
                             dev.ProtocolColor = "#2D7D9A";
                         }
-                        else if (stat.StartsWith("Failed", StringComparison.OrdinalIgnoreCase) || stat.Contains("Auth Failed") || proto == "ERR")
+                        else if (stat.StartsWith("Failed", StringComparison.OrdinalIgnoreCase) || stat.StartsWith("Partial", StringComparison.OrdinalIgnoreCase) || stat.Contains("Auth Failed") || proto == "ERR")
                         {
                             dev.IsFailed = true;
                             dev.IsCompleted = false;
@@ -561,8 +576,8 @@ public partial class MainViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(UpdateMetrics, DispatcherPriority.Background);
             LastBackupDirectory = resultDir;
             HasCompletedBackups = Directory.Exists(resultDir) && Directory.EnumerateFileSystemEntries(resultDir).Any();
-            RunningStatusSummary = $"Completed. {CompletedDevicesCount} backed up, {FailedDevicesCount} failed.";
-            AppendLog("System", "All backup tasks successfully finalized.");
+            RunningStatusSummary = $"Finished. {CompletedDevicesCount} complete backups; {FailedDevicesCount} incomplete or failed. See Command Results.";
+            AppendLog("System", "Backup processing finished. Review partial captures and failed commands in Command Results.");
             AppendLog("System", "Backups staged in temporary session workspace. Use 'Save to Folder...' or 'Export ZIP...' to save your files.");
         }
         catch (OperationCanceledException)
@@ -592,7 +607,57 @@ public partial class MainViewModel : ObservableObject
             }
             UpdateMetrics();
             _appState.UpdateRunningStatus(false, OverallProgress, RunningStatusSummary);
+            if (HasCommandFailures)
+            {
+                CommandFailureFilter = string.Empty;
+                _navigationService?.Navigate<BulkBackup.Desktop.Views.CommandResultsView>();
+            }
         }
+    }
+
+    public void RecordCommandFailure(CommandFailure failure)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Post(() => RecordCommandFailure(failure));
+            return;
+        }
+        CommandFailures.Add(failure);
+        if (MatchesCommandFilter(failure)) VisibleCommandFailures.Add(failure);
+        SelectedCommandFailure ??= VisibleCommandFailures.FirstOrDefault();
+        OnPropertyChanged(nameof(CommandFailureCount));
+        OnPropertyChanged(nameof(HasCommandFailures));
+    }
+
+    private bool MatchesCommandFilter(CommandFailure failure) => string.IsNullOrWhiteSpace(CommandFailureFilter) ||
+        $"{failure.IpAddress} {failure.Hostname} {failure.Command} {failure.Error}".Contains(CommandFailureFilter.Trim(), StringComparison.OrdinalIgnoreCase);
+
+    partial void OnCommandFailureFilterChanged(string value)
+    {
+        VisibleCommandFailures.Clear();
+        foreach (var failure in CommandFailures.Where(MatchesCommandFilter)) VisibleCommandFailures.Add(failure);
+        SelectedCommandFailure = VisibleCommandFailures.FirstOrDefault();
+    }
+
+    [RelayCommand]
+    private void OpenCommandFailures()
+    {
+        CommandFailureFilter = SelectedDevice?.IpAddress ?? string.Empty;
+        _navigationService?.Navigate<BulkBackup.Desktop.Views.CommandResultsView>();
+    }
+
+    [RelayCommand]
+    private async Task ExportCommandFailuresAsync()
+    {
+        if (!HasCommandFailures) return;
+        string? path = await _dialogService.ShowSaveFileDialogAsync("Export failed commands", "failed-commands.json", "json", "JSON report");
+        if (path == null) return;
+        try
+        {
+            await File.WriteAllTextAsync(path, System.Text.Json.JsonSerializer.Serialize(CommandFailures.ToArray(),
+                new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+        }
+        catch (Exception ex) { await _dialogService.ShowMessageAsync("Export failed", ex.Message); }
     }
 
     [RelayCommand]

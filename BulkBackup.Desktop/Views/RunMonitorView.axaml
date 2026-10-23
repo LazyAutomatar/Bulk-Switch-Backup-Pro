@@ -269,10 +269,10 @@
             </Border>
 
             <!-- Keep status and progress visible first; topology detail can scroll horizontally. -->
-            <DataGrid x:Name="DeviceResults" Grid.Row="2" ItemsSource="{Binding Devices}" Margin="0,0,0,10"
+            <controls:ResultsDataGrid x:Name="DeviceResults" SelectedItem="{Binding SelectedDevice}" Grid.Row="2" ItemsSource="{Binding Devices}" Margin="0,0,0,10"
                       AutoGenerateColumns="False" IsReadOnly="True" RowHeight="56" CanUserResizeColumns="True"
                       FrozenColumnCount="2" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                <DataGrid.Styles>
+                <controls:ResultsDataGrid.Styles>
                     <Style Selector="DataGridCell">
                         <Setter Property="Padding" Value="10,6"/>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -282,8 +282,8 @@
                         <Setter Property="Padding" Value="10,10"/>
                     </Style>
                     <Style Selector="ScrollBar"><Setter Property="Opacity" Value="1"/></Style>
-                </DataGrid.Styles>
-                <DataGrid.Columns>
+                </controls:ResultsDataGrid.Styles>
+                <controls:ResultsDataGrid.Columns>
                     <DataGridTextColumn Header="IP Address" Binding="{Binding IpAddress}" Width="140" MinWidth="140"/>
                     <DataGridTemplateColumn Header="Hostname" Width="190" MinWidth="160">
                         <DataGridTemplateColumn.CellTemplate>
@@ -334,8 +334,8 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                </controls:ResultsDataGrid.Columns>
+            </controls:ResultsDataGrid>
             <!-- Live Console & Action Strip -->
             <Grid Grid.Row="3" RowDefinitions="Auto,*">
                 <Border Grid.Row="0" Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4,4,0,0" Padding="10,6">
@@ -346,6 +346,7 @@
                         </StackPanel>
 
                         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button Content="Failed commands" Command="{Binding OpenCommandFailuresCommand}" Height="26" Margin="0,0,6,0"/>
                             <Button Command="{Binding SaveToFolderCommand}" IsEnabled="{Binding HasCompletedBackups}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand" ToolTip.Tip="Save all device backups to a selected local directory">
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Folder" FontSize="12" Margin="0,0,4,0"/>
