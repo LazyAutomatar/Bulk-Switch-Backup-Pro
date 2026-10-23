@@ -38,6 +38,7 @@
                         <ComboBoxItem Content="Cisco Catalyst 9800 WLC (IOS-XE)"/>
                         <ComboBoxItem Content="Cisco AireOS WLC (5520 / 8540 / 3504)"/>
                         <ComboBoxItem Content="Custom CLI Command Script"/>
+                        <ComboBoxItem Content="Auto-detect (multi-vendor switches / WLC)"/>
                     </ComboBox>
                     <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" Margin="10,0,0,0" VerticalAlignment="Center">
                         <TextBlock Text="{Binding CommandCount, StringFormat='{}{0} Commands'}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
@@ -80,3 +81,4 @@
         </Border>
     </Grid>
 </UserControl>
+

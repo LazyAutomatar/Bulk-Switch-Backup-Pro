@@ -81,3 +81,28 @@ route); its CLI tests remain **SKIPPED — requested exception**.
 ## Nine-app continuation complete
 
 The user's later instruction authorized continuing through all nine applications before morning review. See `MIGRATION_OVERVIEW.md` for all draft PRs, per-app test counts and hardware/native UI gates. The first eight have 330 core and 14 headless UI checks; firmware retains the explicit build/static-only exception. No main branches or releases were advanced.
+
+
+## Multi-vendor backup feature (23 October 2026)
+
+- Separate branch: `feature/platform-detection-command-validation`, based on
+  main commit `970de06e83aa5d75e2ec24f94f5fee69b75a93a3`.
+- Add default Auto mode, 29 OS-family templates, identity evidence, command
+  rejection checks, targeted syntax fallback, vendor prompts/pagers and required
+  configuration capture before replacing a backup. Preserve explicit Custom
+  scripts, worker limits, credential fallback, cancellation and atomic writes.
+- Cisco IOS/NX-OS defaults are narrowed to a portable baseline. Catalyst 9800
+  and AireOS command dialects are separated and corrected.
+- See `PLATFORM_SUPPORT.md` for the matrix and boundaries. Live firmware/device
+  validation and native desktop interaction remain unverified. Recursive
+  discovery remains Cisco-oriented; use direct management IPs for mixed fleets.
+- Offline validation: `scripts/test-all.ps1` and `scripts/audit-branding.ps1`;
+  logs and TRX remain under ignored `artifacts/`. No release/tag/merge is part
+  of this feature checkpoint.
+
+### LLDP admission and concurrency follow-up
+
+- Require positive protocol-specific infrastructure evidence and exclude endpoints before probing. Correct enabled-capability precedence, multiline LLDP records, local-port parsing and AP subnet filtering.
+- Use a fixed 1–64 worker queue, deduplicated IP claims and indexed inventory merges. Preserve placeholder promotion, cycles, cancellation and separate backup/discovery phases.
+- Index desktop row updates, refresh aggregate counters on the session timer, and drain pending callbacks before finalizing. Read SSH prompt/pager tails without copying all accumulated output per chunk.
+- Expanded synthetic checks include 100-node cyclic and 128-node chain inventories. Production throughput and native UI load testing remain unverified.

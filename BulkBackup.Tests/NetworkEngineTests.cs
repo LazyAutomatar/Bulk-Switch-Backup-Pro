@@ -33,7 +33,7 @@ public sealed class NetworkEngineTests : IDisposable
         device.Outputs["show running-config"] = "hostname ACCESS-01";
         var result = await RunAsync(commands: ["! heading", "", " show version ", "show running-config"]);
         Assert.Equal(_directory, result);
-        Assert.Equal(["terminal length 0", "show version", "show running-config"], _transport.Commands.Select(x => x.Command));
+        Assert.Equal(["show version", "terminal length 0", "show version", "show running-config"], _transport.Commands.Select(x => x.Command));
         var content = await File.ReadAllTextAsync(Assert.Single(Directory.GetFiles(_directory, "*.txt")));
         Assert.Contains("192.0.2.1_ACCESS-01_Switch.txt", Assert.Single(Directory.GetFiles(_directory)));
         Assert.Contains("Hostname    : ACCESS-01", content);
@@ -196,13 +196,20 @@ public sealed class NetworkEngineTests : IDisposable
     }
 
     [Theory]
-    [InlineData("IOS", "show spanning-tree root", "show startup-config")]
+    [InlineData("IOS", "show spanning-tree summary", "show startup-config")]
     [InlineData("Nexus", "show port-channel summary", "show startup-config")]
     [InlineData("Catalyst WLC", "show ap summary", "show wireless client summary")]
-    [InlineData("AireOS WLC", "show sysinfo", "show run-config")]
+    [InlineData("AireOS WLC", "show sysinfo", "show run-config commands")]
     public async Task Builtin_profiles_preserve_their_platform_specific_capture_commands(string profile, string first, string second)
     {
-        _transport.Add("192.0.2.1");
+        var device = _transport.Add("192.0.2.1");
+        device.Outputs["show version"] = profile switch
+        {
+            "IOS" => "Cisco IOS Software",
+            "Nexus" => "Cisco NX-OS Software",
+            "Catalyst WLC" => "Cisco IOS XE Software C9800-L",
+            _ => "Cisco AireOS Wireless Controller"
+        };
         var commands = profile switch
         {
             "IOS" => CommandProfiles.CiscoIosCommands,
@@ -232,7 +239,7 @@ public sealed class NetworkEngineTests : IDisposable
     {
         _transport.Add("192.0.2.1").RequiresEnable = true;
         await RunAsync();
-        Assert.Equal(["enable", "test-enable-secret", "terminal length 0", "show version"], _transport.Commands.Select(c => c.Command));
+        Assert.Equal(["show version", "enable", "test-enable-secret", "terminal length 0", "show version"], _transport.Commands.Select(c => c.Command));
         Assert.Single(Directory.GetFiles(_directory, "*.txt"));
     }
 
@@ -260,9 +267,9 @@ public sealed class NetworkEngineTests : IDisposable
     [Fact]
     public async Task AireOS_uses_its_paging_command_and_controller_filename()
     {
-        _transport.Add("192.0.2.1", "WLC-01");
+        _transport.Add("192.0.2.1", "WLC-01").Outputs["show version"] = "Cisco AireOS Wireless Controller";
         await RunAsync(profile: "Cisco AireOS WLC", commands: ["show sysinfo"]);
-        Assert.Equal("config paging disable", _transport.Commands.First().Command);
+        Assert.Equal(["show version", "config paging disable", "show sysinfo"], _transport.Commands.Select(c => c.Command));
         Assert.DoesNotContain(_transport.Commands, c => c.Command == "terminal length 0");
         Assert.EndsWith("_WLC.txt", Assert.Single(Directory.GetFiles(_directory)));
     }
@@ -282,7 +289,7 @@ public sealed class NetworkEngineTests : IDisposable
     {
         _transport.Add("192.0.2.1");
         await RunAsync(commands: ["! comment", " "]);
-        Assert.Contains(_transport.Commands, c => c.Command == "show run");
+        Assert.Contains(_transport.Commands, c => c.Command == "show running-config");
     }
 
     [Fact]
@@ -298,7 +305,7 @@ public sealed class NetworkEngineTests : IDisposable
     {
         _transport.Add("192.0.2.1", "CORE-01").Outputs["show cdp neighbors detail"] = Fixture("cdp-mixed.txt");
         _transport.Add("192.0.2.2", "ACCESS-02");
-        _transport.Add("192.0.2.3", "AP-03");
+        _transport.Add("192.0.2.3", "AP-03").Outputs["show version"] = "Cisco IOS Software, AP3G2 Software";
         _transport.Add("192.0.2.4", "SEP001122334455");
         await RunAsync(discover: true, aps: true, save: true, concurrency: 1);
         Assert.DoesNotContain(_transport.Attempts, a => a.Host == "192.0.2.4");
@@ -366,3 +373,4 @@ public sealed class NetworkEngineTests : IDisposable
         if (Directory.Exists(_directory)) Directory.Delete(_directory, recursive: true);
     }
 }
+

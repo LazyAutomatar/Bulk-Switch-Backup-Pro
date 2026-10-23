@@ -53,7 +53,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string backupDirectory = "Temporary Session Staging";
 
     // Profiles & Commands
-    [ObservableProperty] private int selectedProfileIndex = 0;
+    [ObservableProperty] private int selectedProfileIndex = 5;
     [ObservableProperty] private string customCommandsText = string.Empty;
     [ObservableProperty] private int commandCount = 56;
 
@@ -74,6 +74,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string sessionElapsedTime = "00:00";
     private readonly Stopwatch _sessionStopwatch = new();
     private readonly DispatcherTimer _sessionTimer = new();
+    private bool _metricsDirty;
 
     // Collection Properties
     public ObservableCollection<DeviceModel> Devices { get; } = new();
@@ -96,11 +97,12 @@ public partial class MainViewModel : ObservableObject
         _appState = appState;
 
         RefreshStoredCredentials();
-        LoadProfileCommands(0);
+        LoadProfileCommands(SelectedProfileIndex);
 
         _sessionTimer.Interval = TimeSpan.FromSeconds(1);
         _sessionTimer.Tick += (s, e) =>
         {
+            if (_metricsDirty) UpdateMetrics();
             if (_sessionStopwatch.IsRunning)
             {
                 var ts = _sessionStopwatch.Elapsed;
@@ -161,6 +163,11 @@ public partial class MainViewModel : ObservableObject
                 break;
             case 3:
                 CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CiscoAireOsWlcCommands);
+                break;
+            case 5:
+                CustomCommandsText = "! Auto-detect each device and select its OS-specific backup commands." + Environment.NewLine
+                    + "! Supported: " + string.Join(", ", DevicePlatforms.All.Select(p => p.Name)) + Environment.NewLine
+                    + "! Select Custom CLI Command Script to run your own commands.";
                 break;
             case 4:
                 CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CustomTemplateCommands);
@@ -330,7 +337,7 @@ public partial class MainViewModel : ObservableObject
         var ips = TargetIps.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                            .Select(ip => ip.Trim())
                            .Where(ip => !string.IsNullOrEmpty(ip))
-                           .Distinct()
+                           .Distinct(StringComparer.OrdinalIgnoreCase)
                            .ToList();
 
         if (!ips.Any())
@@ -345,7 +352,7 @@ public partial class MainViewModel : ObservableObject
                                              .Where(c => !string.IsNullOrEmpty(c) && !c.StartsWith("!"))
                                              .ToList();
 
-        if (!commandsList.Any())
+        if (SelectedProfileIndex != 5 && !commandsList.Any())
         {
             await _dialogService.ShowMessageAsync("Validation Warning", "The command list is empty. Please configure at least one CLI command.");
             AppendLog("System", "Execution halted: No CLI commands configured.");
@@ -362,6 +369,7 @@ public partial class MainViewModel : ObservableObject
             1 => "Cisco Nexus Switch (NX-OS)",
             2 => "Cisco Catalyst 9800 WLC (IOS-XE)",
             3 => "Cisco AireOS WLC (5520 / 8540 / 3504)",
+            5 => "Auto (multi-vendor)",
             _ => "Custom Profile"
         };
 
@@ -400,10 +408,13 @@ public partial class MainViewModel : ObservableObject
         }
         if (EnableCdp)
         {
-            AppendLog("Discovery", "CDP/LLDP Discovery active. Cisco IP Phones and ATAs are automatically excluded.");
+            AppendLog("Discovery", "CDP/LLDP Discovery active. Infrastructure capabilities or recognized models are required; endpoint advertisements are excluded.");
         }
 
         var engine = new NetworkEngine();
+        // All accesses occur on the UI thread; workers only post immutable update values.
+        var devicesByIp = Devices.ToDictionary(d => d.IpAddress, StringComparer.OrdinalIgnoreCase);
+        var placeholdersByName = new Dictionary<string, DeviceModel>(StringComparer.OrdinalIgnoreCase);
 
         try
         {
@@ -424,7 +435,9 @@ public partial class MainViewModel : ObservableObject
                     (source, message) => Dispatcher.UIThread.Post(() => AppendLog(source, message)),
                     (deviceIp, pct, stat, proto, hostname, isAp, uplink, port) => Dispatcher.UIThread.Post(() =>
                     {
-                        var dev = Devices.FirstOrDefault(d => d.IpAddress == deviceIp || (!string.IsNullOrEmpty(hostname) && HostKey.Same(d.Hostname, hostname)));
+                        devicesByIp.TryGetValue(deviceIp, out var dev);
+                        if (dev == null && !string.IsNullOrEmpty(hostname))
+                            placeholdersByName.TryGetValue(HostKey.Of(hostname), out dev);
                         if (dev == null)
                         {
                             dev = new DeviceModel
@@ -449,8 +462,13 @@ public partial class MainViewModel : ObservableObject
                         }
                         if (!string.IsNullOrEmpty(deviceIp) && !deviceIp.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase) && dev.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
                         {
+                            devicesByIp.Remove(dev.IpAddress);
+                            placeholdersByName.Remove(HostKey.Of(dev.Hostname));
                             dev.IpAddress = deviceIp;
                         }
+                        devicesByIp[deviceIp] = dev;
+                        if (dev.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
+                            placeholdersByName[HostKey.Of(dev.Hostname)] = dev;
                         dev.DeviceType = isAp ? "Access Point" : "Switch";
                         dev.Progress = pct;
                         dev.Status = stat;
@@ -489,12 +507,14 @@ public partial class MainViewModel : ObservableObject
                             dev.ProtocolColor = "#4CC2FF";
                         }
 
-                        UpdateMetrics();
+                        _metricsDirty = true;
                     }),
                     _cts.Token
                 );
             });
 
+            // Process already-posted progress callbacks before calculating the final summary.
+            await Dispatcher.UIThread.InvokeAsync(UpdateMetrics, DispatcherPriority.Background);
             LastBackupDirectory = resultDir;
             HasCompletedBackups = Directory.Exists(resultDir) && Directory.EnumerateFileSystemEntries(resultDir).Any();
             RunningStatusSummary = $"Completed. {CompletedDevicesCount} backed up, {FailedDevicesCount} failed.";
@@ -513,6 +533,9 @@ public partial class MainViewModel : ObservableObject
         }
         finally
         {
+            _sessionTimer.Stop();
+            // Drain worker callbacks on cancellation/failure too, before clearing row state.
+            await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
             HasCompletedBackups = Directory.Exists(LastBackupDirectory) && Directory.EnumerateFiles(LastBackupDirectory, "*.txt").Any();
             _cts?.Dispose();
             _cts = null;
@@ -691,6 +714,7 @@ public partial class MainViewModel : ObservableObject
 
     private void UpdateMetrics()
     {
+        _metricsDirty = false;
         TotalDevicesCount = Devices.Count;
         CompletedDevicesCount = Devices.Count(d => d.IsCompleted);
         FailedDevicesCount = Devices.Count(d => d.IsFailed);
@@ -803,4 +827,5 @@ public partial class MainViewModel : ObservableObject
         }
     }
 }
+
 
