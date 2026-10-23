@@ -10,7 +10,7 @@
 
 <br/>
 
-[![Latest Release](https://img.shields.io/badge/Release-v3.0.0%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v3.0.1%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
 [![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
@@ -100,7 +100,7 @@
 
 <br/><br/>
 
-### Public Release Artifacts (v3.0.0 Enterprise)
+### Public Release Artifacts (v3.0.1 Enterprise)
 
 | Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- |
@@ -247,3 +247,20 @@ choose **Review Update**, read the version and upgrade details, then select
 No package is downloaded or launched by checking updates or opening the changelog.
 Save completed backup exports before installing. On macOS/Linux, use **Open Release
 Downloads** and choose the matching package.
+
+## Command Results and partial diagnostics
+
+After a run, **Command Results** lists failed command attempts, including device IP,
+hostname, command and the returned error. Filter the list and select a row to read
+its response, or export the failed-command list as JSON. A rejected attempt may
+appear even if its fallback syntax later succeeds.
+
+Working commands continue after CLI rejections. When required configuration output
+is unavailable, captured diagnostics are saved as `*.partial-diagnostics.txt` and
+can be exported with the other backup files. These files are incomplete diagnostics,
+not complete configuration backups; earlier complete backups remain untouched.
+A timeout with an incomplete prompt ends that device session to avoid mixing outputs,
+while retaining diagnostic commands captured before the failure.
+
+For wide result tables, use the wheel over the horizontal scrollbar, or hold
+**Shift** while wheeling over the table. Normal vertical scrolling is preserved.

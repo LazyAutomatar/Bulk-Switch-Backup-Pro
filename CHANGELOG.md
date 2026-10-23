@@ -4,6 +4,26 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.0.1] - 2026-10-23
+
+### Added
+- Command Results shows failed command attempts by device, the command text, rejection or timeout details, device response, filtering and JSON export. Open it automatically after runs with failed attempts.
+- Continue working commands after CLI rejections and save clearly marked partial diagnostics when configuration capture fails; preserve previous complete backups.
+- Mouse-wheel scrolling over the horizontal results scrollbar and Shift+wheel across the device table.
+
+### Fixed
+- Align wide profile dropdowns below the selector with its left edge, instead of letting the popup drift left.
+- Keep accepted diagnostics if a later command times out; stop an unsynchronized session rather than mislabel later output.
+- Distinguish complete backups from incomplete/failed captures in the run summary.
+
+
+### Changed
+- Show Auto in both execution-mode selectors and use a wider dropdown with a dynamic platform-count summary.
+- Replace the Auto command editor with a read-only command reference for all supported platforms, including paging setup and required configuration capture.
+- Restrict command editing to Custom Script and preserve its draft when switching execution modes.
+- Improve device-table column widths, status wrapping, horizontal scrolling, frozen identity columns and progress/percentage separation.
+- Add a local-only portable beta build script and visual beta label; leave release versioning and publication for after testing.
+
 ## [3.0.0] - 2026-10-23
 
 ### Added
