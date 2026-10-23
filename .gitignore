@@ -33,3 +33,8 @@ __pycache__/
 ## Validation artifacts
 artifacts/
 TestResults/
+
+## Private signing material
+*.pfx
+*.p12
+*.key

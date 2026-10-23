@@ -4,6 +4,10 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+### Packaging
+- Sign the Windows application before archiving/embedding it, sign the setup installer, verify publisher signatures and timestamps, and generate update hashes after signing.
+- Require a trusted signing identity for public releases; support explicitly requested self-signed development installers without changing machine trust stores.
+
 ### Fixed
 - Keep title-bar zoom controls from initiating window dragging or double-click maximization.
 - Fit initial window bounds to the monitor working area at its display density, including smaller high-DPI screens.

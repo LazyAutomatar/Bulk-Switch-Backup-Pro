@@ -39,6 +39,20 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Load and validate public code-signing identity
+        shell: pwsh
+        env:
+          SIGNING_PFX_BASE64: ${{ secrets.WINDOWS_SIGNING_PFX_BASE64 }}
+          CERT_PASS: ${{ secrets.WINDOWS_SIGNING_PFX_PASSWORD }}
+        run: |
+          if (-not $env:SIGNING_PFX_BASE64) {
+            throw 'Configure WINDOWS_SIGNING_PFX_BASE64 and WINDOWS_SIGNING_PFX_PASSWORD with a publicly trusted code-signing certificate before publishing.'
+          }
+          $env:CERT_PATH = Join-Path $env:RUNNER_TEMP 'bulk-backup-signing.pfx'
+          [IO.File]::WriteAllBytes($env:CERT_PATH, [Convert]::FromBase64String($env:SIGNING_PFX_BASE64))
+          "CERT_PATH=$env:CERT_PATH" >> $env:GITHUB_ENV
+          ./scripts/sign-windows-artifact.ps1 -CheckCertificateOnly
+
       - name: Validate core and desktop before packaging
         shell: pwsh
         run: ./scripts/test-all.ps1
@@ -66,6 +80,8 @@ jobs:
 
       - name: Run Cross-Compiler Pipeline
         shell: pwsh
+        env:
+          CERT_PASS: ${{ secrets.WINDOWS_SIGNING_PFX_PASSWORD }}
         run: |
           ./publish-all.ps1 -Configuration Release -Version "${{ steps.ver.outputs.version }}" -Repo "$env:RELEASES_REPO"
 
@@ -141,3 +157,10 @@ jobs:
             Write-Host "Public repository docs are already up to date." -ForegroundColor Cyan
           }
           Pop-Location
+
+      - name: Remove temporary signing key
+        if: always()
+        shell: pwsh
+        run: |
+          $signingPath = Join-Path $env:RUNNER_TEMP 'bulk-backup-signing.pfx'
+          if (Test-Path -LiteralPath $signingPath) { Remove-Item -LiteralPath $signingPath -Force }

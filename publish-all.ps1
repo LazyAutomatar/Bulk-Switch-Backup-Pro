@@ -42,6 +42,9 @@ function Get-InnoCompiler {
 }
 
 $buildWin = $Target -eq "all" -or $Target -eq "win" -or $Target -eq "win-x64"
+if ($buildWin) {
+    & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -CheckCertificateOnly
+}
 $buildMacArm = $Target -eq "all" -or $Target -eq "mac" -or $Target -eq "osx-arm64"
 $buildMacX64 = $Target -eq "all" -or $Target -eq "mac" -or $Target -eq "osx-x64"
 $buildLinuxX64 = $Target -eq "all" -or $Target -eq "linux" -or $Target -eq "linux-x64"
@@ -90,6 +93,7 @@ function Publish-Target {
         # Sync standalone .exe to dist root
         $mainExe = Join-Path $winTargetDir "BulkSwitchBackupPro.exe"
         if (Test-Path $mainExe) {
+            & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $mainExe
             $destExe = Join-Path $DistDir "BulkSwitchBackupPro.exe"
             for ($attempt = 1; $attempt -le 5; $attempt++) {
                 try {
@@ -145,6 +149,7 @@ function Publish-Target {
                 $setupVer = Join-Path $DistDir "BulkSwitchBackupPro_Setup_v$Version.exe"
                 $setupGen = Join-Path $DistDir "BulkSwitchBackupPro_Setup.exe"
                 if (Test-Path $setupVer) {
+                    & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $setupVer
                     Copy-Item $setupVer -Destination $setupGen -Force
                     $setupSize = [math]::Round((Get-Item $setupVer).Length / 1MB, 2)
                     $results.Add([PSCustomObject]@{

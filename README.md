@@ -264,3 +264,28 @@ while retaining diagnostic commands captured before the failure.
 
 For wide result tables, use the wheel over the horizontal scrollbar, or hold
 **Shift** while wheeling over the table. Normal vertical scrolling is preserved.
+
+## Windows code signing
+
+Public Windows packaging now requires a trusted code-signing certificate and a
+verified timestamp. Configure GitHub Actions secrets `WINDOWS_SIGNING_PFX_BASE64`
+and `WINDOWS_SIGNING_PFX_PASSWORD` for a CA-issued PFX whose private key is permitted
+to be used this way. Local production packaging accepts `CERT_PATH`/`CERT_PASS`,
+or `SIGNING_CERT_THUMBPRINT` for an existing CurrentUser signing identity.
+Keep private keys out of the repository; hardware-backed or managed signing
+identities need their provider integration rather than an exported PFX.
+
+The application is signed before it is copied into the portable ZIP and installer.
+The setup executable is signed before the update manifest's checksum is generated.
+Missing credentials, self-signed production identities, or invalid/missing production
+timestamps stop publication. The release workflow removes its temporary PFX afterward.
+
+For a local beta only, run `./scripts/build-signed-beta-installer.ps1
+-AllowDevelopmentCertificate` after building the portable beta. It reuses the
+existing Bulk Switch Backup development certificate and uses a separate install
+folder, application identity and shortcuts. It never imports a trusted root or
+changes SmartScreen settings. Its public `.cer` file is for inspection, not an
+instruction to trust it on other computers. Self-signed installers can still trigger
+warnings; publicly trusted signatures also need SmartScreen reputation.
+
+See [Microsoft's SmartScreen guidance](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation).
