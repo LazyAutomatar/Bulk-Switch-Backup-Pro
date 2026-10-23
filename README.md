@@ -10,7 +10,7 @@
 
 <br/>
 
-[![Latest Release](https://img.shields.io/badge/Release-v3.0.1%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v3.0.2%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
 [![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
@@ -100,7 +100,7 @@
 
 <br/><br/>
 
-### Public Release Artifacts (v3.0.1 Enterprise)
+### Public Release Artifacts (v3.0.2 Enterprise)
 
 | Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- |
@@ -264,3 +264,30 @@ while retaining diagnostic commands captured before the failure.
 
 For wide result tables, use the wheel over the horizontal scrollbar, or hold
 **Shift** while wheeling over the table. Normal vertical scrolling is preserved.
+
+## Windows code signing
+
+Version 3.0.2 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
+
+By default, public Windows packaging requires a trusted code-signing certificate and a
+verified timestamp. Configure GitHub Actions secrets `WINDOWS_SIGNING_PFX_BASE64`
+and `WINDOWS_SIGNING_PFX_PASSWORD` for a CA-issued PFX whose private key is permitted
+to be used this way. Local production packaging accepts `CERT_PATH`/`CERT_PASS`,
+or `SIGNING_CERT_THUMBPRINT` for an existing CurrentUser signing identity.
+Keep private keys out of the repository; hardware-backed or managed signing
+identities need their provider integration rather than an exported PFX.
+
+The application is signed before it is copied into the portable ZIP and installer.
+The setup executable is signed before the update manifest's checksum is generated.
+Missing credentials, self-signed production identities, or invalid/missing production
+timestamps stop publication. The release workflow removes its temporary PFX afterward.
+
+For a local beta only, run `./scripts/build-signed-beta-installer.ps1
+-AllowDevelopmentCertificate` after building the portable beta. It reuses the
+existing Bulk Switch Backup development certificate and uses a separate install
+folder, application identity and shortcuts. It never imports a trusted root or
+changes SmartScreen settings. Its public `.cer` file is for inspection, not an
+instruction to trust it on other computers. Self-signed installers can still trigger
+warnings; publicly trusted signatures also need SmartScreen reputation.
+
+See [Microsoft's SmartScreen guidance](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation).
