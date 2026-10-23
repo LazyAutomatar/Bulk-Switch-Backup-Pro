@@ -102,7 +102,7 @@ jobs:
             if ($signature.SignerCertificate.Thumbprint -ne '6C7AA04A7196660417CCE9B5C5BD42ED84408366' -or $null -eq $signature.TimeStamperCertificate -or $signature.Status -notin @('Valid', 'NotTrusted', 'UnknownError')) {
               throw "Unexpected signature on $file"
             }
-            if ((Get-Item -LiteralPath $path).VersionInfo.CompanyName -ne 'Yash Nalawde') { throw "Incorrect author on $file" }
+            if ((Get-Item -LiteralPath $path).VersionInfo.CompanyName.Trim() -ne 'Yash Nalawde') { throw "Incorrect author on $file" }
           }
           $manifest = Get-Content dist/update_manifest.json -Raw | ConvertFrom-Json
           if ($manifest.version -ne '3.0.2' -or $manifest.sha256 -ne (Get-FileHash dist/BulkSwitchBackupPro_Setup.exe -Algorithm SHA256).Hash.ToLowerInvariant() -or $manifest.fileSizeBytes -ne (Get-Item dist/BulkSwitchBackupPro_Setup.exe).Length) { throw 'Installer manifest mismatch.' }
