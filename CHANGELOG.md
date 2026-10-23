@@ -4,6 +4,9 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+- Add automatic per-device OS recognition and 29 switch/AP/WLC CLI families, runtime command rejection checks, syntax fallbacks and configuration-capture validation.
+- Correct and separate Catalyst 9800/AireOS templates; preserve explicit custom scripts, credential fallback, bounded workers, cancellation and atomic backup output.
+
 ### Added
 - Offline xUnit coverage for backup profiles, captured output, credential fallback, discovery, worker limits, cancellation, paging, and per-device failures.
 - Injectable SSH transport and in-memory test sessions; core tests never contact network devices or load stored credentials.
@@ -29,3 +32,4 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ### Serial migration handoff
 - Add the nine-app review dashboard with independent draft PRs, validation counts, topology provenance and the explicit firmware build-only exception.
+

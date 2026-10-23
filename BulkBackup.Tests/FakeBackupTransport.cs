@@ -25,6 +25,7 @@ internal sealed class FakeBackupTransport : IBackupTransport
     public FakeDevice Add(string host, string? hostname = null)
     {
         var device = new FakeDevice(hostname ?? "SW-" + host.Replace('.', '-'));
+        device.Outputs["show version"] = "Cisco IOS XE Software, Version 17.12.4";
         Devices[host] = device;
         return device;
     }
@@ -89,13 +90,13 @@ internal sealed class FakeBackupTransport : IBackupTransport
             if (!device.Silent) _responses.Enqueue(Prompt);
         }
 
-        private string Prompt => $"{_device.Hostname}{(_privileged ? '#' : '>')}";
+        private string Prompt => _device.PromptOverride ?? $"{_device.Hostname}{(_privileged ? '#' : '>')}";
         public bool DataAvailable => _responses.Count > 0;
         public string Read() => _responses.Dequeue();
         public void Write(string text)
         {
             _transport.Commands.Enqueue((_host, text));
-            if (text == " ") _responses.Enqueue($"\r\nremaining page\r\n{Prompt}");
+            if (text is " " or "\r" or "y") _responses.Enqueue($"\r\nremaining page\r\n{Prompt}");
         }
         public void WriteLine(string text)
         {
@@ -117,7 +118,8 @@ internal sealed class FakeBackupTransport : IBackupTransport
             if (_device.FailedCommands.Contains(text)) throw new TimeoutException("Simulated command timeout");
             if (_device.PagedCommands.Contains(text))
             {
-                _responses.Enqueue($"{text}\r\nfirst page\r\n--More--");
+                _responses.Enqueue($"{text}\r\nfirst page\r\n{_device.PagerMarker[..(_device.PagerMarker.Length / 2)]}");
+                _responses.Enqueue(_device.PagerMarker[(_device.PagerMarker.Length / 2)..]);
                 return;
             }
             var output = _device.Outputs.GetValueOrDefault(text, "captured " + text);
@@ -130,6 +132,8 @@ internal sealed class FakeBackupTransport : IBackupTransport
 internal sealed class FakeDevice(string hostname)
 {
     public string Hostname { get; } = hostname;
+    public string? PromptOverride { get; set; }
+    public string PagerMarker { get; set; } = "--More--";
     public bool Reachable { get; set; } = true;
     public bool RequiresEnable { get; set; }
     public bool Silent { get; set; }
@@ -139,3 +143,4 @@ internal sealed class FakeDevice(string hostname)
     public HashSet<string> PagedCommands { get; } = new();
     public Action<string>? OnCommand { get; set; }
 }
+

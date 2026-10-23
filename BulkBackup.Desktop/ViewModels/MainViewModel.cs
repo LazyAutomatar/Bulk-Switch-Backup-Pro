@@ -53,7 +53,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string backupDirectory = "Temporary Session Staging";
 
     // Profiles & Commands
-    [ObservableProperty] private int selectedProfileIndex = 0;
+    [ObservableProperty] private int selectedProfileIndex = 5;
     [ObservableProperty] private string customCommandsText = string.Empty;
     [ObservableProperty] private int commandCount = 56;
 
@@ -96,7 +96,7 @@ public partial class MainViewModel : ObservableObject
         _appState = appState;
 
         RefreshStoredCredentials();
-        LoadProfileCommands(0);
+        LoadProfileCommands(SelectedProfileIndex);
 
         _sessionTimer.Interval = TimeSpan.FromSeconds(1);
         _sessionTimer.Tick += (s, e) =>
@@ -161,6 +161,11 @@ public partial class MainViewModel : ObservableObject
                 break;
             case 3:
                 CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CiscoAireOsWlcCommands);
+                break;
+            case 5:
+                CustomCommandsText = "! Auto-detect each device and select its OS-specific backup commands." + Environment.NewLine
+                    + "! Supported: " + string.Join(", ", DevicePlatforms.All.Select(p => p.Name)) + Environment.NewLine
+                    + "! Select Custom CLI Command Script to run your own commands.";
                 break;
             case 4:
                 CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CustomTemplateCommands);
@@ -345,7 +350,7 @@ public partial class MainViewModel : ObservableObject
                                              .Where(c => !string.IsNullOrEmpty(c) && !c.StartsWith("!"))
                                              .ToList();
 
-        if (!commandsList.Any())
+        if (SelectedProfileIndex != 5 && !commandsList.Any())
         {
             await _dialogService.ShowMessageAsync("Validation Warning", "The command list is empty. Please configure at least one CLI command.");
             AppendLog("System", "Execution halted: No CLI commands configured.");
@@ -362,6 +367,7 @@ public partial class MainViewModel : ObservableObject
             1 => "Cisco Nexus Switch (NX-OS)",
             2 => "Cisco Catalyst 9800 WLC (IOS-XE)",
             3 => "Cisco AireOS WLC (5520 / 8540 / 3504)",
+            5 => "Auto (multi-vendor)",
             _ => "Custom Profile"
         };
 
@@ -803,4 +809,5 @@ public partial class MainViewModel : ObservableObject
         }
     }
 }
+
 

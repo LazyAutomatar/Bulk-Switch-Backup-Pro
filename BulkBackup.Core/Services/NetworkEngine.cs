@@ -26,9 +26,9 @@ namespace BulkBackup.Core.Services
         public delegate void LogAction(string source, string message);
         public delegate void ProgressAction(string ip, int percentage, string status, string protocol, string? hostname = null, bool isAp = false, string? uplink = null, string? port = null);
 
-        private static readonly Regex PromptRegex = new(@"(?:^|[\r\n])\s*(?:\([\w\.\-\s]+\)|[\w\.\-]+)(?:\([^\)]+\))?[>#]\s*$", RegexOptions.Compiled);
+        private static readonly Regex PromptRegex = new(@"(?:^|[\r\n])\s*(?:<[\w.\-]+>|\[[\w.@:/ \-]+\](?:\s*[>#])?|(?:\([\w.\-\s]+\)|[* ]*[\w.@:/\-]+)(?:\([^)]*\))?\s*[>#])\s*$", RegexOptions.Compiled);
         private static readonly Regex PasswordRegex = new(@"[Pp]assword:\s*$", RegexOptions.Compiled);
-        private static readonly Regex MoreRegex = new(@"--\s*More\s*--|Press any key to continue", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex MoreRegex = new(@"--\s*More\s*--|----\s*More\s*----|Press any key to continue|Press Enter to continue|Would you like to display[^\r\n]*\(y/n\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex DeviceIdRegex = new(@"Device ID:\s*([^\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex PlatformRegex = new(@"Platform:\s*([^,\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex CapabilitiesRegex = new(@"Capabilities:\s*([^\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -890,6 +890,13 @@ namespace BulkBackup.Core.Services
                      (dev.StartsWith("AP", StringComparison.OrdinalIgnoreCase) && !dev.StartsWith("APP", StringComparison.OrdinalIgnoreCase)));
         }
 
+        private static bool IsBuiltInTemplate(List<string> commands)
+        {
+            static IEnumerable<string> Normalize(IEnumerable<string> items) => items.Select(c => c.Trim())
+                .Where(c => c.Length > 0 && !c.StartsWith('!'));
+            return DevicePlatforms.All.Any(p => Normalize(p.Commands).SequenceEqual(Normalize(commands), StringComparer.OrdinalIgnoreCase));
+        }
+
         private async Task PerformBackupWithFallbackAsync(
             string ip,
             List<CredentialEntry> candidateCredentials,
@@ -960,7 +967,32 @@ namespace BulkBackup.Core.Services
                     using var stream = client.OpenShell();
 
                     string initial = await ReadUntilPromptOrPatternAsync(stream, PromptRegex, 10000, token);
-                    string prompt = await ElevatePrivilegesAsync(stream, initial, activeCred.Secret, token);
+                    progress(ip, 22, "Identifying device OS...", "SSH", knownHostname, isAp, uplinkDevice, port);
+                    DevicePlatform? platform = null;
+                    var identityEvidence = new StringBuilder();
+                    foreach (string probe in DevicePlatforms.Probes)
+                    {
+                        string response = await ExecuteRawCommandAsync(stream, probe, token);
+                        string body = DevicePlatforms.Body(response, probe);
+                        if (DevicePlatforms.IsRejected(body)) continue;
+                        identityEvidence.AppendLine(body);
+                        platform = DevicePlatforms.Recognize(body);
+                        if (platform != null) break;
+                    }
+                    bool automatic = profileName.StartsWith("Auto", StringComparison.OrdinalIgnoreCase);
+                    bool builtIn = automatic || (!profileName.Contains("Custom", StringComparison.OrdinalIgnoreCase) && IsBuiltInTemplate(commands));
+                    if (platform == null && builtIn)
+                        throw new InvalidOperationException("Device OS was not recognized; no automatic backup commands were sent. Use a reviewed custom script for this device.");
+                    if (platform == null)
+                        log("Warning", $"Device {ip} OS is unrecognized; executing the explicit custom script with response validation.");
+                    else
+                    {
+                        isAp = platform.Kind == "AP";
+                        log("Detection", $"Device {ip}: {platform.Name} ({platform.Kind}).");
+                        if (builtIn) commands = platform.Commands.ToList();
+                    }
+                    string prompt = platform?.UsesEnable == true
+                        ? await ElevatePrivilegesAsync(stream, initial, activeCred.Secret, token) : initial;
 
                     string hostname = !string.IsNullOrWhiteSpace(knownHostname) ? knownHostname : ip;
                     var hostMatch = Regex.Match(prompt, @"(?:^|[\r\n])\s*(?:\(([\w\.\-\s]+?)\)|([\w\.\-]+?))(?:\([^\)]+\))?[>#]");
@@ -978,16 +1010,13 @@ namespace BulkBackup.Core.Services
                     }
 
                     progress(ip, 25, "Session Ready", "SSH", hostname, isAp, uplinkDevice, port);
-                    if (!profileName.Contains("AireOS", StringComparison.OrdinalIgnoreCase))
+                    if (!string.IsNullOrEmpty(platform?.Paging))
                     {
-                        await ExecuteRawCommandAsync(stream, "terminal length 0", token);
+                        string pagingOutput = await ExecuteRawCommandAsync(stream, platform.Paging, token);
+                        if (DevicePlatforms.IsRejected(DevicePlatforms.Body(pagingOutput, platform.Paging)))
+                            log("Warning", $"Paging command rejected on {ip}; interactive pager handling remains enabled.");
                     }
-                    else
-                    {
-                        await ExecuteRawCommandAsync(stream, "config paging disable", token);
-                    }
-
-                    string deviceTypeLabel = isAp ? "Access Point" : (profileName.Contains("WLC", StringComparison.OrdinalIgnoreCase) || profileName.Contains("Wireless", StringComparison.OrdinalIgnoreCase) ? "Cisco Wireless Controller" : "Cisco Switch");
+                    string deviceTypeLabel = platform == null ? "Unrecognized (custom script)" : $"{platform.Name} {platform.Kind}";
 
                     var sb = new StringBuilder();
                     sb.AppendLine("==================================================");
@@ -1003,7 +1032,11 @@ namespace BulkBackup.Core.Services
                     {
                         sb.AppendLine($"Port Link   : {port}");
                     }
-                    sb.AppendLine($"Profile     : {(isAp ? "Cisco Access Point" : profileName)}");
+                    sb.AppendLine($"Profile     : {(builtIn ? platform?.Name : profileName)}");
+                    sb.AppendLine($"Detected OS : {platform?.Name ?? "Unknown"}");
+                    sb.AppendLine($"Selection   : {(builtIn ? "Automatic platform template" : "Explicit custom commands")}");
+                    sb.AppendLine("Identity evidence:");
+                    sb.AppendLine(identityEvidence.ToString().TrimEnd());
                     sb.AppendLine($"Auth User   : {activeCred.Username}");
                     sb.AppendLine($"Protocol    : SSH (Interactive Shell)");
                     sb.AppendLine("==================================================\n");
@@ -1022,10 +1055,18 @@ namespace BulkBackup.Core.Services
                             continue;
                         }
 
-                        validCommands.Add(trimmed);
+                        if (builtIn && trimmed == platform?.Paging) continue; // Already applied after identification.
+                        if (!builtIn || !validCommands.Contains(trimmed)) validCommands.Add(trimmed);
                     }
 
-                    if (validCommands.Count == 0) validCommands.Add("show run");
+                    if (validCommands.Count == 0)
+                    {
+                        if (platform == null) throw new InvalidOperationException("No permitted commands for an unidentified device.");
+                        validCommands.Add(platform.Configuration);
+                    }
+                    int rejected = 0;
+                    int successful = 0;
+                    bool configurationCaptured = false;
 
                     for (int i = 0; i < validCommands.Count; i++)
                     {
@@ -1035,16 +1076,35 @@ namespace BulkBackup.Core.Services
                         int pct = 25 + (int)(((double)(i + 1) / validCommands.Count) * 65);
                         progress(ip, pct, $"Running: {cmd}", "SSH", hostname, isAp, uplinkDevice, port);
 
-                        string output = await ExecuteRawCommandAsync(stream, cmd, token);
-
-                        sb.AppendLine("==================================================");
-                        sb.AppendLine($"Command: {cmd}");
-                        sb.AppendLine("==================================================");
-                        sb.AppendLine(output.TrimEnd());
-                        sb.AppendLine();
+                        bool accepted = false;
+                        foreach (string attempt in DevicePlatforms.Alternatives(platform, cmd))
+                        {
+                            bool configurationCommand = cmd == platform?.Configuration || cmd is "show run" or "show running-config" or "show run-config" or "show run-config commands";
+                            string output = await ExecuteRawCommandAsync(stream, attempt, token, timeoutMs: configurationCommand ? 120000 : 20000);
+                            string body = DevicePlatforms.Body(output, attempt);
+                            accepted = !DevicePlatforms.IsRejected(body) && !string.IsNullOrWhiteSpace(body);
+                            sb.AppendLine("==================================================");
+                            sb.AppendLine($"Command: {attempt}");
+                            sb.AppendLine($"Result: {(accepted ? "Accepted" : "Rejected or empty")}");
+                            sb.AppendLine("==================================================");
+                            sb.AppendLine(output.TrimEnd());
+                            sb.AppendLine();
+                            if (accepted) break;
+                            log("Warning", $"Command '{attempt}' rejected or empty on {ip}.");
+                        }
+                        if (accepted)
+                        {
+                            successful++;
+                            if (cmd == platform?.Configuration || cmd is "show run" or "show running-config" or "show run-config" or "show run-config commands")
+                                configurationCaptured = true;
+                        }
+                        else rejected++;
                     }
 
-                    if (writeConfig && !isAp)
+                    if (successful == 0 || ((builtIn || validCommands.Contains(platform?.Configuration ?? "") || validCommands.Any(c => c is "show run" or "show running-config" or "show run-config" or "show run-config commands")) && !configurationCaptured))
+                        throw new InvalidOperationException("No usable configuration backup was captured; previous backup preserved.");
+
+                    if (writeConfig && !isAp && platform?.Save == "write memory")
                     {
                         progress(ip, 95, "Saving Config (write memory)...", "SSH", hostname, isAp, uplinkDevice, port);
                         try
@@ -1053,6 +1113,11 @@ namespace BulkBackup.Core.Services
                             sb.AppendLine("==================================================");
                             sb.AppendLine("Command: write memory");
                             sb.AppendLine("==================================================");
+                            if (DevicePlatforms.IsRejected(DevicePlatforms.Body(saveOutput, "write memory")))
+                            {
+                                rejected++;
+                                log("Warning", $"Save configuration command rejected on {ip}.");
+                            }
                             sb.AppendLine(saveOutput.TrimEnd());
                             sb.AppendLine();
                         }
@@ -1062,10 +1127,12 @@ namespace BulkBackup.Core.Services
                         }
                     }
 
+                    if (writeConfig && !isAp && platform?.Save != "write memory")
+                        log("Warning", $"Save configuration skipped on {ip}: no validated non-interactive save command for this OS.");
                     client.Disconnect();
 
                     string safeHostname = Regex.Replace(hostname, @"[^\w\.\-]", "_");
-                    string devTypeSuffix = isAp ? "AP" : (profileName.Contains("WLC", StringComparison.OrdinalIgnoreCase) || profileName.Contains("Wireless", StringComparison.OrdinalIgnoreCase) ? "WLC" : "Switch");
+                    string devTypeSuffix = platform?.Kind ?? "Unknown";
                     string filename = Path.Combine(backupDir, $"{ip}_{safeHostname}_{devTypeSuffix}.txt");
                     string temporaryFile = filename + $".{Guid.NewGuid():N}.tmp";
                     try
@@ -1079,8 +1146,8 @@ namespace BulkBackup.Core.Services
                         if (File.Exists(temporaryFile)) File.Delete(temporaryFile);
                     }
 
-                    progress(ip, 100, $"Completed ({validCommands.Count} cmds)", "SSH", hostname, isAp, uplinkDevice, port);
-                    log("Backup", $"Successfully backed up {hostname} ({ip}) -> {Path.GetFileName(filename)}");
+                    progress(ip, 100, $"Completed{(rejected > 0 ? " with warnings" : "")} ({successful} accepted, {rejected} rejected)", "SSH", hostname, isAp, uplinkDevice, port);
+                    log("Backup", $"Backup captured ({successful} accepted, {rejected} rejected) for {hostname} ({ip}) -> {Path.GetFileName(filename)}");
                 }
             }
             catch (Exception ex) when (!token.IsCancellationRequested)
@@ -1136,6 +1203,7 @@ namespace BulkBackup.Core.Services
         {
             var sb = new StringBuilder();
             var timer = Stopwatch.StartNew();
+            int handledPagerEnd = 0;
 
             while (timer.ElapsedMilliseconds < timeoutMs)
             {
@@ -1145,18 +1213,19 @@ namespace BulkBackup.Core.Services
                     string chunk = stream.Read();
                     sb.Append(chunk);
 
-                    if (MoreRegex.IsMatch(chunk))
-                    {
-                        stream.Write(" ");
-                        continue;
-                    }
-
                     int searchLen = Math.Min(sb.Length, 512);
                     string tail = sb.ToString(sb.Length - searchLen, searchLen);
+                    tail = Regex.Replace(tail, @"\x1B\[[0-?]*[ -/]*[@-~]|\x08", "");
+                    if (pattern.IsMatch(tail)) return sb.ToString();
 
-                    if (pattern.IsMatch(tail))
+                    // Pager text can be split across SSH reads. Respond once per new marker.
+                    var pager = MoreRegex.Match(sb.ToString(), handledPagerEnd);
+                    if (pager.Success)
                     {
-                        return sb.ToString();
+                        handledPagerEnd = pager.Index + pager.Length;
+                        string reply = pager.Value.Contains("(y/n)", StringComparison.OrdinalIgnoreCase) ? "y"
+                            : pager.Value.Contains("Enter", StringComparison.OrdinalIgnoreCase) ? "\r" : " ";
+                        stream.Write(reply);
                     }
                 }
                 else
@@ -1219,7 +1288,10 @@ namespace BulkBackup.Core.Services
             string cmd = command.Trim();
 
             // Allow AireOS terminal paging commands
-            if (cmd.StartsWith("config paging", StringComparison.OrdinalIgnoreCase)) return false;
+            if (cmd.Equals("config paging disable", StringComparison.OrdinalIgnoreCase) ||
+                cmd.Equals("config paging enable", StringComparison.OrdinalIgnoreCase) ||
+                cmd.Equals("set cli screen-length 0", StringComparison.OrdinalIgnoreCase)) return false;
+            if (Regex.IsMatch(cmd, @"^(?:conf(?:ig(?:ure)?)?|system-view|set|delete|commit|save|write|copy|reload|reboot|erase|debug|clear|reset|format)(?:\s|$)", RegexOptions.IgnoreCase)) return true;
 
             // Check common configuration mode entry variants
             if (cmd.Equals("conf t", StringComparison.OrdinalIgnoreCase) ||
@@ -1264,3 +1336,4 @@ namespace BulkBackup.Core.Services
         }
     }
 }
+

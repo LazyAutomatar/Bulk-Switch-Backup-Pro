@@ -227,3 +227,12 @@ focused checks. Detailed validation logs and TRX results are stored under ignore
 Read [MIGRATION_STATE.md](MIGRATION_STATE.md) for the current checkpoint and next
 bounded task, [MIGRATION_ROADMAP.md](MIGRATION_ROADMAP.md) for the serial app
 sequence, and [CHANGELOG.md](CHANGELOG.md) for this app's changes.
+
+
+## Multi-vendor automatic backup
+
+Auto-detect is the default command profile. Each backup identifies the device OS
+before choosing commands and records rejected commands instead of treating them
+as successful captures. See [platform support and validation](PLATFORM_SUPPORT.md)
+for the supported OS families, Cisco/WLC corrections, custom-script behavior and
+live-device acceptance checklist.
