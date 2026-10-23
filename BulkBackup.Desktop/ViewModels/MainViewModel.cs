@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -26,7 +26,7 @@ public partial class MainViewModel : ObservableObject
 
     // Application & Developer Details
     [ObservableProperty] private string appVersion = "2.5.3 Enterprise";
-    [ObservableProperty] private string framework = ".NET 8.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
+    [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
     [ObservableProperty] private string developerGitHub = "https://github.com/Majordean0303";
@@ -513,6 +513,9 @@ public partial class MainViewModel : ObservableObject
         }
         finally
         {
+            HasCompletedBackups = Directory.Exists(LastBackupDirectory) && Directory.EnumerateFiles(LastBackupDirectory, "*.txt").Any();
+            _cts?.Dispose();
+            _cts = null;
             _sessionStopwatch.Stop();
             _sessionTimer.Stop();
             IsRunning = false;

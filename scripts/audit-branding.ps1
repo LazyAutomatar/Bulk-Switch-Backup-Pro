@@ -23,7 +23,7 @@ $spoofWord = "Lazy" + "Automator"
 
 # 1. Scan for forbidden term across all non-ignored source files (excluding scripts/ itself)
 $files = Get-ChildItem -Path $root -Recurse -File | Where-Object {
-    $_.FullName -notmatch '\\(\.git|bin|obj|dist|publish|scripts)\\'
+    $_.FullName -notmatch '[\\/](\.git|bin|obj|dist|publish|scripts|artifacts|TestResults)[\\/]'
 }
 
 foreach ($file in $files) {
