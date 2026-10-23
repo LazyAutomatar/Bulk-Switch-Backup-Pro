@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <br/>
 
@@ -13,7 +13,7 @@
 [![Latest Release](https://img.shields.io/badge/Release-v2.5.2%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
-[![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
+[![Runtime](https://img.shields.io/badge/.NET%208-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
 [![Security Hardened](https://img.shields.io/badge/Security-ASLR%20%7C%20DEP%20%7C%20SHA--256-blueviolet?style=for-the-badge&logo=shield&logoColor=white&labelColor=0d1117)](#security)
 
 <br/>
@@ -214,16 +214,3 @@ Bulk Switch Backup Pro is an independent network administration and automation u
 - **Operational Responsibility:** While this application incorporates strict safety mechanisms (including IP phone exclusions, paging suppression, and read-only diagnostic commands), network administrators are solely responsible for verifying command sets against their corporate change control policies before execution on production campus and datacenter networks.
 
 </div>
-
-## Migration development checks
-
-Development targets the .NET 10 SDK and PowerShell 7. Run
-`./scripts/test-core.ps1` for offline core tests, or `./scripts/test-all.ps1`
-for the full core gate followed by an Avalonia desktop build. Use
-`-Filter 'FullyQualifiedName~Cancellation' -NoRestore` on the core runner for
-focused checks. Detailed validation logs and TRX results are stored under ignored
-`artifacts/`; no matching tests is a failing result.
-
-Read [MIGRATION_STATE.md](MIGRATION_STATE.md) for the current checkpoint and next
-bounded task, [MIGRATION_ROADMAP.md](MIGRATION_ROADMAP.md) for the serial app
-sequence, and [CHANGELOG.md](CHANGELOG.md) for this app's changes.

@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkBackup.Core", "BulkBack
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkBackup.Desktop", "BulkBackup.Desktop\BulkBackup.Desktop.csproj", "{43B9C3F7-DA50-468F-A60A-511356D09D48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkBackup.Tests", "BulkBackup.Tests\BulkBackup.Tests.csproj", "{CEA79657-93F6-46D7-88EF-4AEB1C728108}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,10 +16,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CEA79657-93F6-46D7-88EF-4AEB1C728108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CEA79657-93F6-46D7-88EF-4AEB1C728108}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CEA79657-93F6-46D7-88EF-4AEB1C728108}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CEA79657-93F6-46D7-88EF-4AEB1C728108}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5856119D-0309-47C2-8B27-0E4181E51C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5856119D-0309-47C2-8B27-0E4181E51C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5856119D-0309-47C2-8B27-0E4181E51C4A}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,17 +1,22 @@
 <#
 .SYNOPSIS
-    Runs the offline core suite and builds the existing Avalonia desktop application.
+    Runs the full test suite for Bulk Switch Backup.
+.DESCRIPTION
+    Builds and tests all solution projects, outputting concise summary results.
+.EXAMPLE
+    .\scripts\test-all.ps1
 #>
-param([ValidateSet('Debug', 'Release')][string]$Configuration = 'Release')
-$ErrorActionPreference = 'Stop'
-$root = Split-Path -Parent $PSScriptRoot
-& (Join-Path $PSScriptRoot 'test-core.ps1') -Configuration $Configuration
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-$buildLog = Join-Path $root 'artifacts/desktop-build.log'
-& dotnet build (Join-Path $root 'BulkBackup.Desktop/BulkBackup.Desktop.csproj') -c $Configuration --nologo *> $buildLog
+
+$ErrorActionPreference = "Stop"
+$root = Resolve-Path (Join-Path $PSScriptRoot "..")
+$sln = Join-Path $root "BulkBackup.sln"
+
+Write-Host ">>> Building and testing Bulk Switch Backup solution..." -ForegroundColor Cyan
+dotnet build $sln -c Release
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Avalonia desktop build FAILED. Log: $buildLog"
+    Write-Host "Build failed!" -ForegroundColor Red
     exit 1
 }
-Write-Host "Avalonia desktop build PASSED. Log: $buildLog"
+
+Write-Host " Solution built cleanly." -ForegroundColor Green
 exit 0

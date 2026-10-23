@@ -1,6 +1,6 @@
 using BulkBackup.Core.Models;
+using Renci.SshNet;
 using Renci.SshNet.Common;
-using System.Diagnostics;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,13 +16,6 @@ namespace BulkBackup.Core.Services
 {
     public class NetworkEngine
     {
-        private readonly IBackupTransport _transport;
-
-        public NetworkEngine(IBackupTransport? transport = null)
-        {
-            _transport = transport ?? new SshNetBackupTransport();
-        }
-
         public delegate void LogAction(string source, string message);
         public delegate void ProgressAction(string ip, int percentage, string status, string protocol, string? hostname = null, bool isAp = false, string? uplink = null, string? port = null);
 
@@ -94,9 +87,6 @@ namespace BulkBackup.Core.Services
             ProgressAction progressCallback,
             CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();
-            ArgumentNullException.ThrowIfNull(targetIps);
-            ArgumentNullException.ThrowIfNull(customCommands);
             if (candidateCredentials == null || candidateCredentials.Count == 0)
             {
                 throw new ArgumentException("At least one credential must be provided.");
@@ -112,7 +102,6 @@ namespace BulkBackup.Core.Services
 
             var devicesToBackup = new ConcurrentDictionary<string, DiscoveredTarget>(StringComparer.OrdinalIgnoreCase);
             var visitedDiscovery = new ConcurrentDictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
-            using var discoverySlots = new SemaphoreSlim(Math.Max(1, maxConcurrency));
 
             if (enableCdp)
             {
@@ -121,7 +110,7 @@ namespace BulkBackup.Core.Services
                 foreach (var ip in targetIps)
                 {
                     AddOrMergeDiscoveredTarget(devicesToBackup, new DiscoveredTarget { IpAddress = ip, Hostname = ip, IsAp = false });
-                    discoveryTasks.Add(PerformDiscoveryAsync(ip, candidateCredentials, filterType, filterValue, includeAps, devicesToBackup, visitedDiscovery, discoverySlots, logCallback, progressCallback, token));
+                    discoveryTasks.Add(PerformDiscoveryAsync(ip, candidateCredentials, filterType, filterValue, includeAps, devicesToBackup, visitedDiscovery, logCallback, progressCallback, token));
                 }
                 await Task.WhenAll(discoveryTasks);
                 logCallback("System", $"CDP/LLDP Discovery Phase complete. Discovered {devicesToBackup.Count} total valid targets.");
@@ -157,12 +146,26 @@ namespace BulkBackup.Core.Services
                 await PerformBackupWithFallbackAsync(target.IpAddress, candidateCredentials, target.IsAp, destinationDirectory, cmds, profileName, writeConfig, logCallback, progressCallback, ct, target.Hostname, target.UplinkDevice, target.Port);
             });
 
-            logCallback("System", $"Backup processing finished. See per-device results. Output directory: {destinationDirectory}");
+            logCallback("System", $"All backups completed! Configurations stored directly in: {destinationDirectory}");
             return destinationDirectory;
         }
 
-        public static Task<bool> IsSshPortReachableAsync(string host, int port = 22, int timeoutMs = 2500, CancellationToken token = default) =>
-            SshNetBackupTransport.IsPortReachableAsync(host, port, timeoutMs, token);
+        public static async Task<bool> IsSshPortReachableAsync(string host, int port = 22, int timeoutMs = 2500, CancellationToken token = default)
+        {
+            try
+            {
+                using var client = new System.Net.Sockets.TcpClient();
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+                cts.CancelAfter(timeoutMs);
+
+                await client.ConnectAsync(host, port, cts.Token);
+                return client.Connected;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         private async Task PerformDiscoveryAsync(
             string ip,
@@ -172,313 +175,298 @@ namespace BulkBackup.Core.Services
             bool includeAps,
             ConcurrentDictionary<string, DiscoveredTarget> backupQueue,
             ConcurrentDictionary<string, bool> visited,
-            SemaphoreSlim discoverySlots,
             LogAction log,
             ProgressAction progress,
             CancellationToken token,
             string? parentHost = null)
         {
-            if (!visited.TryAdd(ip, true)) return;
+            if (visited.ContainsKey(ip)) return;
+            visited.TryAdd(ip, true);
 
-            var pendingDiscovery = new List<(string Ip, string Parent)>();
-            await discoverySlots.WaitAsync(token);
-            try
+            progress(ip, 5, "Probing SSH (Port 22)...", "SSH", null, false, parentHost, null);
+            bool reachable = await IsSshPortReachableAsync(ip, 22, 2500, token);
+            if (!reachable)
             {
+                progress(ip, 0, "Unreachable / Port 22 Closed", "ERR", null, false, parentHost, null);
+                log("Error", $"Seed {ip} is unreachable on port 22 (timeout or connection refused). Skipping CDP discovery.");
+                return;
+            }
 
-                progress(ip, 5, "Probing SSH (Port 22)...", "SSH", null, false, parentHost, null);
-                bool reachable = await _transport.IsReachableAsync(ip, token);
-                if (!reachable)
-                {
-                    progress(ip, 0, "Unreachable / Port 22 Closed", "ERR", null, false, parentHost, null);
-                    log("Error", $"Seed {ip} is unreachable on port 22 (timeout or connection refused). Skipping CDP discovery.");
-                    return;
-                }
+            progress(ip, 15, "Discovering CDP/LLDP neighbors...", "SSH", null, false, parentHost, null);
 
-                progress(ip, 15, "Discovering CDP/LLDP neighbors...", "SSH", null, false, parentHost, null);
+            SshClient? client = null;
+            CredentialEntry? activeCred = null;
 
-                IBackupSession? client = null;
-                CredentialEntry? activeCred = null;
-
-                foreach (var cred in candidateCredentials)
-                {
-                    token.ThrowIfCancellationRequested();
-                    try
-                    {
-                        var testClient = await _transport.ConnectAsync(ip, cred, token);
-
-                        client = testClient;
-                        activeCred = cred;
-                        break;
-                    }
-                    catch (SshAuthenticationException)
-                    {
-                        log("Auth", $"Credential '{cred.Username}' rejected by {ip}. Trying next stored credential...");
-                    }
-                    catch (Exception ex) when (!token.IsCancellationRequested)
-                    {
-                        log("Error", $"Connection error to {ip} with '{cred.Username}': {ex.Message}");
-                        break;
-                    }
-                }
-
-                if (client == null || activeCred == null)
-                {
-                    progress(ip, 0, "Discovery Auth Failed", "ERR", null, false, parentHost, null);
-                    log("Error", $"All credentials failed on seed {ip}.");
-                    return;
-                }
-
+            foreach (var cred in candidateCredentials)
+            {
+                token.ThrowIfCancellationRequested();
                 try
                 {
-                    using (client)
-                    {
-                        using var stream = client.OpenShell();
-                        string initial = await ReadUntilPromptOrPatternAsync(stream, PromptRegex, 8000, token);
+                    var testClient = new SshClient(ip, cred.Username, cred.Password);
+                    testClient.ConnectionInfo.Timeout = TimeSpan.FromSeconds(7);
+                    await Task.Run(() => testClient.Connect(), token);
 
-                        string prompt = await ElevatePrivilegesAsync(stream, initial, activeCred.Secret, token);
-
-                        string currentHost = ip;
-                        var hostMatch = Regex.Match(prompt, @"(?:^|[\r\n])\s*(?:\(([\w\.\-\s]+?)\)|([\w\.\-]+?))(?:\([^\)]+\))?[>#]");
-                        if (hostMatch.Success)
-                        {
-                            string candidate = !string.IsNullOrWhiteSpace(hostMatch.Groups[1].Value) ? hostMatch.Groups[1].Value : hostMatch.Groups[2].Value;
-                            candidate = candidate.Trim();
-                            if (!string.IsNullOrEmpty(candidate) &&
-                                !candidate.Equals("Switch", StringComparison.OrdinalIgnoreCase) &&
-                                !candidate.Equals("Router", StringComparison.OrdinalIgnoreCase) &&
-                                !candidate.Equals("Cisco Controller", StringComparison.OrdinalIgnoreCase))
-                            {
-                                currentHost = candidate;
-                            }
-                        }
-
-                        // Update self hostname in queue
-                        var selfTarget = backupQueue.Values.FirstOrDefault(t => t.IpAddress == ip);
-                        if (selfTarget != null && (string.IsNullOrWhiteSpace(selfTarget.Hostname) || selfTarget.Hostname == selfTarget.IpAddress))
-                        {
-                            selfTarget.Hostname = currentHost;
-                        }
-
-                        await ExecuteRawCommandAsync(stream, "terminal length 0", token);
-
-                        // 1. Protocols table: map Device ID -> IPv4 address fast and reliably
-                        string cdpProtocolsOutput = string.Empty;
-                        try
-                        {
-                            cdpProtocolsOutput = await ExecuteRawCommandAsync(stream, "show cdp entry * protocols", token, timeoutMs: 12000);
-                        }
-                        catch (Exception ex) when (!token.IsCancellationRequested)
-                        {
-                            log("CDP", $"Optional 'show cdp entry * protocols' skipped on {ip}: {ex.Message}");
-                        }
-
-                        // 2. Detailed CDP
-                        string cdpDetailOutput = string.Empty;
-                        try
-                        {
-                            cdpDetailOutput = await ExecuteRawCommandAsync(stream, "show cdp neighbors detail", token, timeoutMs: 25000);
-                        }
-                        catch (Exception ex) when (!token.IsCancellationRequested)
-                        {
-                            log("CDP", $"Error running 'show cdp neighbors detail' on {ip}: {ex.Message}");
-                        }
-
-                        // 3. Tabular CDP (captures ports across 25G Twe, 10G Ten, 1G Gig, Fo 40G, Hu 100G)
-                        string cdpTableOutput = string.Empty;
-                        try
-                        {
-                            cdpTableOutput = await ExecuteRawCommandAsync(stream, "show cdp neighbors", token, timeoutMs: 20000);
-                        }
-                        catch (Exception ex) when (!token.IsCancellationRequested)
-                        {
-                            log("CDP", $"Error running 'show cdp neighbors' on {ip}: {ex.Message}");
-                        }
-
-                        // 4. LLDP Detail
-                        string lldpDetailOutput = string.Empty;
-                        try
-                        {
-                            lldpDetailOutput = await ExecuteRawCommandAsync(stream, "show lldp neighbors detail", token, timeoutMs: 15000);
-                        }
-                        catch (Exception) when (!token.IsCancellationRequested)
-                        {
-                            // LLDP is optional if switch doesn't have it enabled
-                        }
-
-                        client.Disconnect();
-
-                        progress(ip, 100, "Discovery complete", "SSH", currentHost, false, parentHost, null);
-
-                        var protocolsIpMap = ParseCdpProtocols(cdpProtocolsOutput);
-                        var detailNeighbors = ParseCdpNeighborsDetail(cdpDetailOutput, currentHost, ip, protocolsIpMap);
-                        var tableNeighbors = ParseCdpNeighborsTable(cdpTableOutput, currentHost, ip, protocolsIpMap);
-                        var lldpNeighbors = ParseLldpNeighborsDetail(lldpDetailOutput, currentHost, ip);
-
-                        var combinedNeighbors = CombineDiscoveredNeighbors(detailNeighbors, tableNeighbors, lldpNeighbors);
-
-                        foreach (var neighbor in combinedNeighbors)
-                        {
-                            if (string.IsNullOrWhiteSpace(neighbor.DeviceName) || !IsValidCiscoDeviceId(neighbor.DeviceName)) continue;
-
-                            // CRITICAL: NEVER ATTEMPT SSH ON IP PHONES!
-                            if (neighbor.IsPhone)
-                            {
-                                log("CDP", $"Found IP Phone: {neighbor.DeviceName} ({neighbor.IpAddress}) [{neighbor.Platform}] on {currentHost} ({neighbor.LocalPort} -> {neighbor.RemotePort}) - Skipped (No SSH).");
-                                continue;
-                            }
-
-                            bool isAp = neighbor.IsAp;
-                            if (isAp && !includeAps) continue;
-
-                            bool validTarget = isAp;
-                            if (!isAp)
-                            {
-                                if (filterType == 0 && !string.IsNullOrWhiteSpace(neighbor.IpAddress) &&
-                                    !neighbor.IpAddress.StartsWith("0.0.0.") &&
-                                    !neighbor.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    validTarget = IsIpInSubnetFilter(neighbor.IpAddress, filterValue);
-                                }
-                                else
-                                {
-                                    validTarget = true;
-                                }
-                            }
-
-                            if (validTarget)
-                            {
-                                var target = new DiscoveredTarget
-                                {
-                                    IpAddress = neighbor.IpAddress,
-                                    Hostname = neighbor.DeviceName,
-                                    IsAp = isAp,
-                                    UplinkDevice = currentHost,
-                                    UplinkIp = ip,
-                                    LocalPort = neighbor.LocalPort,
-                                    RemotePort = neighbor.RemotePort
-                                };
-
-                                bool isNew = AddOrMergeDiscoveredTarget(backupQueue, target);
-                                if (isNew)
-                                {
-                                    log("CDP", $"Discovered {neighbor.DeviceName} ({target.IpAddress}) [{(isAp ? "AP" : "Switch")}] via {currentHost} ({target.Port})");
-                                    progress(target.IpAddress, 0, "Discovered via CDP", "Waiting", neighbor.DeviceName, isAp, currentHost, target.Port);
-
-                                    // Recurse only if switch has a valid, routable IP address
-                                    if (!isAp && !string.IsNullOrWhiteSpace(target.IpAddress) &&
-                                        !target.IpAddress.StartsWith("0.0.0.") &&
-                                        !target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        pendingDiscovery.Add((target.IpAddress, currentHost));
-                                    }
-                                }
-                            }
-                        }
-
-                    }
+                    client = testClient;
+                    activeCred = cred;
+                    break;
                 }
-                catch (Exception ex) when (!token.IsCancellationRequested)
+                catch (SshAuthenticationException)
                 {
-                    progress(ip, 0, "Discovery Failed", "ERR", null, false, parentHost, null);
-                    log("Error", $"CDP/LLDP Discovery failed on {ip}: {ex.Message}");
+                    log("Auth", $"Credential '{cred.Username}' rejected by {ip}. Trying next stored credential...");
+                }
+                catch (Exception ex)
+                {
+                    log("Error", $"Connection error to {ip} with '{cred.Username}': {ex.Message}");
+                    break;
                 }
             }
-            finally
+
+            if (client == null || activeCred == null)
             {
-                discoverySlots.Release();
+                progress(ip, 0, "Discovery Auth Failed", "ERR", null, false, parentHost, null);
+                log("Error", $"All credentials failed on seed {ip}.");
+                return;
             }
 
-            // Release the connection slot before waiting for descendants; otherwise a
-            // single-worker run can deadlock when a switch discovers another switch.
-            await Task.WhenAll(pendingDiscovery.Select(next => PerformDiscoveryAsync(
-                next.Ip, candidateCredentials, filterType, filterValue, includeAps,
-                backupQueue, visited, discoverySlots, log, progress, token, next.Parent)));
+            try
+            {
+                using (client)
+                {
+                    using var stream = client.CreateShellStream("vt100", 255, 50, 800, 600, 4096);
+                    string initial = await ReadUntilPromptOrPatternAsync(stream, PromptRegex, 8000, token);
+
+                    string prompt = await ElevatePrivilegesAsync(stream, initial, activeCred.Secret, token);
+
+                    string currentHost = ip;
+                    var hostMatch = Regex.Match(prompt, @"(?:^|[\r\n])\s*(?:\(([\w\.\-\s]+?)\)|([\w\.\-]+?))(?:\([^\)]+\))?[>#]");
+                    if (hostMatch.Success)
+                    {
+                        string candidate = !string.IsNullOrWhiteSpace(hostMatch.Groups[1].Value) ? hostMatch.Groups[1].Value : hostMatch.Groups[2].Value;
+                        candidate = candidate.Trim();
+                        if (!string.IsNullOrEmpty(candidate) &&
+                            !candidate.Equals("Switch", StringComparison.OrdinalIgnoreCase) &&
+                            !candidate.Equals("Router", StringComparison.OrdinalIgnoreCase) &&
+                            !candidate.Equals("Cisco Controller", StringComparison.OrdinalIgnoreCase))
+                        {
+                            currentHost = candidate;
+                        }
+                    }
+
+                    // Update self hostname in queue
+                    var selfTarget = backupQueue.Values.FirstOrDefault(t => t.IpAddress == ip);
+                    if (selfTarget != null && (string.IsNullOrWhiteSpace(selfTarget.Hostname) || selfTarget.Hostname == selfTarget.IpAddress))
+                    {
+                        selfTarget.Hostname = currentHost;
+                    }
+
+                    await ExecuteRawCommandAsync(stream, "terminal length 0", token);
+
+                    // 1. Protocols table: map Device ID -> IPv4 address fast and reliably
+                    string cdpProtocolsOutput = string.Empty;
+                    try
+                    {
+                        cdpProtocolsOutput = await ExecuteRawCommandAsync(stream, "show cdp entry * protocols", token, timeoutMs: 12000);
+                    }
+                    catch (Exception ex)
+                    {
+                        log("CDP", $"Optional 'show cdp entry * protocols' skipped on {ip}: {ex.Message}");
+                    }
+
+                    // 2. Detailed CDP
+                    string cdpDetailOutput = string.Empty;
+                    try
+                    {
+                        cdpDetailOutput = await ExecuteRawCommandAsync(stream, "show cdp neighbors detail", token, timeoutMs: 25000);
+                    }
+                    catch (Exception ex)
+                    {
+                        log("CDP", $"Error running 'show cdp neighbors detail' on {ip}: {ex.Message}");
+                    }
+
+                    // 3. Tabular CDP (captures ports across 25G Twe, 10G Ten, 1G Gig, Fo 40G, Hu 100G)
+                    string cdpTableOutput = string.Empty;
+                    try
+                    {
+                        cdpTableOutput = await ExecuteRawCommandAsync(stream, "show cdp neighbors", token, timeoutMs: 20000);
+                    }
+                    catch (Exception ex)
+                    {
+                        log("CDP", $"Error running 'show cdp neighbors' on {ip}: {ex.Message}");
+                    }
+
+                    // 4. LLDP Detail
+                    string lldpDetailOutput = string.Empty;
+                    try
+                    {
+                        lldpDetailOutput = await ExecuteRawCommandAsync(stream, "show lldp neighbors detail", token, timeoutMs: 15000);
+                    }
+                    catch
+                    {
+                        // LLDP is optional if switch doesn't have it enabled
+                    }
+
+                    client.Disconnect();
+
+                    progress(ip, 100, "Discovery complete", "SSH", currentHost, false, parentHost, null);
+
+                    var protocolsIpMap = ParseCdpProtocols(cdpProtocolsOutput);
+                    var detailNeighbors = ParseCdpNeighborsDetail(cdpDetailOutput, currentHost, ip, protocolsIpMap);
+                    var tableNeighbors = ParseCdpNeighborsTable(cdpTableOutput, currentHost, ip, protocolsIpMap);
+                    var lldpNeighbors = ParseLldpNeighborsDetail(lldpDetailOutput, currentHost, ip);
+
+                    var combinedNeighbors = CombineDiscoveredNeighbors(detailNeighbors, tableNeighbors, lldpNeighbors);
+                    var subTasks = new List<Task>();
+
+                    foreach (var neighbor in combinedNeighbors)
+                    {
+                        if (string.IsNullOrWhiteSpace(neighbor.DeviceName) || !IsValidCiscoDeviceId(neighbor.DeviceName)) continue;
+
+                        // CRITICAL: NEVER ATTEMPT SSH ON IP PHONES!
+                        if (neighbor.IsPhone)
+                        {
+                            log("CDP", $"Found IP Phone: {neighbor.DeviceName} ({neighbor.IpAddress}) [{neighbor.Platform}] on {currentHost} ({neighbor.LocalPort} -> {neighbor.RemotePort}) - Skipped (No SSH).");
+                            continue;
+                        }
+
+                        bool isAp = neighbor.IsAp;
+                        if (isAp && !includeAps) continue;
+
+                        bool validTarget = isAp;
+                        if (!isAp)
+                        {
+                            if (filterType == 0 && !string.IsNullOrWhiteSpace(neighbor.IpAddress) &&
+                                !neighbor.IpAddress.StartsWith("0.0.0.") &&
+                                !neighbor.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
+                            {
+                                validTarget = IsIpInSubnetFilter(neighbor.IpAddress, filterValue);
+                            }
+                            else
+                            {
+                                validTarget = true;
+                            }
+                        }
+
+                        if (validTarget)
+                        {
+                            var target = new DiscoveredTarget
+                            {
+                                IpAddress = neighbor.IpAddress,
+                                Hostname = neighbor.DeviceName,
+                                IsAp = isAp,
+                                UplinkDevice = currentHost,
+                                UplinkIp = ip,
+                                LocalPort = neighbor.LocalPort,
+                                RemotePort = neighbor.RemotePort
+                            };
+
+                            bool isNew = AddOrMergeDiscoveredTarget(backupQueue, target);
+                            if (isNew)
+                            {
+                                log("CDP", $"Discovered {neighbor.DeviceName} ({target.IpAddress}) [{(isAp ? "AP" : "Switch")}] via {currentHost} ({target.Port})");
+                                progress(target.IpAddress, 0, "Discovered via CDP", "Waiting", neighbor.DeviceName, isAp, currentHost, target.Port);
+
+                                // Recurse only if switch has a valid, routable IP address
+                                if (!isAp && !string.IsNullOrWhiteSpace(target.IpAddress) &&
+                                    !target.IpAddress.StartsWith("0.0.0.") &&
+                                    !target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    subTasks.Add(PerformDiscoveryAsync(target.IpAddress, candidateCredentials, filterType, filterValue, includeAps, backupQueue, visited, log, progress, token, currentHost));
+                                }
+                            }
+                        }
+                    }
+
+                    await Task.WhenAll(subTasks);
+                }
+            }
+            catch (Exception ex)
+            {
+                progress(ip, 0, "Discovery Failed", "ERR", null, false, parentHost, null);
+                log("Error", $"CDP/LLDP Discovery failed on {ip}: {ex.Message}");
+            }
         }
 
         private static bool AddOrMergeDiscoveredTarget(
             ConcurrentDictionary<string, DiscoveredTarget> dict,
             DiscoveredTarget target)
         {
-            lock (dict)
+            string hostKey = HostKey.Of(target.Hostname);
+            DiscoveredTarget? existing = null;
+
+            if (!string.IsNullOrWhiteSpace(target.IpAddress) &&
+                !target.IpAddress.StartsWith("0.0.0.") &&
+                !target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
             {
-                string hostKey = HostKey.Of(target.Hostname);
-                DiscoveredTarget? existing = null;
-
-                if (!string.IsNullOrWhiteSpace(target.IpAddress) &&
-                    !target.IpAddress.StartsWith("0.0.0.") &&
-                    !target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
-                {
-                    dict.TryGetValue(target.IpAddress, out existing);
-                }
-
-                if (existing == null && !string.IsNullOrEmpty(hostKey))
-                {
-                    existing = dict.Values.FirstOrDefault(t => HostKey.Same(t.Hostname, target.Hostname));
-                }
-
-                if (existing != null)
-                {
-                    // Promote placeholder to real IP if discovered
-                    if ((string.IsNullOrWhiteSpace(existing.IpAddress) || existing.IpAddress.StartsWith("0.0.0.") || existing.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase)) &&
-                        !string.IsNullOrWhiteSpace(target.IpAddress) && !target.IpAddress.StartsWith("0.0.0.") && !target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var oldKeys = dict.Where(kvp => kvp.Value == existing).Select(kvp => kvp.Key).ToList();
-                        foreach (var k in oldKeys) dict.TryRemove(k, out _);
-
-                        existing.IpAddress = target.IpAddress;
-                        dict[existing.IpAddress] = existing;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(existing.Hostname) || existing.Hostname == existing.IpAddress)
-                    {
-                        if (!string.IsNullOrWhiteSpace(target.Hostname)) existing.Hostname = target.Hostname;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(existing.UplinkDevice) && !string.IsNullOrWhiteSpace(target.UplinkDevice))
-                    {
-                        existing.UplinkDevice = target.UplinkDevice;
-                        existing.UplinkIp = target.UplinkIp;
-                    }
-                    else if (!string.IsNullOrWhiteSpace(target.UplinkDevice) &&
-                             existing.UplinkDevice.StartsWith("Core", StringComparison.OrdinalIgnoreCase) &&
-                             !target.UplinkDevice.StartsWith("Core", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Prefer specific distribution uplink over generic Core
-                        existing.UplinkDevice = target.UplinkDevice;
-                        existing.UplinkIp = target.UplinkIp;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(existing.LocalPort) && !string.IsNullOrWhiteSpace(target.LocalPort))
-                    {
-                        existing.LocalPort = target.LocalPort;
-                    }
-                    if (string.IsNullOrWhiteSpace(existing.RemotePort) && !string.IsNullOrWhiteSpace(target.RemotePort))
-                    {
-                        existing.RemotePort = target.RemotePort;
-                    }
-
-                    return false;
-                }
-
-                string key;
-                if (!string.IsNullOrWhiteSpace(target.IpAddress) &&
-                    !target.IpAddress.StartsWith("0.0.0.") &&
-                    !target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
-                {
-                    key = target.IpAddress;
-                }
-                else if (!string.IsNullOrEmpty(hostKey))
-                {
-                    key = $"placeholder:{hostKey}";
-                }
-                else
-                {
-                    key = $"placeholder:{Guid.NewGuid():N}";
-                }
-
-                target.IpAddress = string.IsNullOrWhiteSpace(target.IpAddress) ? key : target.IpAddress;
-                return dict.TryAdd(key, target);
+                dict.TryGetValue(target.IpAddress, out existing);
             }
+
+            if (existing == null && !string.IsNullOrEmpty(hostKey))
+            {
+                existing = dict.Values.FirstOrDefault(t => HostKey.Same(t.Hostname, target.Hostname));
+            }
+
+            if (existing != null)
+            {
+                // Promote placeholder to real IP if discovered
+                if ((string.IsNullOrWhiteSpace(existing.IpAddress) || existing.IpAddress.StartsWith("0.0.0.") || existing.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase)) &&
+                    !string.IsNullOrWhiteSpace(target.IpAddress) && !target.IpAddress.StartsWith("0.0.0.") && !target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
+                {
+                    var oldKeys = dict.Where(kvp => kvp.Value == existing).Select(kvp => kvp.Key).ToList();
+                    foreach (var k in oldKeys) dict.TryRemove(k, out _);
+
+                    existing.IpAddress = target.IpAddress;
+                    dict[existing.IpAddress] = existing;
+                }
+
+                if (string.IsNullOrWhiteSpace(existing.Hostname) || existing.Hostname == existing.IpAddress)
+                {
+                    if (!string.IsNullOrWhiteSpace(target.Hostname)) existing.Hostname = target.Hostname;
+                }
+
+                if (string.IsNullOrWhiteSpace(existing.UplinkDevice) && !string.IsNullOrWhiteSpace(target.UplinkDevice))
+                {
+                    existing.UplinkDevice = target.UplinkDevice;
+                    existing.UplinkIp = target.UplinkIp;
+                }
+                else if (!string.IsNullOrWhiteSpace(target.UplinkDevice) &&
+                         existing.UplinkDevice.StartsWith("Core", StringComparison.OrdinalIgnoreCase) &&
+                         !target.UplinkDevice.StartsWith("Core", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Prefer specific distribution uplink over generic Core
+                    existing.UplinkDevice = target.UplinkDevice;
+                    existing.UplinkIp = target.UplinkIp;
+                }
+
+                if (string.IsNullOrWhiteSpace(existing.LocalPort) && !string.IsNullOrWhiteSpace(target.LocalPort))
+                {
+                    existing.LocalPort = target.LocalPort;
+                }
+                if (string.IsNullOrWhiteSpace(existing.RemotePort) && !string.IsNullOrWhiteSpace(target.RemotePort))
+                {
+                    existing.RemotePort = target.RemotePort;
+                }
+
+                return false;
+            }
+
+            string key;
+            if (!string.IsNullOrWhiteSpace(target.IpAddress) &&
+                !target.IpAddress.StartsWith("0.0.0.") &&
+                !target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
+            {
+                key = target.IpAddress;
+            }
+            else if (!string.IsNullOrEmpty(hostKey))
+            {
+                key = $"placeholder:{hostKey}";
+            }
+            else
+            {
+                key = $"placeholder:{Guid.NewGuid():N}";
+            }
+
+            target.IpAddress = string.IsNullOrWhiteSpace(target.IpAddress) ? key : target.IpAddress;
+            return dict.TryAdd(key, target);
         }
 
         private static List<CdpNeighbor> CombineDiscoveredNeighbors(
@@ -907,7 +895,7 @@ namespace BulkBackup.Core.Services
         {
             progress(ip, 5, "Probing SSH (Port 22)...", "SSH", knownHostname, isAp, uplinkDevice, port);
 
-            bool reachable = await _transport.IsReachableAsync(ip, token);
+            bool reachable = await IsSshPortReachableAsync(ip, 22, 2500, token);
             if (!reachable)
             {
                 progress(ip, 0, "Unreachable / Port 22 Closed", "ERR", knownHostname, isAp, uplinkDevice, port);
@@ -915,7 +903,7 @@ namespace BulkBackup.Core.Services
                 return;
             }
 
-            IBackupSession? client = null;
+            SshClient? client = null;
             CredentialEntry? activeCred = null;
 
             foreach (var cred in candidateCredentials)
@@ -924,7 +912,9 @@ namespace BulkBackup.Core.Services
                 try
                 {
                     progress(ip, 10, $"Authenticating ({cred.Username})...", "SSH", knownHostname, isAp, uplinkDevice, port);
-                    var testClient = await _transport.ConnectAsync(ip, cred, token);
+                    var testClient = new SshClient(ip, cred.Username, cred.Password);
+                    testClient.ConnectionInfo.Timeout = TimeSpan.FromSeconds(7);
+                    await Task.Run(() => testClient.Connect(), token);
 
                     client = testClient;
                     activeCred = cred;
@@ -935,7 +925,7 @@ namespace BulkBackup.Core.Services
                 {
                     log("Auth", $"Credential '{cred.Username}' failed for {ip}. Attempting fallback credential...");
                 }
-                catch (Exception ex) when (!token.IsCancellationRequested)
+                catch (Exception ex)
                 {
                     log("Error", $"Connection error to {ip} with '{cred.Username}': {ex.Message}");
                     if (ex.Message.Contains("timed out") || ex.Message.Contains("No route") || ex.Message.Contains("refused"))
@@ -957,7 +947,7 @@ namespace BulkBackup.Core.Services
                 using (client)
                 {
                     progress(ip, 20, "Connected", "SSH", knownHostname, isAp, uplinkDevice, port);
-                    using var stream = client.OpenShell();
+                    using var stream = client.CreateShellStream("vt100", 255, 50, 800, 600, 4096);
 
                     string initial = await ReadUntilPromptOrPatternAsync(stream, PromptRegex, 10000, token);
                     string prompt = await ElevatePrivilegesAsync(stream, initial, activeCred.Secret, token);
@@ -1056,7 +1046,7 @@ namespace BulkBackup.Core.Services
                             sb.AppendLine(saveOutput.TrimEnd());
                             sb.AppendLine();
                         }
-                        catch (Exception ex) when (!token.IsCancellationRequested)
+                        catch (Exception ex)
                         {
                             log("Warning", $"Failed to save memory on {ip}: {ex.Message}");
                         }
@@ -1067,30 +1057,20 @@ namespace BulkBackup.Core.Services
                     string safeHostname = Regex.Replace(hostname, @"[^\w\.\-]", "_");
                     string devTypeSuffix = isAp ? "AP" : (profileName.Contains("WLC", StringComparison.OrdinalIgnoreCase) || profileName.Contains("Wireless", StringComparison.OrdinalIgnoreCase) ? "WLC" : "Switch");
                     string filename = Path.Combine(backupDir, $"{ip}_{safeHostname}_{devTypeSuffix}.txt");
-                    string temporaryFile = filename + $".{Guid.NewGuid():N}.tmp";
-                    try
-                    {
-                        await File.WriteAllTextAsync(temporaryFile, sb.ToString(), token);
-                        token.ThrowIfCancellationRequested();
-                        File.Move(temporaryFile, filename, overwrite: true);
-                    }
-                    finally
-                    {
-                        if (File.Exists(temporaryFile)) File.Delete(temporaryFile);
-                    }
+                    await File.WriteAllTextAsync(filename, sb.ToString(), token);
 
                     progress(ip, 100, $"Completed ({validCommands.Count} cmds)", "SSH", hostname, isAp, uplinkDevice, port);
                     log("Backup", $"Successfully backed up {hostname} ({ip}) -> {Path.GetFileName(filename)}");
                 }
             }
-            catch (Exception ex) when (!token.IsCancellationRequested)
+            catch (Exception ex)
             {
                 progress(ip, 0, $"Failed: {ex.Message}", "ERR", knownHostname, isAp, uplinkDevice, port);
                 log("Error", $"Backup failed on {ip}: {ex.Message}");
             }
         }
 
-        private async Task<string> ElevatePrivilegesAsync(IBackupShell stream, string initialOutput, string secret, CancellationToken token)
+        private async Task<string> ElevatePrivilegesAsync(ShellStream stream, string initialOutput, string secret, CancellationToken token)
         {
             if (initialOutput.TrimEnd().EndsWith("#"))
             {
@@ -1116,15 +1096,14 @@ namespace BulkBackup.Core.Services
             return initialOutput;
         }
 
-        private async Task<string> ExecuteRawCommandAsync(IBackupShell stream, string command, CancellationToken token, int timeoutMs = 20000)
+        private async Task<string> ExecuteRawCommandAsync(ShellStream stream, string command, CancellationToken token, int timeoutMs = 20000)
         {
-            token.ThrowIfCancellationRequested();
             FlushStream(stream);
             stream.WriteLine(command);
             return await ReadUntilPromptOrPatternAsync(stream, PromptRegex, timeoutMs, token);
         }
 
-        private void FlushStream(IBackupShell stream)
+        private void FlushStream(ShellStream stream)
         {
             while (stream.DataAvailable)
             {
@@ -1132,14 +1111,13 @@ namespace BulkBackup.Core.Services
             }
         }
 
-        private async Task<string> ReadUntilPromptOrPatternAsync(IBackupShell stream, Regex pattern, int timeoutMs, CancellationToken token)
+        private async Task<string> ReadUntilPromptOrPatternAsync(ShellStream stream, Regex pattern, int timeoutMs, CancellationToken token)
         {
             var sb = new StringBuilder();
-            var timer = Stopwatch.StartNew();
+            var startTime = DateTime.UtcNow;
 
-            while (timer.ElapsedMilliseconds < timeoutMs)
+            while (!token.IsCancellationRequested && (DateTime.UtcNow - startTime).TotalMilliseconds < timeoutMs)
             {
-                token.ThrowIfCancellationRequested();
                 if (stream.DataAvailable)
                 {
                     string chunk = stream.Read();
@@ -1165,8 +1143,7 @@ namespace BulkBackup.Core.Services
                 }
             }
 
-            token.ThrowIfCancellationRequested();
-            throw new TimeoutException($"No device prompt received within {timeoutMs} ms.");
+            return sb.ToString();
         }
 
         private bool IsIpInSubnetFilter(string ipStr, string filter)

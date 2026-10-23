@@ -12,7 +12,7 @@ REM 1. Ensure dotnet CLI is available
 where dotnet >nul 2>nul
 if %ERRORLEVEL% neq 0 (
     echo [ERROR] .NET SDK is not found in your PATH!
-    echo Please install the .NET 10 SDK or add dotnet to your system PATH.
+    echo Please install the .NET 8 SDK or add dotnet to your system PATH.
     echo.
     pause
     exit /b 1

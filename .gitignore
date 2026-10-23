@@ -29,7 +29,3 @@ dotnet-install.ps1
 ## Python legacy cache
 __pycache__/
 *.pyc
-
-## Validation artifacts
-artifacts/
-TestResults/

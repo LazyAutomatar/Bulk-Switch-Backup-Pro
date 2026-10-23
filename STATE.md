@@ -1,8 +1,8 @@
 # Bulk Switch Backup Pro - Project State
 
 ## Status Overview
-- **Current Phase:** .NET 10 offline core gate complete; UI/runtime and packaging validation pending (see MIGRATION_STATE.md)
-- **Active Sprint:** Serial application 1 migration on `migration/avalonia/bulk-switch-backup`; see `MIGRATION_ROADMAP.md` and `CHANGELOG.md`
+- **Current Phase:** Phase 0 Completed (Repo Plumbing & Infra Alignment), Ready for Phase 1 (MainWindow Title Bar Parity)
+- **Active Sprint:** Frontend Overhaul & Two-Repo Alignment with `LazyAutomatar/Bulk-Switch-Backup-Pro`
 
 ---
 

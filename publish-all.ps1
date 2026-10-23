@@ -1,20 +1,13 @@
 param(
     [ValidateSet("all", "win", "mac", "linux", "win-x64", "osx-arm64", "osx-x64", "linux-x64", "linux-arm64")]
     [string]$Target = "all",
-    [string]$Configuration = "Release",
-    [string]$Version,
-    [ValidatePattern('^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$')][string]$Repo = "LazyAutomatar/Bulk-Switch-Backup-Pro"
+    [string]$Configuration = "Release"
 )
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Join-Path $ScriptDir "BulkBackup.Desktop"
 $DistDir = Join-Path $ScriptDir "dist"
-if (-not $Version) {
-    [xml]$project = Get-Content (Join-Path $ProjectDir "BulkBackup.Desktop.csproj") -Raw
-    $Version = [string]$project.Project.PropertyGroup.Version
-}
-if ($Version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$') { throw "Invalid release version." }
 
 if (-not (Test-Path $DistDir)) {
     New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
@@ -56,7 +49,7 @@ function Publish-Target {
     )
 
     Write-Host "`n>>> [Building $DisplayName] RID: $Rid..." -ForegroundColor Yellow
-    $publishOut = Join-Path $ProjectDir "bin\$Configuration\net10.0\$Rid\publish"
+    $publishOut = Join-Path $ProjectDir "bin\$Configuration\net8.0\$Rid\publish"
 
     dotnet publish "$ProjectDir\BulkBackup.Desktop.csproj" `
         -c $Configuration `
@@ -139,16 +132,16 @@ function Publish-Target {
         $issScript = Join-Path $ScriptDir "installer.iss"
         if ($iscc -and (Test-Path $issScript)) {
             Write-Host "`n>>> [Building Windows Setup Installer (exe)]..." -ForegroundColor Yellow
-            & $iscc "/DMyAppVersion=$Version" "$issScript" /Q
+            & $iscc "$issScript" /Q
             if ($LASTEXITCODE -eq 0) {
-                $setupVer = Join-Path $DistDir "BulkSwitchBackupPro_Setup_v$Version.exe"
+                $setupVer = Join-Path $DistDir "BulkSwitchBackupPro_Setup_v2.5.3.exe"
                 $setupGen = Join-Path $DistDir "BulkSwitchBackupPro_Setup.exe"
                 if (Test-Path $setupVer) {
                     Copy-Item $setupVer -Destination $setupGen -Force
                     $setupSize = [math]::Round((Get-Item $setupVer).Length / 1MB, 2)
                     $results.Add([PSCustomObject]@{
                         Platform = "Windows Installer (.exe)"
-                        Package = "dist\BulkSwitchBackupPro_Setup_v$Version.exe"
+                        Package = "dist\BulkSwitchBackupPro_Setup_v2.5.3.exe"
                         Size = "$setupSize MB"
                     })
                 }
@@ -229,8 +222,7 @@ To install:
         $tarCmd = Get-Command "tar" -ErrorAction SilentlyContinue
         if ($tarCmd) {
             Write-Host "Creating $tarGz..." -ForegroundColor Gray
-            & $tarCmd.Source -czf $tarGz -C $DistDir $Rid
-            if ($LASTEXITCODE -ne 0) { throw "Archive creation failed for $Rid" }
+            & tar.exe -czf $tarGz -C $DistDir $Rid
             $tarSize = [math]::Round((Get-Item $tarGz).Length / 1MB, 2)
             $results.Add([PSCustomObject]@{
                 Platform = "$DisplayName (with installer)"
@@ -276,17 +268,3 @@ $results | Format-Table -Property Platform, Package, Size -AutoSize
 Write-Host "All distribution packages ready in: $DistDir`n" -ForegroundColor Cyan
 
 
-
-if ($buildWin) {
-    $installer = Join-Path $DistDir 'BulkSwitchBackupPro_Setup.exe'
-    if (-not (Test-Path $installer)) { throw 'Windows update manifest requires a successfully built Inno Setup installer.' }
-    $manifest = [ordered]@{
-        version = $Version; title = "Bulk Switch Backup Pro $Version"
-        releaseNotes = "See CHANGELOG.md for release details."
-        publishedAt = [DateTime]::UtcNow.ToString('o')
-        downloadUrl = "https://github.com/$Repo/releases/download/v$Version/BulkSwitchBackupPro_Setup.exe"
-        sha256 = (Get-FileHash $installer -Algorithm SHA256).Hash.ToLowerInvariant()
-        fileSizeBytes = (Get-Item $installer).Length
-    }
-    $manifest | ConvertTo-Json | Set-Content (Join-Path $DistDir 'update_manifest.json') -Encoding utf8
-}
