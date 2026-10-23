@@ -74,6 +74,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string sessionElapsedTime = "00:00";
     private readonly Stopwatch _sessionStopwatch = new();
     private readonly DispatcherTimer _sessionTimer = new();
+    private bool _metricsDirty;
 
     // Collection Properties
     public ObservableCollection<DeviceModel> Devices { get; } = new();
@@ -101,6 +102,7 @@ public partial class MainViewModel : ObservableObject
         _sessionTimer.Interval = TimeSpan.FromSeconds(1);
         _sessionTimer.Tick += (s, e) =>
         {
+            if (_metricsDirty) UpdateMetrics();
             if (_sessionStopwatch.IsRunning)
             {
                 var ts = _sessionStopwatch.Elapsed;
@@ -335,7 +337,7 @@ public partial class MainViewModel : ObservableObject
         var ips = TargetIps.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                            .Select(ip => ip.Trim())
                            .Where(ip => !string.IsNullOrEmpty(ip))
-                           .Distinct()
+                           .Distinct(StringComparer.OrdinalIgnoreCase)
                            .ToList();
 
         if (!ips.Any())
@@ -406,10 +408,13 @@ public partial class MainViewModel : ObservableObject
         }
         if (EnableCdp)
         {
-            AppendLog("Discovery", "CDP/LLDP Discovery active. Cisco IP Phones and ATAs are automatically excluded.");
+            AppendLog("Discovery", "CDP/LLDP Discovery active. Infrastructure capabilities or recognized models are required; endpoint advertisements are excluded.");
         }
 
         var engine = new NetworkEngine();
+        // All accesses occur on the UI thread; workers only post immutable update values.
+        var devicesByIp = Devices.ToDictionary(d => d.IpAddress, StringComparer.OrdinalIgnoreCase);
+        var placeholdersByName = new Dictionary<string, DeviceModel>(StringComparer.OrdinalIgnoreCase);
 
         try
         {
@@ -430,7 +435,9 @@ public partial class MainViewModel : ObservableObject
                     (source, message) => Dispatcher.UIThread.Post(() => AppendLog(source, message)),
                     (deviceIp, pct, stat, proto, hostname, isAp, uplink, port) => Dispatcher.UIThread.Post(() =>
                     {
-                        var dev = Devices.FirstOrDefault(d => d.IpAddress == deviceIp || (!string.IsNullOrEmpty(hostname) && HostKey.Same(d.Hostname, hostname)));
+                        devicesByIp.TryGetValue(deviceIp, out var dev);
+                        if (dev == null && !string.IsNullOrEmpty(hostname))
+                            placeholdersByName.TryGetValue(HostKey.Of(hostname), out dev);
                         if (dev == null)
                         {
                             dev = new DeviceModel
@@ -455,8 +462,13 @@ public partial class MainViewModel : ObservableObject
                         }
                         if (!string.IsNullOrEmpty(deviceIp) && !deviceIp.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase) && dev.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
                         {
+                            devicesByIp.Remove(dev.IpAddress);
+                            placeholdersByName.Remove(HostKey.Of(dev.Hostname));
                             dev.IpAddress = deviceIp;
                         }
+                        devicesByIp[deviceIp] = dev;
+                        if (dev.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
+                            placeholdersByName[HostKey.Of(dev.Hostname)] = dev;
                         dev.DeviceType = isAp ? "Access Point" : "Switch";
                         dev.Progress = pct;
                         dev.Status = stat;
@@ -495,12 +507,14 @@ public partial class MainViewModel : ObservableObject
                             dev.ProtocolColor = "#4CC2FF";
                         }
 
-                        UpdateMetrics();
+                        _metricsDirty = true;
                     }),
                     _cts.Token
                 );
             });
 
+            // Process already-posted progress callbacks before calculating the final summary.
+            await Dispatcher.UIThread.InvokeAsync(UpdateMetrics, DispatcherPriority.Background);
             LastBackupDirectory = resultDir;
             HasCompletedBackups = Directory.Exists(resultDir) && Directory.EnumerateFileSystemEntries(resultDir).Any();
             RunningStatusSummary = $"Completed. {CompletedDevicesCount} backed up, {FailedDevicesCount} failed.";
@@ -519,6 +533,9 @@ public partial class MainViewModel : ObservableObject
         }
         finally
         {
+            _sessionTimer.Stop();
+            // Drain worker callbacks on cancellation/failure too, before clearing row state.
+            await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background);
             HasCompletedBackups = Directory.Exists(LastBackupDirectory) && Directory.EnumerateFiles(LastBackupDirectory, "*.txt").Any();
             _cts?.Dispose();
             _cts = null;
@@ -697,6 +714,7 @@ public partial class MainViewModel : ObservableObject
 
     private void UpdateMetrics()
     {
+        _metricsDirty = false;
         TotalDevicesCount = Devices.Count;
         CompletedDevicesCount = Devices.Count(d => d.IsCompleted);
         FailedDevicesCount = Devices.Count(d => d.IsFailed);

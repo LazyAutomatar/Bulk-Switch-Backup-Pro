@@ -4,6 +4,9 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+- Require positive CDP/LLDP infrastructure evidence; distinguish LLDP telephone/station capabilities, prefer enabled capabilities, and apply subnet filters to APs.
+- Replace recursive discovery tasks with a fixed worker queue, index target/UI lookups, and reduce SSH-output copying and aggregate UI refresh work.
+
 - Add automatic per-device OS recognition and 29 switch/AP/WLC CLI families, runtime command rejection checks, syntax fallbacks and configuration-capture validation.
 - Correct and separate Catalyst 9800/AireOS templates; preserve explicit custom scripts, credential fallback, bounded workers, cancellation and atomic backup output.
 

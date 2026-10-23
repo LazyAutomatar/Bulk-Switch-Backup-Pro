@@ -99,3 +99,10 @@ The user's later instruction authorized continuing through all nine applications
 - Offline validation: `scripts/test-all.ps1` and `scripts/audit-branding.ps1`;
   logs and TRX remain under ignored `artifacts/`. No release/tag/merge is part
   of this feature checkpoint.
+
+### LLDP admission and concurrency follow-up
+
+- Require positive protocol-specific infrastructure evidence and exclude endpoints before probing. Correct enabled-capability precedence, multiline LLDP records, local-port parsing and AP subnet filtering.
+- Use a fixed 1–64 worker queue, deduplicated IP claims and indexed inventory merges. Preserve placeholder promotion, cycles, cancellation and separate backup/discovery phases.
+- Index desktop row updates, refresh aggregate counters on the session timer, and drain pending callbacks before finalizing. Read SSH prompt/pager tails without copying all accumulated output per chunk.
+- Expanded synthetic checks include 100-node cyclic and 128-node chain inventories. Production throughput and native UI load testing remain unverified.

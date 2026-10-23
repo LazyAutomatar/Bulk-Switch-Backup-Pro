@@ -99,3 +99,54 @@ a manual capture. Use the relevant OEM command reference for that exact release.
 No live switches or WLCs were contacted during this implementation. The automated
 suite uses synthetic identities and simulated SSH replies, including wrong-profile
 selection, missing configuration, rejection/fallback and vendor prompt handling.
+
+## Discovery admission and worker scheduling
+
+LLDP is an advertisement protocol, not proof of device identity. It is no longer
+sufficient for a neighbor merely to be present or to have a switch-like hostname.
+The discovery policy checks the advertised evidence before any TCP/SSH probe:
+
+- Prefer **Enabled Capabilities** over System Capabilities, including an explicitly
+  empty/None enabled list. LLDP `B`/Bridge and `R`/Router admit infrastructure;
+  `W`/WLAN admits APs only when Include APs is selected. LLDP `T` is telephone
+  and `S` is station, unlike CDP's transparent-bridge and switch letters.
+- Telephone/station/host capabilities and known endpoint descriptions (phones,
+  Windows, Linux hosts, hypervisors, printers and cameras) exclude the neighbor,
+  even when it also advertises bridging. Phone/endpoint evidence wins when CDP
+  and LLDP records from the same queried device are combined.
+- With no capability TLV, a recognized network OS/model is required. Unknown
+  neighbors are skipped with a reason. A device name is not positive evidence.
+- Parse multiline descriptions, `Local Intf`/`Local Interface`/`Local Port id`,
+  separated or adjacent records, and IPv4 management address sections. Remote
+  Port Description is never used as the local interface.
+- Invalid, unspecified, loopback, link-local and multicast management addresses
+  are not contacted. Recognized devices without usable IPv4 addresses remain
+  visible as layer-2 entries and are skipped for SSH. Subnet filters apply to
+  discovered APs as well as switches/routers. Explicit seeds remain user-selected
+  targets and do not need an LLDP advertisement.
+
+This policy is deliberately conservative: a server advertising only Bridge with
+no endpoint-identifying description can still look like infrastructure, and LLDP
+can be spoofed. Auto backup's independent OS recognition remains a second check.
+Unknown or excluded legitimate devices can be supplied explicitly as seeds with
+reviewed custom commands. This is not authenticated device attestation, universal
+LLDP-format support, or complete mixed-vendor recursive discovery.
+
+Discovery uses a fixed pool of asynchronous workers and an IP-deduplicated queue,
+not a recursive task per neighbor. The queue is unbounded to avoid workers
+blocking while trying to enqueue children; its pending records and visited set
+remain proportional to the discovered inventory. Active sessions/tasks are
+bounded by the worker setting, clamped to 1–64. Discovery and backup remain separate
+phases, preserving the existing workflow and avoiding overlapping worker budgets.
+IP/name indexes replace inventory scans under the merge lock; a placeholder
+promoted to an IP is scheduled, and distinct IPs are not collapsed by hostname.
+The SSH reader scans only the response tail for prompts/pagers. Desktop row lookup
+is indexed and aggregate progress refreshes at most once per timer tick during a
+run, with final callback draining on success, cancellation and failure.
+
+Regression checks cover endpoint exclusion before TCP probing, capability
+precedence, AP scope, duplicate/missing addresses, a 100-device cyclic graph with
+1/4 workers, a 128-device single-worker chain, cancellation with queued work and
+extreme worker settings. These demonstrate behavior and bounds, not a measured
+production throughput improvement. Live-device throughput and native UI load
+still require representative inventory testing.

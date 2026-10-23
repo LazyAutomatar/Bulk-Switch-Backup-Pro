@@ -9,6 +9,7 @@ namespace BulkBackup.Tests;
 internal sealed class FakeBackupTransport : IBackupTransport
 {
     public ConcurrentDictionary<string, FakeDevice> Devices { get; } = new();
+    public ConcurrentQueue<string> Probes { get; } = new();
     public ConcurrentQueue<(string Host, string Username)> Attempts { get; } = new();
     public ConcurrentQueue<(string Host, string Command)> Commands { get; } = new();
     public Func<string, CancellationToken, Task>? BeforeConnect { get; set; }
@@ -33,6 +34,7 @@ internal sealed class FakeBackupTransport : IBackupTransport
     public async Task<bool> IsReachableAsync(string host, CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
+        Probes.Enqueue(host);
         if (BeforeProbe is not null) await BeforeProbe(host, token);
         return Devices.TryGetValue(host, out var device) && device.Reachable;
     }
