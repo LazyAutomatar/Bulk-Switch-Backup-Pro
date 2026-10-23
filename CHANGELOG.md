@@ -6,6 +6,10 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [3.0.2] - 2026-10-23
 
+### Added
+- Publish a silent-install launcher for the existing Windows installer, with installation logging, exit-code forwarding, optional destination directory, and no automatic restart or app launch.
+- Document unattended installation commands; the existing v3.0.2 installer binary already supports silent mode and remains unchanged.
+
 ### Packaging
 - Sign the Windows application before archiving/embedding it, sign the setup installer, verify publisher signatures and timestamps, and generate update hashes after signing.
 - Keep Yash Nalawde as author and installer publisher. This owner-authorized public release uses a timestamped self-signed certificate; Windows may still show Unknown publisher or SmartScreen warnings. Future releases require trusted signing by default.

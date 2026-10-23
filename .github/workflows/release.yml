@@ -112,7 +112,9 @@ jobs:
 
       - name: Extract version-specific release notes
         shell: pwsh
-        run: ./scripts/release-notes.ps1 -Version "${{ steps.ver.outputs.version }}" -OutputPath artifacts/release-notes.md
+        run: |
+          ./scripts/release-notes.ps1 -Version "${{ steps.ver.outputs.version }}" -OutputPath artifacts/release-notes.md
+          Copy-Item scripts/BulkSwitchBackupPro_Install_Silent.cmd dist/BulkSwitchBackupPro_Install_Silent.cmd
 
       - name: Verify artifacts
         shell: pwsh
@@ -145,6 +147,7 @@ jobs:
             dist/BulkSwitchBackupPro*.zip
             dist/BulkSwitchBackupPro*.tar.gz
             dist/BulkSwitchBackupPro*.cer
+            dist/BulkSwitchBackupPro*.cmd
 
       - name: Sync documentation, EULA, and assets to public repo
         shell: pwsh

@@ -114,6 +114,29 @@
 
 </div>
 
+#### Windows silent installation:
+
+The latest Windows installer supports unattended installation. Run this from the
+folder containing the downloaded setup executable:
+
+```powershell
+$setup = Start-Process -FilePath .\BulkSwitchBackupPro_Setup.exe -ArgumentList '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /LOG' -Wait -PassThru
+$setup.ExitCode
+```
+
+Alternatively, download `BulkSwitchBackupPro_Install_Silent.cmd` from the
+[latest release](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest)
+beside `BulkSwitchBackupPro_Setup.exe` and run the launcher. It waits for setup,
+returns its exit code, and writes `%TEMP%\BulkSwitchBackupPro-Silent-Install.log`.
+It also accepts an installer path, optional installation directory, and optional
+log path as quoted arguments, in that order.
+
+Silent mode hides the installation wizard, prevents automatic restarts, and does
+not open the app afterward. Close active backup jobs before upgrading.
+Windows security or elevation prompts may still appear. Installer success is
+exit code `0`; consult the log for any other exit code. Author and publisher:
+**Yash Nalawde**. See [Inno Setup's command-line reference](https://jrsoftware.org/ishelp/topic_setupcmdline.htm).
+
 #### Linux Installation:
 Extract the `.tar.gz` and run the included desktop installer:
 ```bash
