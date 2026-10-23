@@ -2,10 +2,10 @@
 .SYNOPSIS
 Build a tested portable Windows beta without changing versions or publishing anything.
 #>
-param()
+param([string]$OutputDirectory)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$output = Join-Path $root 'artifacts/local-beta'
+$output = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $root 'artifacts/local-beta' }
 $app = Join-Path $output 'app'
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 & (Join-Path $PSScriptRoot 'test-all.ps1')
@@ -29,6 +29,9 @@ Test:
 3. Command Reference: select any of the 29 platforms to inspect its actual
    diagnostic commands, paging setup and required configuration capture.
 4. Custom CLI Command Script: edits are preserved when switching modes.
+
+5. Zoom controls: repeated plus/minus clicks must not resize or maximize the window.
+   At smaller window sizes, the header remains visible while content can scroll.
 
 Versioning and stable publication will happen after this beta is accepted.
 '@ | Set-Content (Join-Path $app 'LOCAL-BETA-README.txt') -Encoding utf8

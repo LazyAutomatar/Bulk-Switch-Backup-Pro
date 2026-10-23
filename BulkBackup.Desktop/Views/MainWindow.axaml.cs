@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
 using BulkBackup.Desktop.Services;
 using BulkBackup.Desktop.ViewModels;
@@ -78,10 +80,7 @@ public partial class MainWindow : Window
         };
 
         // Responsive NavigationView Auto-Collapse
-        SizeChanged += (s, e) =>
-        {
-            RootNavigation.IsPaneOpen = e.NewSize.Width >= 1120;
-        };
+        _appState.UiScaleChanged += _ => Avalonia.Threading.Dispatcher.UIThread.Post(UpdateResponsiveLayout);
 
         // Navigate to Run & Monitor initially
         NavigateToType(typeof(RunMonitorView));
@@ -154,6 +153,7 @@ public partial class MainWindow : Window
 
     private void OnTitleBarPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if (IsTitleBarButton(e.Source)) return;
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             BeginMoveDrag(e);
@@ -162,6 +162,58 @@ public partial class MainWindow : Window
 
     private void OnTitleBarDoubleTapped(object? sender, TappedEventArgs e)
     {
+        if (IsTitleBarButton(e.Source))
+        {
+            e.Handled = true;
+            return;
+        }
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    }
+
+    private static bool IsTitleBarButton(object? source) => source is Visual visual &&
+        visual.GetSelfAndVisualAncestors().Any(control => control is Button);
+
+    protected override void OnOpened(EventArgs e)
+    {
+        base.OnOpened(e);
+        var screen = Screens.ScreenFromWindow(this) ?? Screens.Primary;
+        if (screen != null && WindowState == WindowState.Normal)
+        {
+            var size = FitStartupSize(new Size(screen.WorkingArea.Width, screen.WorkingArea.Height), screen.Scaling);
+            MinWidth = Math.Min(640, size.Width);
+            MinHeight = Math.Min(420, size.Height);
+            Width = Math.Min(Width, size.Width);
+            Height = Math.Min(Height, size.Height);
+            Position = new PixelPoint(screen.WorkingArea.X + Math.Max(0, (screen.WorkingArea.Width - (int)(Width * screen.Scaling)) / 2),
+                screen.WorkingArea.Y + Math.Max(0, (screen.WorkingArea.Height - (int)(Height * screen.Scaling)) / 2));
+        }
+        UpdateResponsiveLayout();
+    }
+
+    public static Size FitStartupSize(Size workingAreaPixels, double scaling)
+    {
+        double density = double.IsFinite(scaling) && scaling > 0 ? scaling : 1;
+        return new Size(Math.Min(1380, Math.Max(1, workingAreaPixels.Width / density - 32)),
+            Math.Min(820, Math.Max(1, workingAreaPixels.Height / density - 32)));
+    }
+
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(e);
+        if (RootNavigation != null) UpdateResponsiveLayout();
+    }
+
+    private void UpdateResponsiveLayout()
+    {
+        double width = ClientSize.Width > 0 ? ClientSize.Width : Width;
+        DeveloperBadge.IsVisible = width >= 1050;
+        ThemeToggleLabel.IsVisible = width >= 850;
+        double scale = _appState?.CurrentUiScale ?? (DataContext as MainWindowViewModel)?.UiScale ?? 1;
+        double contentWidth = width / scale;
+        // Keep page measurement finite so device tables retain row virtualization inside the scrollable shell.
+        RootNavigation.Width = Math.Max(1000, contentWidth);
+        RootNavigation.Height = Math.Max(600, ((ClientSize.Height > 0 ? ClientSize.Height : Height) - 38) / scale);
+        RootNavigation.PaneDisplayMode = contentWidth < 900 ? NavigationViewPaneDisplayMode.LeftMinimal : NavigationViewPaneDisplayMode.LeftCompact;
+        RootNavigation.IsPaneOpen = contentWidth >= 1120;
     }
 }

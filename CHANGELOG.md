@@ -4,6 +4,12 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+### Fixed
+- Keep title-bar zoom controls from initiating window dragging or double-click maximization.
+- Fit initial window bounds to the monitor working area at its display density, including smaller high-DPI screens.
+- Keep the header unscaled and visible while zoomed content scrolls; adapt navigation and secondary header badges to the available width.
+
+
 ## [3.0.1] - 2026-10-23
 
 ### Added
