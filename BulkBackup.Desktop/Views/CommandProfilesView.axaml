@@ -1,84 +1,86 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:vm="using:BulkBackup.Desktop.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="1160" d:DesignHeight="780"
-             x:Class="BulkBackup.Desktop.Views.CommandProfilesView"
-             x:DataType="vm:MainViewModel">
-
-    <Grid RowDefinitions="Auto,Auto,*" Margin="16,14,16,14">
-        <!-- Safety Guard Banner -->
-        <Border Grid.Row="0" CornerRadius="8" Padding="14,10" Margin="0,0,0,12"
-                Background="{DynamicResource SubtleFillColorSecondaryBrush}"
-                BorderBrush="{DynamicResource SystemFillColorCautionBrush}" BorderThickness="1">
-            <DockPanel LastChildFill="True">
-                <ui:SymbolIcon DockPanel.Dock="Left" Symbol="Help" FontSize="18"
-                               Foreground="{DynamicResource SystemFillColorCautionBrush}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                <TextBlock Text="Read-only diagnostic policy enforced: configuration push and destructive commands (configure terminal, write, copy, reload, erase, debug, clear) are suppressed at execution time."
-                           FontSize="11.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" VerticalAlignment="Center"/>
-            </DockPanel>
-        </Border>
-
-        <!-- Top Bar: Cohesive Toolbar -->
-        <Border Grid.Row="1"
-                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1" CornerRadius="8"
-                Margin="0,0,0,12" Padding="14"
-                HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <DockPanel>
-                <!-- Left: Label, ComboBox, Count badge -->
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="CLI Command Profile:" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <ComboBox SelectedIndex="{Binding SelectedProfileIndex}" Width="320" VerticalAlignment="Center">
-                        <ComboBoxItem Content="Cisco Switch (IOS / IOS-XE)"/>
-                        <ComboBoxItem Content="Cisco Nexus Switch (NX-OS)"/>
-                        <ComboBoxItem Content="Cisco Catalyst 9800 WLC (IOS-XE)"/>
-                        <ComboBoxItem Content="Cisco AireOS WLC (5520 / 8540 / 3504)"/>
-                        <ComboBoxItem Content="Custom CLI Command Script"/>
-                        <ComboBoxItem Content="Auto-detect (multi-vendor switches / WLC)"/>
-                    </ComboBox>
-                    <Border Background="{DynamicResource SubtleFillColorSecondaryBrush}" CornerRadius="4" Padding="8,4" Margin="10,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding CommandCount, StringFormat='{}{0} Commands'}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource AccentFillColorDefaultBrush}"/>
-                    </Border>
+             xmlns:services="using:BulkBackup.Core.Services"
+             xmlns:controls="using:BulkBackup.Desktop.Controls"
+             x:Class="BulkBackup.Desktop.Views.CommandProfilesView" x:DataType="vm:MainViewModel">
+    <UserControl.Styles>
+        <Style Selector="ScrollBar"><Setter Property="Opacity" Value="1"/></Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="Auto,Auto,*" Margin="20">
+        <StackPanel Spacing="6" Margin="0,0,0,12">
+            <TextBlock Text="Command Reference" FontSize="24" FontWeight="Bold"/>
+            <TextBlock Text="Auto chooses the command set after identifying each device. Browse the exact platform templates below; choose Custom Script only when you need to supply your own commands."
+                       TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+        </StackPanel>
+        <Border Grid.Row="1" Margin="0,0,0,14" Padding="14" CornerRadius="8" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="6" Margin="0,0,0,12">
+                    <TextBlock Text="Execution mode" FontWeight="SemiBold"/>
+                    <controls:ProfileComboBox x:Name="ReferenceProfileSelector" ItemsSource="{Binding ProfileNames}" SelectedIndex="{Binding SelectedProfileIndex}"
+                                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinWidth="480" MaxDropDownHeight="360"/>
                 </StackPanel>
-
-                <!-- Right: Reset & Clear buttons -->
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Command="{Binding ResetProfileCommandsCommand}" Height="32" Margin="0,0,8,0" Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="Refresh" FontSize="14" Margin="0,0,6,0"/>
-                            <TextBlock Text="Reset Template" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Command="{Binding ClearCommandsCommand}" Height="32" Cursor="Hand">
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="Delete" FontSize="14" Margin="0,0,6,0"/>
-                            <TextBlock Text="Clear" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-            </DockPanel>
-        </Border>
-
-        <!-- Custom Commands Editor Area -->
-        <Border Grid.Row="2"
-                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1" CornerRadius="8" Padding="14"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid RowDefinitions="Auto,*">
-                <TextBlock Grid.Row="0" Text="CLI Commands to execute per target (Read-only diagnostic &amp; audit commands; configuration push is suppressed):"
-                           FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,8"/>
-
-                <TextBox Grid.Row="1" Text="{Binding CustomCommandsText}"
-                         AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas, Cascadia Code, Courier New" FontSize="12"
-                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                         Padding="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <TextBlock Grid.Column="1" Margin="16,0,0,0" Text="{Binding CommandSummary}" VerticalAlignment="Center" FontWeight="SemiBold"/>
             </Grid>
         </Border>
+        <Grid Grid.Row="2">
+            <Grid x:Name="AutoCommandBrowser" IsVisible="{Binding IsAutoProfile}" ColumnDefinitions="360,16,*">
+                <Border CornerRadius="8" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="12">
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock Text="Supported device platforms" FontSize="15" FontWeight="SemiBold"/>
+                        <ListBox x:Name="PlatformList" Grid.Row="1" Margin="0,10,0,0" ItemsSource="{Binding SupportedPlatforms}" SelectedItem="{Binding SelectedPreviewPlatform}"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="services:DevicePlatform">
+                                    <StackPanel Margin="4,6" Spacing="4">
+                                        <TextBlock Text="{Binding Name}" TextWrapping="Wrap" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Kind}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="2" Padding="18" CornerRadius="8" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid RowDefinitions="Auto,Auto,Auto,*">
+                        <StackPanel Spacing="6" Margin="0,0,0,12">
+                            <TextBlock Text="{Binding SelectedPreviewPlatform.Name}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding PreviewCommandSummary}" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Spacing="6" Margin="0,0,0,12">
+                            <TextBlock Text="{Binding PreviewPaging}" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding PreviewConfiguration}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="2" Margin="0,0,0,12" Text="Read-only preview. Device identity probes run first; supported syntax fallbacks may be used if a command is rejected. Optional configuration saving follows the run settings."
+                                   TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBox x:Name="PlatformCommands" Grid.Row="3" Text="{Binding PreviewCommandsText}" IsReadOnly="True" AcceptsReturn="True"
+                                 FontFamily="Consolas, Cascadia Code, Courier New" FontSize="13" Padding="14" TextWrapping="NoWrap"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                    </Grid>
+                </Border>
+            </Grid>
+            <Border IsVisible="{Binding IsFixedProfile}" Padding="18" CornerRadius="8" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <Grid RowDefinitions="Auto,*">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel>
+                            <TextBlock Text="Commands" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock Text="Built-in templates are read-only and adapt to the detected OS. Switch to Custom CLI Command Script to edit."
+                                       TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" IsVisible="{Binding IsCustomProfile}" Spacing="8">
+                            <Button Content="Reset template" Command="{Binding ResetProfileCommandsCommand}"/>
+                            <Button Content="Clear" Command="{Binding ClearCommandsCommand}"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBox x:Name="CustomCommandsEditor" Grid.Row="1" Margin="0,12,0,0" Text="{Binding CustomCommandsText}" IsReadOnly="{Binding !IsCustomProfile}"
+                             AcceptsReturn="True" FontFamily="Consolas, Cascadia Code, Courier New" FontSize="13" Padding="14" TextWrapping="NoWrap"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
-

@@ -12,9 +12,9 @@ namespace BulkBackup.Core.Services
     {
         private readonly string _storagePath;
 
-        public CredentialStore()
+        public CredentialStore(string? storagePath = null)
         {
-            _storagePath = Path.Combine(
+            _storagePath = storagePath ?? Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "BulkSwitchBackupPro",
                 "Credentials"

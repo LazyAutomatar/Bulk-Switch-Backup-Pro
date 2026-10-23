@@ -56,6 +56,27 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private int selectedProfileIndex = 5;
     [ObservableProperty] private string customCommandsText = string.Empty;
     [ObservableProperty] private int commandCount = 56;
+    [ObservableProperty] private DevicePlatform selectedPreviewPlatform = DevicePlatforms.All[0];
+    private string? _customCommandDraft;
+    public bool IsLocalBeta => BuildChannel.IsLocalBeta;
+    public IReadOnlyList<string> ProfileNames { get; } = new[]
+    {
+        "Cisco Switch (IOS / IOS-XE)", "Cisco Nexus Switch (NX-OS)",
+        "Cisco Catalyst 9800 WLC (IOS-XE)", "Cisco AireOS WLC (5520 / 8540 / 3504)",
+        "Custom CLI Command Script", "Auto-detect (multi-vendor switches / WLC)"
+    };
+    public IReadOnlyList<DevicePlatform> SupportedPlatforms => DevicePlatforms.All;
+    public bool IsAutoProfile => SelectedProfileIndex == 5;
+    public bool IsCustomProfile => SelectedProfileIndex == 4;
+    public bool IsFixedProfile => !IsAutoProfile;
+    public string CommandSummary => IsAutoProfile ? $"Dynamic · {SupportedPlatforms.Count} platforms" : $"{CommandCount} commands";
+    public IReadOnlyList<string> PreviewCommands => SelectedPreviewPlatform.Commands
+        .Where(command => command != SelectedPreviewPlatform.Paging && !NetworkEngine.IsConfigurationPushCommand(command))
+        .Distinct().ToArray();
+    public string PreviewCommandsText => string.Join(Environment.NewLine, PreviewCommands);
+    public string PreviewCommandSummary => $"{SelectedPreviewPlatform.Kind} · {PreviewCommands.Count} diagnostic commands";
+    public string PreviewPaging => $"Paging setup: {SelectedPreviewPlatform.Paging}";
+    public string PreviewConfiguration => $"Required configuration capture: {SelectedPreviewPlatform.Configuration}";
 
     // Status & Metrics
     [ObservableProperty] private bool isRunning = false;
@@ -110,7 +131,7 @@ public partial class MainViewModel : ObservableObject
             }
         };
 
-        AppendLog("System", "Bulk Switch Backup Pro v2.5.2 Enterprise ready. Powered by Avalonia UI 11.");
+        AppendLog("System", $"Bulk Switch Backup Pro {AppVersion} ready. Powered by Avalonia UI 11.");
     }
 
     public void RefreshStoredCredentials()
@@ -138,10 +159,30 @@ public partial class MainViewModel : ObservableObject
         TargetIpsCount = lines.Count;
     }
 
+    partial void OnSelectedProfileIndexChanging(int oldValue, int newValue)
+    {
+        if (oldValue == 4) _customCommandDraft = CustomCommandsText;
+    }
+
     partial void OnSelectedProfileIndexChanged(int value)
     {
         LoadProfileCommands(value);
+        OnPropertyChanged(nameof(IsAutoProfile));
+        OnPropertyChanged(nameof(IsCustomProfile));
+        OnPropertyChanged(nameof(IsFixedProfile));
+        OnPropertyChanged(nameof(CommandSummary));
     }
+
+    partial void OnSelectedPreviewPlatformChanged(DevicePlatform value)
+    {
+        OnPropertyChanged(nameof(PreviewCommandsText));
+        OnPropertyChanged(nameof(PreviewCommands));
+        OnPropertyChanged(nameof(PreviewCommandSummary));
+        OnPropertyChanged(nameof(PreviewPaging));
+        OnPropertyChanged(nameof(PreviewConfiguration));
+    }
+
+    partial void OnCommandCountChanged(int value) => OnPropertyChanged(nameof(CommandSummary));
 
     partial void OnCustomCommandsTextChanged(string value)
     {
@@ -170,7 +211,7 @@ public partial class MainViewModel : ObservableObject
                     + "! Select Custom CLI Command Script to run your own commands.";
                 break;
             case 4:
-                CustomCommandsText = string.Join(Environment.NewLine, CommandProfiles.CustomTemplateCommands);
+                CustomCommandsText = _customCommandDraft ?? string.Join(Environment.NewLine, CommandProfiles.CustomTemplateCommands);
                 break;
         }
         UpdateCommandCount();
@@ -194,6 +235,8 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void ResetProfileCommands()
     {
+        if (!IsCustomProfile) return;
+        _customCommandDraft = null;
         LoadProfileCommands(SelectedProfileIndex);
         AppendLog("System", "CLI commands reset to default profile template.");
     }
@@ -201,6 +244,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void ClearCommands()
     {
+        if (!IsCustomProfile) return;
         CustomCommandsText = "! Enter custom commands, one per line" + Environment.NewLine;
         UpdateCommandCount();
         AppendLog("System", "Custom CLI commands cleared.");

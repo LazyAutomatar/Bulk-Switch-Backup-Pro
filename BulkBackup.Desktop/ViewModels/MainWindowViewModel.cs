@@ -17,7 +17,8 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty] private double _overallProgress;
     [ObservableProperty] private string _runningStatusSummary = "Ready";
 
-    [ObservableProperty] private string _applicationTitle = "Bulk Switch Backup Pro";
+    [ObservableProperty] private string _applicationTitle = BuildChannel.IsLocalBeta
+        ? "Bulk Switch Backup Pro · Local beta" : "Bulk Switch Backup Pro";
     [ObservableProperty] private Symbol _themeSymbol = Symbol.DarkTheme;
     [ObservableProperty] private string _themeButtonText = "Dark Mode";
 

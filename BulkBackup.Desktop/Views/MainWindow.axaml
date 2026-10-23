@@ -135,7 +135,7 @@
                         </ui:NavigationViewItem.IconSource>
                     </ui:NavigationViewItem>
 
-                    <ui:NavigationViewItem Content="Command Profiles" Tag="Profiles">
+                    <ui:NavigationViewItem Content="Command Reference" Tag="Profiles">
                         <ui:NavigationViewItem.IconSource>
                             <ui:SymbolIconSource Symbol="Document"/>
                         </ui:NavigationViewItem.IconSource>

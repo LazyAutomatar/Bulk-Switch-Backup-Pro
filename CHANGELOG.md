@@ -4,6 +4,13 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+### Changed
+- Show Auto in both execution-mode selectors and use a wider dropdown with a dynamic platform-count summary.
+- Replace the Auto command editor with a read-only command reference for all supported platforms, including paging setup and required configuration capture.
+- Restrict command editing to Custom Script and preserve its draft when switching execution modes.
+- Improve device-table column widths, status wrapping, horizontal scrolling, frozen identity columns and progress/percentage separation.
+- Add a local-only portable beta build script and visual beta label; leave release versioning and publication for after testing.
+
 ## [3.0.0] - 2026-10-23
 
 ### Added
