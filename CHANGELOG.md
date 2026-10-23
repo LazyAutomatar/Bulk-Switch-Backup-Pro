@@ -4,6 +4,39 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-10-23
+
+### Added
+- Auto-detect device OS before backups and select commands from 29 CLI families covering major switch vendors, Cisco access points and wireless controllers.
+- Validate command responses, expose rejected diagnostics, and retry supported legacy syntax alternatives.
+- View expandable Release Changelog & History in About, including the installed release history offline and incoming release notes before downloading an upgrade.
+- Review the target version and release notes before explicitly confirming Download & Install.
+- Add regression coverage for platform identity, discovery policy, cyclic topologies, bounded workers and queued cancellation.
+
+### Changed
+- Adapt unchanged built-in templates to detected platforms while preserving custom scripts, edited command order and repeated commands.
+- Use a fixed discovery worker queue with IP deduplication and concurrency clamped to 1-64 workers.
+- Require positive infrastructure evidence for discovered targets, prefer LLDP Enabled Capabilities, and exclude known endpoint advertisements.
+- Index inventory merges and desktop row lookup; refresh aggregate metrics on the session timer.
+- Restrict optional configuration saves to recognized platforms with supported non-interactive save commands.
+- Allow up to 120 seconds for configuration capture while preserving cancellation and complete-prompt requirements.
+- Include actual version-specific release notes in the update manifest and public release.
+
+### Fixed
+- Separate Catalyst 9800 IOS-XE and AireOS command dialects, including radio syntax and configuration-output fallback.
+- Preserve prior backups when required configuration output is empty, denied or rejected.
+- Handle vendor prompts, ANSI colors, and paging continuations split across SSH reads.
+- Correct LLDP multiline records, management addresses and local-interface selection.
+- Exclude invalid discovered addresses, apply subnet scope to APs, promote placeholders to IP targets, and retain distinct IPs sharing a hostname.
+- Drain pending desktop progress callbacks before final run summaries.
+- Preserve the validated .NET 10 migration, cancellation behavior, offline tests and packaging fixes when reconciling the obsolete rollback branch.
+
+### Compatibility
+- Platform templates are covered by simulated SSH tests; live firmware and production performance require device validation. See PLATFORM_SUPPORT.md for the matrix and limits.
+- Recursive topology discovery remains Cisco-oriented; provide management IPs directly for mixed-vendor fleets.
+- Automatic installer launch is Windows-only; macOS and Linux users download the matching release package.
+
+
 ## [2.5.4] - 2026-10-23
 
 Conservative public testing release from the merged main branch. The platform-detection and migration-revert branches are excluded; live-device and native cross-platform validation remain manual checks.
@@ -31,4 +64,3 @@ Conservative public testing release from the merged main branch. The platform-de
 
 - Preserve completed backup exports after cancellation and dispose session cancellation sources.
 - Align packaging parameters, installer version, release artifact names and update-manifest generation; use native tar on Unix.
-

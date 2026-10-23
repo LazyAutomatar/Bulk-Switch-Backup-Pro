@@ -10,7 +10,7 @@
 
 <br/>
 
-[![Latest Release](https://img.shields.io/badge/Release-v2.5.4%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v3.0.0%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
 [![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
@@ -100,7 +100,7 @@
 
 <br/><br/>
 
-### Public Release Artifacts (v2.5.4 Enterprise)
+### Public Release Artifacts (v3.0.0 Enterprise)
 
 | Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- |
@@ -227,3 +227,23 @@ focused checks. Detailed validation logs and TRX results are stored under ignore
 Read [MIGRATION_STATE.md](MIGRATION_STATE.md) for the current checkpoint and next
 bounded task, [MIGRATION_ROADMAP.md](MIGRATION_ROADMAP.md) for the serial app
 sequence, and [CHANGELOG.md](CHANGELOG.md) for this app's changes.
+
+
+## Multi-vendor automatic backup
+
+Auto-detect is the default command profile. Each backup identifies the device OS
+before choosing commands and records rejected commands instead of treating them
+as successful captures. See [platform support and validation](PLATFORM_SUPPORT.md)
+for the supported OS families, Cisco/WLC corrections, custom-script behavior and
+live-device acceptance checklist.
+
+## Review changes before upgrading
+
+Open **About** and expand **Release Changelog & History** to read the installed
+release history without an internet connection. **Check for Updates** displays
+complete notes for the available version and adds it to the history. On Windows,
+choose **Review Update**, read the version and upgrade details, then select
+**Download & Install** to proceed or **Cancel** to stay on the current version.
+No package is downloaded or launched by checking updates or opening the changelog.
+Save completed backup exports before installing. On macOS/Linux, use **Open Release
+Downloads** and choose the matching package.
