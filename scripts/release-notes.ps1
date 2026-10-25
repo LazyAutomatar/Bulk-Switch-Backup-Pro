@@ -1,9 +1,13 @@
 param(
     [Parameter(Mandatory = $true)][string]$Version,
-    [string]$ChangelogPath = (Join-Path (Split-Path -Parent $PSScriptRoot) 'CHANGELOG.md'),
+    [string]$ChangelogPath,
     [string]$OutputPath
 )
 $ErrorActionPreference = 'Stop'
+if (-not $ChangelogPath) {
+    $root = if ($PSScriptRoot) { Split-Path -Parent $PSScriptRoot } else { (Get-Location).Path }
+    $ChangelogPath = Join-Path $root 'CHANGELOG.md'
+}
 $cleanVersion = $Version.TrimStart('v', 'V')
 $text = [IO.File]::ReadAllText($ChangelogPath).Replace("`r`n", "`n")
 $escapedVersion = [regex]::Escape($cleanVersion)
