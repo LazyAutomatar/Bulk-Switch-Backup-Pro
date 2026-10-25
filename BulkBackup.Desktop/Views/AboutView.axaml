@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -60,13 +60,13 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Command="{Binding CheckForUpdatesCommand}" 
-                                Background="{DynamicResource AccentFillColorDefaultBrush}" Foreground="#FFFFFF"
+                        <Button Classes="accent"
+                                Command="{Binding CheckForUpdatesCommand}" 
                                 IsEnabled="{Binding !IsCheckingUpdate}"
                                 Height="36" Padding="14,0" Margin="0,0,10,6" Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
-                                <ui:SymbolIcon Symbol="Refresh" FontSize="16" Margin="0,0,8,0" Foreground="#FFFFFF"/>
-                                <TextBlock Text="Check for Updates" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                                <ui:SymbolIcon Symbol="Refresh" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Check for Updates" FontWeight="SemiBold"/>
                             </StackPanel>
                         </Button>
                     </WrapPanel>
@@ -267,3 +267,4 @@
         </StackPanel>
     </ScrollViewer>
 </UserControl>
+

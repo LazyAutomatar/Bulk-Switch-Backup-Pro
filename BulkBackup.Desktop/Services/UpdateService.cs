@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,8 +15,8 @@ namespace BulkBackup.Desktop.Services;
 
 public record UpdateInfo
 {
-    public string CurrentVersion { get; init; } = "2.5.0";
-    public string LatestVersion { get; init; } = "2.5.0";
+    public string CurrentVersion { get; init; } = UpdateService.DefaultCurrentVersion;
+    public string LatestVersion { get; init; } = UpdateService.DefaultCurrentVersion;
     public bool IsUpdateAvailable { get; init; }
     public string Title { get; init; } = string.Empty;
     public string ReleaseNotes { get; init; } = string.Empty;
