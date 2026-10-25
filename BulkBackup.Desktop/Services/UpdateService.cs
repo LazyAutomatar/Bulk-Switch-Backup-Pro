@@ -95,7 +95,12 @@ public class UpdateService : IUpdateService
     public bool SupportsInstallation => OperatingSystem.IsWindows();
     private static readonly HttpClient HttpClient = new()
     {
-        Timeout = TimeSpan.FromSeconds(15)
+        Timeout = TimeSpan.FromSeconds(45)
+    };
+
+    private static readonly HttpClient DownloadHttpClient = new()
+    {
+        Timeout = TimeSpan.FromHours(1)
     };
 
     public const string DefaultCurrentVersion = "3.0.2";
@@ -103,7 +108,9 @@ public class UpdateService : IUpdateService
 
     static UpdateService()
     {
-        HttpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("BulkSwitchBackupPro", DefaultCurrentVersion));
+        var productHeader = new ProductInfoHeaderValue("BulkSwitchBackupPro", DefaultCurrentVersion);
+        HttpClient.DefaultRequestHeaders.UserAgent.Add(productHeader);
+        DownloadHttpClient.DefaultRequestHeaders.UserAgent.Add(productHeader);
     }
 
     /// <summary>
@@ -126,35 +133,34 @@ public class UpdateService : IUpdateService
 
             // Mode B: Query GitHub Releases API
             var ghResult = await CheckGitHubReleasesAsync(currentVer, ct);
-            if (ghResult.ErrorMessage == null)
+            if (ghResult.ErrorMessage == null && (!ghResult.IsUpdateAvailable || !string.IsNullOrWhiteSpace(ghResult.DownloadUrl)))
             {
                 return ghResult;
             }
 
-            // Mode C: Fallback to GitHub Tags API if releases/latest is not published yet
+            // Mode C: Fallback to repository update manifest if available (fast CDN, no rate limit)
+            try
+            {
+                string rawManifestUrl = $"https://raw.githubusercontent.com/{GitHubRepo}/main/dist/update_manifest.json";
+                var manifestResult = await CheckCustomManifestAsync(rawManifestUrl, currentVer, ct);
+                if (manifestResult.ErrorMessage == null)
+                {
+                    return manifestResult;
+                }
+            }
+            catch
+            {
+                // Fallback to tags or return initial error
+            }
+
+            // Mode D: Fallback to GitHub Tags API if releases/latest is not published yet
             var tagResult = await CheckGitHubTagsAsync(currentVer, ct);
             if (tagResult != null && tagResult.ErrorMessage == null)
             {
                 return tagResult;
             }
 
-            // Mode D: Fallback to repository update manifest if available
-            try
-            {
-                string rawManifestUrl = $"https://raw.githubusercontent.com/{GitHubRepo}/main/dist/update_manifest.json";
-                return await CheckCustomManifestAsync(rawManifestUrl, currentVer, ct);
-            }
-            catch
-            {
-                // When no remote releases or manifests exist yet, the running build is the latest
-                return new UpdateInfo
-                {
-                    CurrentVersion = currentVer,
-                    LatestVersion = currentVer,
-                    IsUpdateAvailable = false,
-                    ErrorMessage = null
-                };
-            }
+            return ghResult;
         }
         catch (Exception ex)
         {
@@ -380,7 +386,7 @@ public class UpdateService : IUpdateService
 
         using var request = new HttpRequestMessage(HttpMethod.Get, update.DownloadUrl);
         TryAttachAuthHeader(request);
-        using var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
+        using var response = await DownloadHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
         response.EnsureSuccessStatusCode();
 
         long? totalBytes = response.Content.Headers.ContentLength ?? (update.FileSizeBytes > 0 ? update.FileSizeBytes : null);
@@ -488,3 +494,6 @@ public class UpdateService : IUpdateService
         return string.Compare(clean1, clean2, StringComparison.OrdinalIgnoreCase);
     }
 }
+
+
+
