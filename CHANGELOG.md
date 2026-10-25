@@ -4,6 +4,17 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.0.3] - 2026-10-25
+
+### Added
+- Local operational and diagnostic file logging for the application and auto-update pipeline written to `%APPDATA%\BulkSwitchBackup\Logs` (`bulkswitchbackup.log` and `updates.log`) with millisecond timestamps and automatic size-based log rotation.
+- Real-time download progress tracking with byte counts, percentage milestones, and transfer speeds logged to `updates.log` for troubleshooting network timeouts and firewalls.
+
+### Fixed
+- Resolve update download timeouts on slower network connections or high-latency enterprise links by allocating a dedicated 1-hour HTTP client for downloading installer packages.
+- Add high-resilience fast-path fallback to CDN-hosted release manifest to prevent rate-limit throttling during frequent update checks.
+- Dynamic theme accent contrast for action buttons in About and Credentials views across dark and light desktop themes.
+
 ## [3.0.2] - 2026-10-23
 
 ### Added

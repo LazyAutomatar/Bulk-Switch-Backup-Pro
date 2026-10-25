@@ -33,7 +33,7 @@ public partial class MainViewModel : ObservableObject
     private CancellationTokenSource? _cts;
 
     // Application & Developer Details
-    [ObservableProperty] private string appVersion = "3.0.2 Enterprise";
+    [ObservableProperty] private string appVersion = "3.0.3 Enterprise";
     [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
@@ -845,12 +845,7 @@ public partial class MainViewModel : ObservableObject
         _appState.UpdateRunningStatus(IsRunning, OverallProgress, RunningStatusSummary);
     }
 
-    private static readonly string LogDirectory = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "BulkSwitchBackup",
-        "Logs"
-    );
-    private static readonly string LogFilePath = Path.Combine(LogDirectory, "bulkswitchbackup.log");
+    private static readonly string LogDirectory = AppLogger.LogDirectory;
 
     public void AppendLog(string source, string message)
     {
@@ -867,11 +862,7 @@ public partial class MainViewModel : ObservableObject
 
         try
         {
-            if (!Directory.Exists(LogDirectory))
-            {
-                Directory.CreateDirectory(LogDirectory);
-            }
-            File.AppendAllText(LogFilePath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{source}] {message}{Environment.NewLine}");
+            AppLogger.Log(source, message);
         }
         catch { }
     }

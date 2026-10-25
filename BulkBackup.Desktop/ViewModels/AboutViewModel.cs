@@ -14,7 +14,7 @@ public partial class AboutViewModel : ObservableObject
 {
     private readonly IUpdateService _updateService;
 
-    [ObservableProperty] private string appVersion = "3.0.2 Enterprise";
+    [ObservableProperty] private string appVersion = "3.0.3 Enterprise";
     [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
@@ -38,11 +38,7 @@ public partial class AboutViewModel : ObservableObject
 
     private UpdateInfo? _latestUpdateInfo;
 
-    private static readonly string LogDirectory = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "BulkSwitchBackup",
-        "Logs"
-    );
+    private static readonly string LogDirectory = AppLogger.LogDirectory;
 
     public AboutViewModel(IUpdateService updateService)
     {
@@ -66,6 +62,8 @@ public partial class AboutViewModel : ObservableObject
         LatestVersion = string.Empty;
         ReleaseNotes = string.Empty;
 
+        AppLogger.LogInfo("AboutViewModel", $"Check for updates initiated. CustomManifestUrl: '{CustomManifestUrl}'");
+
         try
         {
             var result = await _updateService.CheckForUpdatesAsync(
@@ -79,6 +77,7 @@ public partial class AboutViewModel : ObservableObject
             {
                 UpdateStatusText = result.ErrorMessage;
                 IsUpdateAvailable = false;
+                AppLogger.LogWarning("AboutViewModel", $"Update check completed with message: {result.ErrorMessage}");
             }
             else if (result.IsUpdateAvailable)
             {
@@ -87,17 +86,20 @@ public partial class AboutViewModel : ObservableObject
                 ReleaseNotes = ChangelogService.NotesForVersion(result.LatestVersion, result.ReleaseNotes);
                 SyncIncomingVersionToChangelog(result.LatestVersion, ReleaseNotes, result.PublishedAt);
                 UpdateStatusText = $"New version available: v{result.LatestVersion}!";
+                AppLogger.LogInfo("AboutViewModel", $"Update check: new version available v{result.LatestVersion}");
             }
             else
             {
                 IsUpdateAvailable = false;
                 UpdateStatusText = $"Bulk Switch Backup Pro is up to date (Version {result.CurrentVersion}).";
+                AppLogger.LogInfo("AboutViewModel", $"Update check: up to date (Version {result.CurrentVersion})");
             }
         }
         catch (Exception ex)
         {
             UpdateStatusText = $"Update check failed: {ex.Message}";
             IsUpdateAvailable = false;
+            AppLogger.LogError("AboutViewModel", "Update check failed in UI", ex);
         }
         finally
         {
@@ -108,11 +110,19 @@ public partial class AboutViewModel : ObservableObject
     [RelayCommand]
     private void ReviewUpdate()
     {
-        if (CanReviewUpdate) IsReviewingUpdate = true;
+        if (CanReviewUpdate)
+        {
+            AppLogger.LogInfo("AboutViewModel", $"User opened Review Update dialog for version v{_latestUpdateInfo?.LatestVersion}");
+            IsReviewingUpdate = true;
+        }
     }
 
     [RelayCommand]
-    private void CancelUpdateReview() => IsReviewingUpdate = false;
+    private void CancelUpdateReview()
+    {
+        AppLogger.LogInfo("AboutViewModel", "User cancelled update review dialog.");
+        IsReviewingUpdate = false;
+    }
 
     public void SyncIncomingVersionToChangelog(string version, string notes, DateTime? publishedAt = null)
     {
@@ -140,6 +150,8 @@ public partial class AboutViewModel : ObservableObject
         DownloadProgress = 0.0;
         UpdateStatusText = "Downloading update package...";
 
+        AppLogger.LogInfo("AboutViewModel", $"User confirmed Download & Install for version v{_latestUpdateInfo.LatestVersion}");
+
         try
         {
             var progress = new Progress<double>(p =>
@@ -151,20 +163,30 @@ public partial class AboutViewModel : ObservableObject
             string installerPath = await _updateService.DownloadUpdateAsync(_latestUpdateInfo, progress, CancellationToken.None);
 
             UpdateStatusText = "Launching update package...";
+            AppLogger.LogInfo("AboutViewModel", $"Invoking LaunchInstallerAndExit with path '{installerPath}'");
             _updateService.LaunchInstallerAndExit(installerPath);
         }
         catch (Exception ex)
         {
             UpdateStatusText = $"Download failed: {ex.Message}";
             IsDownloadingUpdate = false;
+            AppLogger.LogError("AboutViewModel", "Download & Install update failed", ex);
         }
     }
 
     [RelayCommand]
     private void OpenReleases()
     {
-        try { Process.Start(new ProcessStartInfo("https://github.com/" + UpdateService.GitHubRepo + "/releases") { UseShellExecute = true }); }
-        catch (Exception ex) { UpdateStatusText = $"Could not open releases: {ex.Message}"; }
+        try
+        {
+            AppLogger.LogInfo("AboutViewModel", "Opening releases page in browser.");
+            Process.Start(new ProcessStartInfo("https://github.com/" + UpdateService.GitHubRepo + "/releases") { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            UpdateStatusText = $"Could not open releases: {ex.Message}";
+            AppLogger.LogError("AboutViewModel", "Could not open releases page", ex);
+        }
     }
 
     [RelayCommand]
@@ -183,8 +205,12 @@ public partial class AboutViewModel : ObservableObject
                 UseShellExecute = true,
                 Verb = "open"
             });
+            AppLogger.LogInfo("AboutViewModel", $"Opened log directory: {LogDirectory}");
         }
-        catch { }
+        catch (Exception ex)
+        {
+            AppLogger.LogError("AboutViewModel", $"Could not open log folder '{LogDirectory}'", ex);
+        }
     }
 
     [RelayCommand]
@@ -215,5 +241,3 @@ public partial class AboutViewModel : ObservableObject
         catch { }
     }
 }
-
-

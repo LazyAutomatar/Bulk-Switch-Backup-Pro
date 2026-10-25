@@ -1,9 +1,9 @@
-{
-  "version": "3.0.2",
-  "title": "Bulk Switch Backup Pro 3.0.2",
-  "releaseNotes": "### Added\n- Publish a silent-install launcher for the existing Windows installer, with installation logging, exit-code forwarding, optional destination directory, and no automatic restart or app launch.\n- Document unattended installation commands; the existing v3.0.2 installer binary already supports silent mode and remains unchanged.\n\n### Packaging\n- Sign the Windows application before archiving/embedding it, sign the setup installer, verify publisher signatures and timestamps, and generate update hashes after signing.\n- Keep Yash Nalawde as author and installer publisher. This owner-authorized public release uses a timestamped self-signed certificate; Windows may still show Unknown publisher or SmartScreen warnings. Future releases require trusted signing by default.\n\n### Fixed\n- Keep title-bar zoom controls from initiating window dragging or double-click maximization.\n- Fit initial window bounds to the monitor working area at its display density, including smaller high-DPI screens.\n- Keep the header unscaled and visible while zoomed content scrolls; adapt navigation and secondary header badges to the available width.",
-  "publishedAt": "2026-10-23T09:09:29.1492613Z",
-  "downloadUrl": "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.2/BulkSwitchBackupPro_Setup.exe",
-  "sha256": "57bc5bb890b5f78065fe97b0da61c0915d98d5d6e86db4aaeee1eb34c1c55b31",
-  "fileSizeBytes": 47377440
+﻿{
+    "version":  "3.0.3",
+    "title":  "Bulk Switch Backup Pro 3.0.3",
+    "releaseNotes":  "### Added\n- Local operational and diagnostic file logging for the application and auto-update pipeline written to `%APPDATA%\\BulkSwitchBackup\\Logs` (`bulkswitchbackup.log` and `updates.log`) with millisecond timestamps and automatic size-based log rotation.\n- Real-time download progress tracking with byte counts, percentage milestones, and transfer speeds logged to `updates.log` for troubleshooting network timeouts and firewalls.\n\n### Fixed\n- Resolve update download timeouts on slower network connections or high-latency enterprise links by allocating a dedicated 1-hour HTTP client for downloading installer packages.\n- Add high-resilience fast-path fallback to CDN-hosted release manifest to prevent rate-limit throttling during frequent update checks.\n- Dynamic theme accent contrast for action buttons in About and Credentials views across dark and light desktop themes.",
+    "publishedAt":  "2026-10-25T15:08:00.4520208Z",
+    "downloadUrl":  "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.3/BulkSwitchBackupPro_Setup.exe",
+    "sha256":  "9ec55c7225528cb197cfefbe4981b6487b505473f0ba67f8a6c7fc23cc80bfbc",
+    "fileSizeBytes":  47378952
 }

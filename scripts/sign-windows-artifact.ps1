@@ -13,7 +13,8 @@ param(
     [string]$TimestampServer = 'http://timestamp.digicert.com'
 )
 $ErrorActionPreference = 'Stop'
-if (-not $IsWindows) { throw 'Authenticode signing requires Windows.' }
+$isWin = if ($null -ne (Get-Variable -Name IsWindows -ErrorAction SilentlyContinue)) { $IsWindows } else { [System.Environment]::OSVersion.Platform -match 'Win' }
+if (-not $isWin) { throw 'Authenticode signing requires Windows.' }
 $developmentSubject = 'CN=Bulk Switch Backup Pro (Yash Nalawde)'
 if ($env:CERT_PATH) {
     if (-not (Test-Path -LiteralPath $env:CERT_PATH -PathType Leaf)) { throw 'CERT_PATH does not identify a certificate file.' }
