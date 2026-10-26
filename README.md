@@ -176,13 +176,25 @@ flowchart LR
 1. **Input Seed Switch or IP List**:
    - Provide your seed Core/Distribution switch IP address (or import a batch IP list from text file).
 2. **Configure Multi-Credential Vault**:
-   - Enter your primary network credentials and enable secret. Add fallback credentials to the encrypted vault.
+   - Enter your primary network credentials and enable secret. In Saved Credentials, create or unlock the encrypted vault before adding fallback credentials.
 3. **Select Execution Profile**:
    - Choose from **Cisco Switch (IOS / IOS-XE)**, **Cisco Nexus (NX-OS)**, **Cisco Catalyst 9800 WLC**, **Cisco AireOS WLC**, or **Custom Profile**.
 4. **Initiate Traversal & Backup**:
    - Click **Start Backup**. The engine recursively maps the network topology, classifies hardware, captures configurations concurrently, and logs status in real time.
 5. **Export On Demand**:
    - Backups are safely staged in temporary isolation. Click **Save to Folder...** to persist to your local directory or **Export ZIP...** to download a compressed archive.
+
+### Credential vault and legacy switch connections (3.0.4)
+
+Saved Credentials uses a portable **AES-256-GCM** vault with a master-password key derived using **PBKDF2-SHA256 (600,000 iterations, random salt)**. Create a master password of at least 12 characters and keep it safe: there is no password recovery. The master password and encryption key are never written to disk. The vault starts locked on each application launch; unlock it before using saved credential fallback. Lock clears the displayed session credentials and the vault's in-memory key; a backup already in progress retains the credentials it started with.
+
+The encrypted file is `BulkSwitchBackupPro/Credentials/vault.json` beneath .NET's per-user `ApplicationData` folder: normally `%APPDATA%` on Windows, `$XDG_CONFIG_HOME` (or `~/.config`) on Linux, and `~/Library/Application Support` on macOS. Copy that file to the equivalent directory on another computer and unlock it using the same master password. Back it up before moving or replacing it. On Linux/macOS, newly written vault files have owner-only read/write permissions.
+
+For existing Windows profiles, create/unlock the vault and choose **Import Legacy Windows Credentials** on the original Windows account. This explicitly imports the old DPAPI `.cred` files and preserves those originals. The imported `vault.json` can then be moved between supported operating systems. Passwords and enable secrets are not displayed in the credentials table.
+
+Connections prefer SSH on port 22. If SSH is unavailable or negotiation fails, the engine attempts Telnet on port 23 and labels the session **Telnet** in progress and saved backups. Telnet sends credentials and traffic without encryption, so use this fallback only on a trusted management network. Rejected SSH credentials trigger credential rotation rather than a Telnet downgrade. Legacy terminal `login:`, `Username:` and `Password:` prompts are handled before commands begin; forced password changes are reported for manual attention.
+
+Automatic profiles recognize **Catalyst C1000 as an IOS switch** and **SG350 as Cisco Small Business**, which uses `terminal datadump`. AP-only wired-interface commands are confined to detected AP profiles. Explicit custom scripts remain under your control.
 
 ---
 
