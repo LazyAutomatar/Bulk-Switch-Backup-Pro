@@ -34,6 +34,16 @@ Test:
    At smaller window sizes, the header remains visible while content can scroll.
 
 Versioning and stable publication will happen after this beta is accepted.
+
+Vault and legacy-switch regression checks:
+6. Saved Credentials: create a master password (12+ characters), save a test
+   profile, Apply to Session, Lock, and Unlock. The populated table must not crash.
+   Existing Windows profiles can be imported explicitly after creating the vault.
+7. A device with SSH unavailable and Telnet enabled should connect on port 23
+   and display Telnet. Test only on a trusted management network.
+8. SG350 repeated Username/Password prompts should finish before backup commands.
+9. C1000 must appear as Switch and receive IOS commands, never AP wired commands
+   in Auto mode. SG350 should use terminal datadump and its Small Business profile.
 '@ | Set-Content (Join-Path $app 'LOCAL-BETA-README.txt') -Encoding utf8
 $exe = Join-Path $app 'BulkSwitchBackupPro.exe'
 $hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()

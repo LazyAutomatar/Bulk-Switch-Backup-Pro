@@ -1,5 +1,15 @@
 # Bulk Switch Backup Pro migration checkpoint
 
+## 2026-10-26 vault and legacy connection checkpoint
+
+- Current fix branch: `codex/vault-telnet-legacy-cli`, based on public-version 3.0.3 source. The older migration checkpoint below is historical.
+- Replaced the active DPAPI-only credential store with a portable master-password AES-256-GCM vault; Windows DPAPI is retained only for explicit legacy import.
+- Reproduced and fixed the populated Saved Credentials table crash caused by the row-action binding type cast. A headless UI test now creates, applies, locks, unlocks and deletes a saved profile.
+- Added SSH-to-Telnet connectivity fallback and bounded legacy terminal authentication; corrected C1000 classification and SG350 paging/profile selection.
+- Windows validation: 193 tests passed, zero failed/skipped; desktop build succeeded with zero warnings/errors using `scripts/test-all.ps1` through `scripts/build-local-beta.ps1`.
+- Local portable beta output: `artifacts/vault-legacy-beta/`. Product version remains 3.0.3. No release tag or public release is part of this checkpoint.
+- Still to validate: physical SG350/C1000 login and backup sessions, plus native Linux/macOS behavior. Offline tests use synthetic devices and isolated test credentials.
+
 ## Resume here
 
 - Repository: `Majordean0303/Bulk-Switch-Backup` (application 1 of 9).
