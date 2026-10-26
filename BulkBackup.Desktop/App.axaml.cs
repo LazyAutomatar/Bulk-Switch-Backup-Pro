@@ -33,7 +33,11 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = Services.GetRequiredService<MainWindow>();
-            desktop.Exit += (s, e) => TempSessionManager.CleanupAllSessions();
+            desktop.Exit += (s, e) =>
+            {
+                Services.GetRequiredService<CredentialStore>().Lock();
+                TempSessionManager.CleanupAllSessions();
+            };
         }
 
         base.OnFrameworkInitializationCompleted();

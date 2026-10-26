@@ -21,6 +21,53 @@ namespace BulkBackup.Tests;
 public class RunMonitorAndProfilesTests
 {
     [AvaloniaFact]
+    public void SavedCredentialsPageOpens()
+    {
+        using var fixture = new UiFixture();
+        var window = new Window { Content = new CredentialsView(fixture.ViewModel), Width = 1100, Height = 800 };
+        try { window.Show(); Dispatcher.UIThread.RunJobs(); }
+        finally { window.Close(); }
+    }
+
+    [AvaloniaFact]
+    public async Task SavedCredentialsCanBeCreatedAppliedLockedAndUnlockedWhilePageIsOpen()
+    {
+        using var fixture = new UiFixture();
+        var vm = fixture.ViewModel;
+        var window = new Window { Content = new CredentialsView(vm), Width = 1100, Height = 800 };
+        try
+        {
+            window.Show();
+            vm.VaultPassword = vm.VaultConfirmation = "test master password 123";
+            await vm.UnlockVaultCommand.ExecuteAsync(null);
+            Assert.True(vm.IsVaultUnlocked);
+            vm.NewCredProfileName = "Test switch"; vm.NewCredUsername = "operator";
+            vm.NewCredPassword = "test-device-password"; vm.NewCredSecret = "test-enable-secret";
+            await vm.SaveNewCredentialCommand.ExecuteAsync(null);
+            Dispatcher.UIThread.RunJobs();
+            var entry = Assert.Single(vm.StoredCredentials);
+            Assert.DoesNotContain(window.GetVisualDescendants().OfType<TextBlock>(), text => text.Text == "test-enable-secret");
+            var apply = Assert.Single(window.GetVisualDescendants().OfType<Button>(), b => Equals(b.Content, "Apply to Session"));
+            Assert.NotNull(apply.Command);
+            apply.Command.Execute(apply.CommandParameter);
+            Assert.Equal("test-device-password", vm.ActivePassword);
+            vm.LockVaultCommand.Execute(null);
+            Assert.Empty(vm.ActivePassword); Assert.Empty(vm.StoredCredentials);
+            vm.VaultPassword = "wrong password";
+            await vm.UnlockVaultCommand.ExecuteAsync(null);
+            Assert.False(vm.IsVaultUnlocked);
+            Assert.Contains("Wrong master password", vm.VaultStatus);
+            vm.VaultPassword = "test master password 123";
+            await vm.UnlockVaultCommand.ExecuteAsync(null);
+            Assert.Single(vm.StoredCredentials);
+            vm.DeleteStoredCredentialCommand.Execute(vm.StoredCredentials[0]);
+            Assert.Empty(vm.StoredCredentials);
+            Dispatcher.UIThread.RunJobs();
+        }
+        finally { vm.LockVaultCommand.Execute(null); window.Close(); }
+    }
+
+    [AvaloniaFact]
     public void AutoReferenceMatchesEveryRuntimePlatformAndPreservesCustomDraft()
     {
         using var fixture = new UiFixture();
@@ -186,7 +233,7 @@ public class RunMonitorAndProfilesTests
         private readonly string _directory = Path.Combine(Path.GetTempPath(), "bulk-backup-ui-" + Guid.NewGuid());
         public MainViewModel ViewModel { get; }
         public UiFixture() => ViewModel = new MainViewModel(new CredentialStore(_directory), new NoDialogs(), new AppState());
-        public void Dispose() => Directory.Delete(_directory, true);
+        public void Dispose() { if (Directory.Exists(_directory)) Directory.Delete(_directory, true); }
     }
 
     private sealed class NoDialogs : IDialogService

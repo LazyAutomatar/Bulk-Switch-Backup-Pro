@@ -109,6 +109,13 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<DeviceModel> Devices { get; } = new();
     public ObservableCollection<CredentialEntry> StoredCredentials { get; } = new();
     [ObservableProperty] private bool hasStoredCredentials = false;
+    [ObservableProperty] private string vaultPassword = string.Empty;
+    [ObservableProperty] private string vaultConfirmation = string.Empty;
+    [ObservableProperty] private bool isVaultUnlocked;
+    [ObservableProperty] private bool isVaultBusy;
+    [ObservableProperty] private bool needsVaultCreation;
+    [ObservableProperty] private string vaultStatus = "Vault locked. Enter your master password.";
+    public bool CanImportLegacyVault => OperatingSystem.IsWindows();
 
     // Form Inputs for Adding Credentials
     [ObservableProperty] private string newCredProfileName = string.Empty;
@@ -146,11 +153,62 @@ public partial class MainViewModel : ObservableObject
     public void RefreshStoredCredentials()
     {
         StoredCredentials.Clear();
-        foreach (var cred in _credStore.LoadAllCredentials())
+        try
         {
-            StoredCredentials.Add(cred);
+            NeedsVaultCreation = !_credStore.Exists;
+            IsVaultUnlocked = _credStore.IsUnlocked;
+            foreach (var cred in _credStore.LoadAllCredentials()) StoredCredentials.Add(cred);
         }
+        catch { VaultStatus = "Could not read the credential vault. Check file access and unlock again."; }
         HasStoredCredentials = StoredCredentials.Count > 0;
+    }
+
+    [RelayCommand]
+    private async Task UnlockVaultAsync()
+    {
+        if (IsVaultBusy) return;
+        IsVaultBusy = true;
+        string password = VaultPassword;
+        try
+        {
+            if (!_credStore.Exists && password != VaultConfirmation)
+                throw new InvalidOperationException("Master passwords do not match.");
+            await Task.Run(() => { if (_credStore.Exists) _credStore.Unlock(password); else _credStore.Create(password); });
+            VaultStatus = "Vault unlocked for this session. Lock it when finished.";
+        }
+        catch (Exception ex) { VaultStatus = ex.Message; }
+        finally
+        {
+            VaultPassword = VaultConfirmation = string.Empty;
+            IsVaultBusy = false;
+            RefreshStoredCredentials();
+        }
+    }
+
+    [RelayCommand]
+    private void LockVault()
+    {
+        if (IsVaultBusy) return;
+        _credStore.Lock();
+        ActiveUsername = ActivePassword = ActiveSecret = string.Empty;
+        NewCredProfileName = NewCredUsername = NewCredPassword = NewCredSecret = string.Empty;
+        VaultPassword = VaultConfirmation = string.Empty;
+        VaultStatus = "Vault locked. Session credential fields cleared.";
+        RefreshStoredCredentials();
+    }
+
+    [RelayCommand]
+    private async Task ImportLegacyVaultAsync()
+    {
+        if (IsVaultBusy || !IsVaultUnlocked) return;
+        IsVaultBusy = true;
+        try
+        {
+            int count = await Task.Run(_credStore.ImportLegacyWindowsCredentials);
+            VaultStatus = $"Imported {count} legacy profiles. Original encrypted files preserved.";
+        }
+        catch (Exception ex) { VaultStatus = $"Legacy import failed: {ex.Message}"; }
+        finally { IsVaultBusy = false; RefreshStoredCredentials(); }
     }
 
     partial void OnTargetIpsChanged(string value)
@@ -270,7 +328,7 @@ public partial class MainViewModel : ObservableObject
 
         try
         {
-            _credStore.SaveCredential(NewCredProfileName.Trim(), NewCredUsername.Trim(), NewCredPassword, NewCredSecret.Trim());
+            _credStore.SaveCredential(NewCredProfileName.Trim(), NewCredUsername.Trim(), NewCredPassword, NewCredSecret);
             RefreshStoredCredentials();
             AppendLog("Security", $"Saved credential profile '{NewCredProfileName}'.");
 
@@ -304,7 +362,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void ApplyCredentialToActive(CredentialEntry? entry)
     {
-        if (entry == null) return;
+        if (entry == null || !_credStore.IsUnlocked) return;
         ActiveUsername = entry.Username;
         ActivePassword = entry.Password;
         ActiveSecret = entry.Secret;
