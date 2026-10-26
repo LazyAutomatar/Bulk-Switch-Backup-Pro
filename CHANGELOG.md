@@ -2,7 +2,16 @@
 
 Changes for Bulk Switch Backup Pro are tracked independently from the other network applications.
 
-## [Unreleased]
+## [3.0.7] - 2026-10-26
+
+### Added
+- Catalyst 9800 WLC evidence collection for platform resources, environment, AP uptime/history, rogue AP summary and 5 GHz CleanAir configuration, keeping each actual command and evidence type distinct.
+- Schema-versioned `capture-manifest.json` in ZIP exports with UTC timestamps, requested targets, device identity/platform/profile, configuration state, per-command outcomes and failure reasons. Current-run output selection excludes stale files; legacy exports are explicitly unverified.
+
+### Fixed
+- Continue supported diagnostics after command rejection or timeout; reconnect and initialize a fresh session after incomplete responses rather than reusing an unsynchronized shell.
+- Preserve partial captures when required configuration is unavailable, and record unreachable/skipped/unattempted targets without successful backup claims.
+- Default the explicit save-configuration option to off. Run `write memory` only when selected and after required configuration capture succeeds.
 
 ## [3.0.6] - 2026-10-26
 

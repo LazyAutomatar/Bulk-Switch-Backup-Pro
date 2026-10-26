@@ -33,7 +33,7 @@ public partial class MainViewModel : ObservableObject
     private CancellationTokenSource? _cts;
 
     // Application & Developer Details
-    [ObservableProperty] private string appVersion = "3.0.6 Enterprise";
+    [ObservableProperty] private string appVersion = "3.0.7 Enterprise";
     [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
@@ -57,7 +57,7 @@ public partial class MainViewModel : ObservableObject
 
     // Execution Tuning
     [ObservableProperty] private int maxConcurrency = Math.Clamp(Environment.ProcessorCount * 2, 6, 16);
-    [ObservableProperty] private bool writeConfig = true;
+    [ObservableProperty] private bool writeConfig = false;
     [ObservableProperty] private string backupDirectory = "Temporary Session Staging";
 
     // Profiles & Commands
@@ -842,12 +842,7 @@ public partial class MainViewModel : ObservableObject
         {
             try
             {
-                if (File.Exists(savePath))
-                {
-                    File.Delete(savePath);
-                }
-
-                await Task.Run(() => ZipFile.CreateFromDirectory(sourceDir, savePath));
+                await Task.Run(() => BackupArchive.Create(sourceDir, savePath));
                 AppendLog("System", $"Exported backups ZIP successfully to: {savePath}");
                 await _dialogService.ShowMessageAsync("Export Complete", $"Successfully exported backup archive to:\n{savePath}");
             }

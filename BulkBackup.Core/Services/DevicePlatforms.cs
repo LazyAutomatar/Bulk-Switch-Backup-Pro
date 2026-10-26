@@ -83,8 +83,11 @@ public static class DevicePlatforms
 
     public static string[] Probes => ["show version", "show sysinfo", "display version", "get system status", "show system", "show inventory", "show sys-info", "show microcode", "show switch", "show system-info", "/system resource print"];
 
-    public static bool IsRejected(string output) => Regex.IsMatch(output,
+    public static bool IsRejected(string output) => IsUnsupported(output) || Regex.IsMatch(output,
         @"(?im)^\s*(?:%\s*)?(?:Error\s*:?\s*)?(?:Invalid (?:input|command|parameter)|Unrecognized command|Unknown command|Incomplete command|Ambiguous command|Incorrect usage|Syntax error|Command (?:not found|not supported|not authorized|authorization failed)|Permission denied|Access denied|Authorization failed|Not enough permissions|Insufficient privileges|Unrecognized word|Wrong parameter|Bad command name)\b|(?im)^\s*%\s*(?:Invalid|Error|Unrecognized|Unknown|Incomplete|Ambiguous)|(?im)^\s*Error:|(?im)^\s*syntax error,");
+
+    public static bool IsUnsupported(string output) => Regex.IsMatch(output,
+        @"(?im)^\s*(?:%\s*)?(?:Invalid (?:input|command)|Unrecognized command|Unknown command|Unsupported command|Incomplete command|Ambiguous command|Missing mandatory parameter|Syntax error|Command (?:not found|not supported)|This command is not supported)\b");
 
     public static string Body(string output, string command) => string.Join("\n", Regex.Replace(output, @"\x1B\[[0-?]*[ -/]*[@-~]|\x08", "").Replace("\r", "").Split('\n')
         .Where(line => !line.Trim().Equals(command, StringComparison.OrdinalIgnoreCase) && !IsPrompt(line.Trim()))).Trim();

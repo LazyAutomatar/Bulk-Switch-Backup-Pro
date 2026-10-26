@@ -115,6 +115,18 @@ namespace BulkBackup.Core.Services
             logCallback("System", $"Starting Bulk Switch Backup Pro (Profile: {profileName}, Workers: {workerCount}, Credentials: {candidateCredentials.Count})...");
 
             var devicesToBackup = new DiscoveryTargets();
+            var captures = new ConcurrentDictionary<string, DeviceCapture>(StringComparer.OrdinalIgnoreCase);
+            var manifest = new CaptureManifest { SelectedProfile = profileName, RequestedTargets = targetIps.Distinct(StringComparer.OrdinalIgnoreCase).ToList() };
+            DeviceCapture CaptureFor(DiscoveredTarget target) => captures.GetOrAdd(target.IpAddress, _ => new DeviceCapture
+            {
+                IpAddress = target.IpAddress, Hostname = target.Hostname, Profile = profileName, SaveRequested = writeConfig,
+                Commands = customCommands.Where(c => !string.IsNullOrWhiteSpace(c) && !c.TrimStart().StartsWith('!') &&
+                    !IsConfigurationPushCommand(c) && !DevicePlatforms.All.Any(p => p.Paging == c.Trim()))
+                    .Select(c => new CommandCapture { Command = c.Trim() }).ToList()
+            });
+            foreach (string seed in manifest.RequestedTargets) CaptureFor(new DiscoveredTarget { IpAddress = seed, Hostname = seed });
+            try
+            {
 
             if (enableCdp)
             {
@@ -144,21 +156,46 @@ namespace BulkBackup.Core.Services
 
             await Parallel.ForEachAsync(devicesToBackup.Snapshot(), parallelOptions, async (target, ct) =>
             {
+                var capture = CaptureFor(target);
                 if (string.IsNullOrWhiteSpace(target.IpAddress) ||
                     target.IpAddress.StartsWith("0.0.0.") ||
                     target.IpAddress.StartsWith("placeholder:", StringComparison.OrdinalIgnoreCase))
                 {
                     logCallback("Discovery", $"Device '{target.Hostname}' on {target.UplinkDevice} ({target.Port}) has no advertised IP address. Skipping SSH backup.");
                     progressCallback(target.IpAddress, 0, "Skipped (No IP)", "L2", target.Hostname, target.IsAp, target.UplinkDevice, target.Port);
+                    capture.Status = "skipped";
+                    capture.Reason = "No usable management IP address.";
                     return;
                 }
 
                 var cmds = target.IsAp ? CommandProfiles.CiscoApCommands.ToList() : customCommands;
-                await PerformBackupWithFallbackAsync(target.IpAddress, candidateCredentials, target.IsAp, destinationDirectory, cmds, profileName, writeConfig, logCallback, progressCallback, ct, target.Hostname, target.UplinkDevice, target.Port);
+                try
+                {
+                    await PerformBackupWithFallbackAsync(target.IpAddress, candidateCredentials, target.IsAp, destinationDirectory, cmds, profileName, writeConfig, logCallback, progressCallback, ct, target.Hostname, target.UplinkDevice, target.Port, capture);
+                }
+                catch (Exception ex) when (!ct.IsCancellationRequested)
+                {
+                    capture.Status = "failure";
+                    capture.Reason = ex.Message;
+                    progressCallback(target.IpAddress, 0, $"Failed: {ex.Message}", "ERR", target.Hostname, target.IsAp, target.UplinkDevice, target.Port);
+                }
             });
 
             logCallback("System", $"Backup processing finished. See per-device results. Output directory: {destinationDirectory}");
             return destinationDirectory;
+            }
+            finally
+            {
+                foreach (var capture in captures.Values)
+                {
+                    if (capture.Status == "notAttempted") capture.Reason = token.IsCancellationRequested ? "Capture cancelled before completion." : "Device was not captured.";
+                    foreach (var command in capture.Commands.Where(c => c.Status == "notAttempted"))
+                        command.Reason ??= capture.Reason ?? "Command was not attempted.";
+                }
+                manifest.CompletedAtUtc = DateTimeOffset.UtcNow;
+                manifest.Devices = captures.Values.OrderBy(c => c.IpAddress, StringComparer.OrdinalIgnoreCase).ToList();
+                await BackupArchive.WriteManifestAsync(destinationDirectory, manifest);
+            }
         }
 
         public static Task<bool> IsSshPortReachableAsync(string host, int port = 22, int timeoutMs = 2500, CancellationToken token = default) =>
@@ -893,14 +930,19 @@ namespace BulkBackup.Core.Services
             CancellationToken token,
             string? knownHostname = null,
             string? uplinkDevice = null,
-            string? port = null)
+            string? port = null,
+            DeviceCapture? capture = null)
         {
+            capture ??= new DeviceCapture { IpAddress = ip, Hostname = knownHostname ?? ip, Profile = profileName, SaveRequested = writeConfig };
+            capture.CapturedAtUtc = DateTimeOffset.UtcNow;
             string protocol = "SSH/Telnet";
             progress(ip, 5, "Probing SSH (22) and Telnet (23)...", protocol, knownHostname, isAp, uplinkDevice, port);
 
             bool reachable = await _transport.IsReachableAsync(ip, token);
             if (!reachable)
             {
+                capture.Status = "unreachable";
+                capture.Reason = "TCP ports 22 and 23 timed out or refused.";
                 progress(ip, 0, "Unreachable / Ports 22 and 23 Closed", "ERR", knownHostname, isAp, uplinkDevice, port);
                 log("Error", $"Device {ip} is unreachable (TCP ports 22 and 23 timed out or refused).");
                 return;
@@ -942,6 +984,8 @@ namespace BulkBackup.Core.Services
 
             if (client == null || activeCred == null)
             {
+                capture.Status = "failure";
+                capture.Reason = connectionFailure ?? "All candidate credentials were rejected.";
                 progress(ip, 0, connectionFailure == null ? "Auth Failed (All Creds)" : $"Connection failed: {connectionFailure}", "ERR", knownHostname, isAp, uplinkDevice, port);
                 log("Error", $"All candidate credentials failed on {ip}.");
                 return;
@@ -950,6 +994,8 @@ namespace BulkBackup.Core.Services
             StringBuilder? diagnosticCapture = null;
             int capturedSuccessfulCommands = 0;
             string captureHostname = knownHostname ?? ip;
+            IBackupSession? recoveryClient = null;
+            IBackupShell? recoveryStream = null;
             try
             {
                 using (client)
@@ -963,8 +1009,17 @@ namespace BulkBackup.Core.Services
                     var identityEvidence = new StringBuilder();
                     foreach (string probe in DevicePlatforms.Probes)
                     {
-                        string response = await ExecuteRawCommandAsync(stream, probe, token);
+                        var probeCapture = new CommandCapture { Command = probe, Stage = "identity" };
+                        capture.Commands.Add(probeCapture);
+                        string response;
+                        try { response = await ExecuteRawCommandAsync(stream, probe, token); }
+                        catch (Exception ex) when (!token.IsCancellationRequested)
+                        {
+                            RecordAttempt(probeCapture, probe, null, ex);
+                            throw;
+                        }
                         string body = DevicePlatforms.Body(response, probe);
+                        RecordAttempt(probeCapture, probe, body);
                         if (DevicePlatforms.IsRejected(body)) continue;
                         identityEvidence.AppendLine(body);
                         platform = DevicePlatforms.Recognize(body);
@@ -978,6 +1033,9 @@ namespace BulkBackup.Core.Services
                         log("Warning", $"Device {ip} OS is unrecognized; executing the explicit custom script with response validation.");
                     else
                     {
+                        capture.Platform = platform.Id;
+                        capture.DeviceType = platform.Kind;
+                        capture.Profile = builtIn ? platform.Name : profileName;
                         isAp = platform.Kind == "AP";
                         log("Detection", $"Device {ip}: {platform.Name} ({platform.Kind}).");
                         if (builtIn) commands = platform.Commands.ToList();
@@ -1001,12 +1059,18 @@ namespace BulkBackup.Core.Services
                     }
 
                     progress(ip, 25, "Session Ready", protocol, hostname, isAp, uplinkDevice, port);
+                    capture.Hostname = hostname;
+                    capture.Protocol = protocol;
+                    capture.IdentityEvidence = identityEvidence.ToString().Trim();
                     if (!string.IsNullOrEmpty(platform?.Paging))
                     {
+                        var pagingCapture = new CommandCapture { Command = platform.Paging, Stage = "setup" };
+                        capture.Commands.Add(pagingCapture);
                         string pagingOutput;
                         try { pagingOutput = await ExecuteRawCommandAsync(stream, platform.Paging, token); }
                         catch (Exception ex) when (!token.IsCancellationRequested)
                         {
+                            RecordAttempt(pagingCapture, platform.Paging, null, ex);
                             ReportCommandFailure(ip, hostname, platform.Paging, ex.GetType().Name, ex.Message);
                             throw;
                         }
@@ -1015,6 +1079,7 @@ namespace BulkBackup.Core.Services
                             ReportCommandFailure(ip, hostname, platform.Paging, "Paging rejected", DevicePlatforms.Body(pagingOutput, platform.Paging));
                             log("Warning", $"Paging command rejected on {ip}; interactive pager handling remains enabled.");
                         }
+                        RecordAttempt(pagingCapture, platform.Paging, DevicePlatforms.Body(pagingOutput, platform.Paging));
                     }
                     string deviceTypeLabel = platform == null ? "Unrecognized (custom script)" : $"{platform.Name} {platform.Kind}";
 
@@ -1069,6 +1134,30 @@ namespace BulkBackup.Core.Services
                     int rejected = 0;
                     int successful = 0;
                     bool configurationCaptured = false;
+                    capture.Commands.RemoveAll(c => c.Stage == "capture");
+                    var planned = validCommands.Select(c => new CommandCapture { Command = c }).ToList();
+                    capture.Commands.AddRange(planned);
+                    bool needsRecovery = false;
+                    async Task<string> ExecuteCaptureAsync(string command, int timeoutMs)
+                    {
+                        if (needsRecovery)
+                        {
+                            recoveryStream?.Dispose();
+                            recoveryStream = null;
+                            recoveryClient?.Dispose();
+                            recoveryClient = null;
+                            recoveryClient = await _transport.ConnectAsync(ip, activeCred, token);
+                            recoveryStream = recoveryClient.OpenShell();
+                            string recoveryPrompt = await ReadUntilPromptOrPatternAsync(recoveryStream, PromptRegex, 10000, token);
+                            if (platform?.UsesEnable == true)
+                                await ElevatePrivilegesAsync(recoveryStream, recoveryPrompt, activeCred.Secret, token);
+                            if (!string.IsNullOrEmpty(platform?.Paging))
+                                await ExecuteRawCommandAsync(recoveryStream, platform.Paging, token);
+                            needsRecovery = false;
+                            log("Transport", $"Opened a fresh session on {ip} to continue after an incomplete command response.");
+                        }
+                        return await ExecuteRawCommandAsync(recoveryStream ?? stream, command, token, timeoutMs);
+                    }
 
                     for (int i = 0; i < validCommands.Count; i++)
                     {
@@ -1085,16 +1174,20 @@ namespace BulkBackup.Core.Services
                             string output;
                             try
                             {
-                                output = await ExecuteRawCommandAsync(stream, attempt, token, timeoutMs: configurationCommand ? 120000 : 20000);
+                                output = await ExecuteCaptureAsync(attempt, configurationCommand ? 120000 : 20000);
                             }
                             catch (Exception ex) when (!token.IsCancellationRequested)
                             {
                                 ReportCommandFailure(ip, hostname, attempt, ex.GetType().Name, ex.Message);
                                 sb.AppendLine($"Command: {attempt}\nResult: Failed\n{ex.Message}\n");
-                                throw; // An incomplete prompt cannot safely delimit later command output.
+                                RecordAttempt(planned[i], attempt, null, ex);
+                                needsRecovery = true;
+                                log("Warning", $"Command '{attempt}' failed on {ip}; later commands will use a fresh session.");
+                                break;
                             }
                             string body = DevicePlatforms.Body(output, attempt);
                             accepted = !DevicePlatforms.IsRejected(body) && !string.IsNullOrWhiteSpace(body);
+                            RecordAttempt(planned[i], attempt, body);
                             sb.AppendLine("==================================================");
                             sb.AppendLine($"Command: {attempt}");
                             sb.AppendLine($"Result: {(accepted ? "Accepted" : "Rejected or empty")}");
@@ -1111,6 +1204,7 @@ namespace BulkBackup.Core.Services
                             capturedSuccessfulCommands = successful;
                             if (cmd == platform?.Configuration || cmd is "show run" or "show running-config" or "show run-config" or "show run-config commands")
                                 configurationCaptured = true;
+                            capture.ConfigurationCaptured = configurationCaptured;
                         }
                         else rejected++;
                     }
@@ -1120,6 +1214,9 @@ namespace BulkBackup.Core.Services
                     if ((builtIn || validCommands.Contains(platform?.Configuration ?? "") || validCommands.Any(c => c is "show run" or "show running-config" or "show run-config" or "show run-config commands")) && !configurationCaptured)
                     {
                         await SavePartialCaptureAsync(backupDir, ip, hostname, sb.ToString(), token);
+                        capture.OutputFile = PartialCaptureFilename(ip, hostname);
+                        capture.Status = "partial";
+                        capture.Reason = "Required configuration output was unavailable; diagnostics only.";
                         progress(ip, 100, $"Partial diagnostics saved: configuration unavailable ({successful} accepted, {rejected} rejected). See Command Results.", protocol, hostname, isAp, uplinkDevice, port);
                         log("Warning", $"Partial diagnostics saved for {ip}; previous configuration backup preserved.");
                         return;
@@ -1127,14 +1224,18 @@ namespace BulkBackup.Core.Services
 
                     if (writeConfig && !isAp && platform?.Save == "write memory")
                     {
+                        var saveCapture = new CommandCapture { Command = "write memory", Stage = "save" };
+                        capture.Commands.Add(saveCapture);
                         progress(ip, 95, "Saving Config (write memory)...", protocol, hostname, isAp, uplinkDevice, port);
                         try
                         {
-                            string saveOutput = await ExecuteRawCommandAsync(stream, "write memory", token, timeoutMs: 25000);
+                            string saveOutput = await ExecuteCaptureAsync("write memory", 25000);
+                            RecordAttempt(saveCapture, "write memory", DevicePlatforms.Body(saveOutput, "write memory"));
                             sb.AppendLine("==================================================");
                             sb.AppendLine("Command: write memory");
                             sb.AppendLine("==================================================");
-                            if (DevicePlatforms.IsRejected(DevicePlatforms.Body(saveOutput, "write memory")))
+                            if (DevicePlatforms.IsRejected(DevicePlatforms.Body(saveOutput, "write memory")) ||
+                                string.IsNullOrWhiteSpace(DevicePlatforms.Body(saveOutput, "write memory")))
                             {
                                 rejected++;
                                 ReportCommandFailure(ip, hostname, "write memory", "Save rejected", DevicePlatforms.Body(saveOutput, "write memory"));
@@ -1145,6 +1246,8 @@ namespace BulkBackup.Core.Services
                         }
                         catch (Exception ex) when (!token.IsCancellationRequested)
                         {
+                            rejected++;
+                            RecordAttempt(saveCapture, "write memory", null, ex);
                             ReportCommandFailure(ip, hostname, "write memory", ex.GetType().Name, ex.Message);
                             log("Warning", $"Failed to save memory on {ip}: {ex.Message}");
                         }
@@ -1169,12 +1272,18 @@ namespace BulkBackup.Core.Services
                         if (File.Exists(temporaryFile)) File.Delete(temporaryFile);
                     }
 
+                    capture.OutputFile = Path.GetFileName(filename);
+                    capture.Status = rejected > 0 || !configurationCaptured ? "partial" : "success";
+                    capture.Reason = rejected > 0 ? "One or more commands were unsupported or failed; inspect per-command results."
+                        : !configurationCaptured ? "Diagnostic capture did not include configuration." : null;
                     progress(ip, 100, $"Completed{(rejected > 0 ? " with warnings" : "")} ({successful} accepted, {rejected} rejected)", protocol, hostname, isAp, uplinkDevice, port);
                     log("Backup", $"Backup captured ({successful} accepted, {rejected} rejected) for {hostname} ({ip}) -> {Path.GetFileName(filename)}");
                 }
             }
             catch (Exception ex) when (!token.IsCancellationRequested)
             {
+                capture.Status = "failure";
+                capture.Reason = ex.Message;
                 progress(ip, 0, $"Failed: {ex.Message}", "ERR", knownHostname, isAp, uplinkDevice, port);
                 log("Error", $"Backup failed on {ip}: {ex.Message}");
                 if (capturedSuccessfulCommands > 0 && diagnosticCapture != null)
@@ -1182,6 +1291,8 @@ namespace BulkBackup.Core.Services
                     try
                     {
                         await SavePartialCaptureAsync(backupDir, ip, captureHostname, diagnosticCapture.ToString(), token);
+                        capture.OutputFile = PartialCaptureFilename(ip, captureHostname);
+                        capture.Status = "partial";
                         log("Warning", $"Saved commands captured before the failure on {ip} as partial diagnostics.");
                     }
                     catch (Exception saveError) when (!token.IsCancellationRequested)
@@ -1190,6 +1301,24 @@ namespace BulkBackup.Core.Services
                     }
                 }
             }
+            finally
+            {
+                recoveryStream?.Dispose();
+                recoveryClient?.Dispose();
+            }
+        }
+
+        private static void RecordAttempt(CommandCapture capture, string command, string? body, Exception? exception = null)
+        {
+            bool rejected = body != null && DevicePlatforms.IsRejected(body);
+            string status = exception != null || string.IsNullOrWhiteSpace(body) ? "failure"
+                : rejected ? (DevicePlatforms.IsUnsupported(body!) ? "unsupported" : "failure") : "success";
+            string? reason = exception != null ? $"{exception.GetType().Name}: {exception.Message}"
+                : string.IsNullOrWhiteSpace(body) ? "Empty command response." : rejected ? body!.Trim() : null;
+            if (reason?.Length > 1000) reason = reason[..1000];
+            capture.Attempts.Add(new CommandAttempt(command, DateTimeOffset.UtcNow, status, reason));
+            capture.Status = status;
+            capture.Reason = reason;
         }
 
         private void ReportCommandFailure(string ip, string hostname, string command, string error, string response)
@@ -1201,8 +1330,7 @@ namespace BulkBackup.Core.Services
 
         private static async Task SavePartialCaptureAsync(string directory, string ip, string hostname, string text, CancellationToken token)
         {
-            string safeHost = Regex.Replace(hostname, @"[^\w.\-]", "_");
-            string path = Path.Combine(directory, $"{ip}_{safeHost}.partial-diagnostics.txt");
+            string path = Path.Combine(directory, PartialCaptureFilename(ip, hostname));
             string temporary = path + $".{Guid.NewGuid():N}.tmp";
             try
             {
@@ -1212,6 +1340,9 @@ namespace BulkBackup.Core.Services
             }
             finally { if (File.Exists(temporary)) File.Delete(temporary); }
         }
+
+        private static string PartialCaptureFilename(string ip, string hostname) =>
+            $"{ip}_{Regex.Replace(hostname, @"[^\w.\-]", "_")}.partial-diagnostics.txt";
 
         private async Task<string> ElevatePrivilegesAsync(IBackupShell stream, string initialOutput, string secret, CancellationToken token)
         {

@@ -74,6 +74,7 @@ public class RunMonitorAndProfilesTests
         var vm = fixture.ViewModel;
         Assert.Equal(5, vm.SelectedProfileIndex);
         Assert.Equal(6, vm.ProfileNames.Count);
+        Assert.False(vm.WriteConfig);
         Assert.Contains("Dynamic", vm.CommandSummary);
         Assert.Equal(DevicePlatforms.All.Length, vm.SupportedPlatforms.Count);
         foreach (var platform in DevicePlatforms.All)

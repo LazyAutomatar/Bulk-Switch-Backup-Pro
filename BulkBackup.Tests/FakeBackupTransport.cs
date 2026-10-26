@@ -12,6 +12,8 @@ internal sealed class FakeBackupTransport : IBackupTransport
     public ConcurrentQueue<string> Probes { get; } = new();
     public ConcurrentQueue<(string Host, string Username)> Attempts { get; } = new();
     public ConcurrentQueue<(string Host, string Command)> Commands { get; } = new();
+    public ConcurrentQueue<(string Command, int Shell)> ShellCommands { get; } = new();
+    private int _openedShells;
     public Func<string, CancellationToken, Task>? BeforeConnect { get; set; }
     public Func<string, CancellationToken, Task>? BeforeProbe { get; set; }
     private int _active;
@@ -84,10 +86,12 @@ internal sealed class FakeBackupTransport : IBackupTransport
         private readonly Queue<string> _responses = new();
         private bool _awaitingSecret;
         private bool _privileged;
+        private readonly int _shellId;
 
         public Shell(FakeBackupTransport transport, string host, FakeDevice device)
         {
             (_transport, _host, _device) = (transport, host, device);
+            _shellId = Interlocked.Increment(ref transport._openedShells);
             _privileged = !device.RequiresEnable;
             if (!device.Silent) _responses.Enqueue(Prompt);
         }
@@ -102,6 +106,7 @@ internal sealed class FakeBackupTransport : IBackupTransport
         }
         public void WriteLine(string text)
         {
+            _transport.ShellCommands.Enqueue((text, _shellId));
             _transport.Commands.Enqueue((_host, text));
             if (_awaitingSecret)
             {

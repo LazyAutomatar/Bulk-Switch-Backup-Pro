@@ -6,7 +6,7 @@ namespace BulkBackup.Tests;
 public class PartialCaptureTests
 {
     [Fact]
-    public async Task TimeoutRetainsEarlierCommandsWithoutRunningMoreOnAnUnsynchronizedShell()
+    public async Task TimeoutRetainsEarlierCommandsAndContinuesOnAFreshSession()
     {
         string directory = Path.Combine(Path.GetTempPath(), "bulk-partial-" + Guid.NewGuid());
         Directory.CreateDirectory(directory);
@@ -23,7 +23,10 @@ public class PartialCaptureTests
             string partial = Assert.Single(Directory.GetFiles(directory));
             Assert.EndsWith(".partial-diagnostics.txt", partial);
             Assert.Contains("captured show inventory", File.ReadAllText(partial));
-            Assert.DoesNotContain(transport.Commands, c => c.Command == "show vlan");
+            Assert.Contains(transport.Commands, c => c.Command == "show vlan");
+            Assert.Contains("captured show vlan", File.ReadAllText(partial));
+            Assert.Equal(2, transport.Attempts.Count);
+            Assert.Equal(0, transport.Active);
             Assert.Equal("TimeoutException", Assert.Single(failures).Error);
         }
         finally { Directory.Delete(directory, true); }
