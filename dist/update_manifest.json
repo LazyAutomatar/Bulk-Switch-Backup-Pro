@@ -1,9 +1,9 @@
 {
-  "version": "3.0.6",
-  "title": "Bulk Switch Backup Pro 3.0.6",
-  "releaseNotes": "### Changed\n- Use one default Cisco switch diagnostic list for IOS/IOS-XE, C1000 and Small Business/CBS switches. Keep platform identification, paging and output parsing appropriate to each device.\n- Include all 16 Network Health Reporter switching commands in default backups: sorted CPU and memory, power, temperature, stack details, stack-ring speed, VTP, CPU-policer statistics and both CDP views. Preserve rejected commands and continue capturing supported diagnostics and configuration.\n- Fall back to unsorted CPU/memory and Small Business VLAN syntax when necessary without relabeling the actual captured command.\n\n### Fixed\n- Parse SG350 detailed CDP `Device-ID`, `Primary Management Address: IP` and `Addresses: IP` fields so advertised AP and C1000 neighbor addresses populate the inventory and backup queue.\n- Recognize the Small Business `TransBridge` capability label so AP neighbors remain APs even without a summary table.",
-  "publishedAt": "2026-10-26T09:44:53.7269238Z",
-  "downloadUrl": "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.6/BulkSwitchBackupPro_Setup.exe",
-  "sha256": "c5c6b99a3f1940840d628f6e3aaee055a6a17bd49f013a2b4fa482f0d8591238",
-  "fileSizeBytes": 47392568
+  "version": "3.0.7",
+  "title": "Bulk Switch Backup Pro 3.0.7",
+  "releaseNotes": "### Added\n- Catalyst 9800 WLC evidence collection for platform resources, environment, AP uptime/history, rogue AP summary and 5 GHz CleanAir configuration, keeping each actual command and evidence type distinct.\n- Schema-versioned `capture-manifest.json` in ZIP exports with UTC timestamps, requested targets, device identity/platform/profile, configuration state, per-command outcomes and failure reasons. Current-run output selection excludes stale files; legacy exports are explicitly unverified.\n\n### Fixed\n- Continue supported diagnostics after command rejection or timeout; reconnect and initialize a fresh session after incomplete responses rather than reusing an unsynchronized shell.\n- Preserve partial captures when required configuration is unavailable, and record unreachable/skipped/unattempted targets without successful backup claims.\n- Default the explicit save-configuration option to off. Run `write memory` only when selected and after required configuration capture succeeds.",
+  "publishedAt": "2026-10-26T11:36:29.0208703Z",
+  "downloadUrl": "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.7/BulkSwitchBackupPro_Setup.exe",
+  "sha256": "d9060d069a65c3bb0c3096e673a76899e8c4cfec5d9ec7ccd473749dce251445",
+  "fileSizeBytes": 47398168
 }

@@ -10,7 +10,7 @@
 
 <br/>
 
-[![Latest Release](https://img.shields.io/badge/Release-v3.0.6%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v3.0.7%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
 [![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
@@ -102,7 +102,7 @@
 
 <br/><br/>
 
-### Public Release Artifacts (v3.0.6 Enterprise)
+### Public Release Artifacts (v3.0.7 Enterprise)
 
 | Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- |
@@ -197,6 +197,16 @@ For existing Windows profiles, create/unlock the vault and choose **Import Legac
 Connections prefer SSH on port 22. If SSH is unavailable or negotiation fails, the engine attempts Telnet on port 23 and labels the session **Telnet** in progress and saved backups. Telnet sends credentials and traffic without encryption, so use this fallback only on a trusted management network. Rejected SSH credentials trigger credential rotation rather than a Telnet downgrade. Legacy terminal `login:`, `Username:` and `Password:` prompts are handled before commands begin; forced password changes are reported for manual attention.
 
 Automatic profiles recognize **Catalyst C1000 as an IOS switch** and **SG350 as Cisco Small Business**, which uses `terminal datadump`. AP-only wired-interface commands are confined to detected AP profiles. Explicit custom scripts remain under your control.
+
+### Catalyst 9800 evidence and ZIP manifests
+
+The Catalyst 9800 WLC profile attempts `show platform resources`, `show environment all`, `show ap uptime`, `show wireless stats ap history`, `show wireless wps rogue ap summary`, and `show ap dot11 5ghz cleanair config`, in addition to its existing configuration and diagnostic commands. Availability depends on the IOS-XE release, hardware and operator permissions. Each command is captured under its actual command name. Logging is not substituted for AP history, and a 5 GHz radio summary is not substituted for CleanAir configuration. Unsupported evidence remains unavailable for the health reporter.
+
+Rejected commands are recorded and collection continues. When a command times out or its session fails, later commands use a fresh authenticated shell with privilege and paging setup reapplied; output from the incomplete shell cannot become another command's evidence. A missing required running configuration produces a `.partial-diagnostics.txt` file rather than replacing a previous complete backup. **Save configuration (`write memory`) is off by default and runs only when the existing save option is explicitly selected and the required configuration capture succeeded.**
+
+New ZIP exports contain a root `capture-manifest.json` with schema version 1. It records requested targets, UTC run/capture timestamps, device IP and hostname, detected platform/type, selected and resolved profiles, identity evidence, transport, configuration-capture state, output filename, and save-option state. Each command has a stage (`identity`, `setup`, `capture`, or `save`), a status (`success`, `unsupported`, `failure`, or `notAttempted`), a reason when unavailable, and timestamped attempts with the actual command used. Device status is `success`, `partial`, `failure`, `unreachable`, `skipped`, or `notAttempted`. A device is successful only after configuration and all capture commands succeeded; partial diagnostic availability does not establish complete device health.
+
+The staging folder retains this metadata in `.capture/capture-manifest.json`. ZIP export includes only the current run's recorded output files, so an old router backup in the folder cannot imply a successful new capture. Unreachable targets are explicitly recorded without an output file. Targets omitted from the request are not reported as captured. Legacy folders without capture metadata export their text files as `unverifiedFiles`, with no inferred successful devices. Credentials are not written to the manifest.
 
 ---
 
@@ -304,7 +314,7 @@ For wide result tables, use the wheel over the horizontal scrollbar, or hold
 
 ## Windows code signing
 
-Version 3.0.6 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
+Version 3.0.7 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
 
 By default, public Windows packaging requires a trusted code-signing certificate and a
 verified timestamp. Configure GitHub Actions secrets `WINDOWS_SIGNING_PFX_BASE64`
