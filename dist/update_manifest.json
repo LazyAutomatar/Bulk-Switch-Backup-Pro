@@ -1,9 +1,9 @@
-﻿{
-    "version":  "3.0.3",
-    "title":  "Bulk Switch Backup Pro 3.0.3",
-    "releaseNotes":  "### Added\n- Local operational and diagnostic file logging for the application and auto-update pipeline written to `%APPDATA%\\BulkSwitchBackup\\Logs` (`bulkswitchbackup.log` and `updates.log`) with millisecond timestamps and automatic size-based log rotation.\n- Real-time download progress tracking with byte counts, percentage milestones, and transfer speeds logged to `updates.log` for troubleshooting network timeouts and firewalls.\n\n### Fixed\n- Resolve update download timeouts on slower network connections or high-latency enterprise links by allocating a dedicated 1-hour HTTP client for downloading installer packages.\n- Add high-resilience fast-path fallback to CDN-hosted release manifest to prevent rate-limit throttling during frequent update checks.\n- Dynamic theme accent contrast for action buttons in About and Credentials views across dark and light desktop themes.",
-    "publishedAt":  "2026-10-25T15:08:00.4520208Z",
-    "downloadUrl":  "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.3/BulkSwitchBackupPro_Setup.exe",
-    "sha256":  "9ec55c7225528cb197cfefbe4981b6487b505473f0ba67f8a6c7fc23cc80bfbc",
-    "fileSizeBytes":  47378952
+{
+  "version": "3.0.4",
+  "title": "Bulk Switch Backup Pro 3.0.4",
+  "releaseNotes": "### Added\n- Portable master-password credential vault for Windows, Linux and macOS using AES-256-GCM and PBKDF2-SHA256. Create, unlock and lock the vault from Saved Credentials; explicitly import existing Windows DPAPI profiles on their original Windows account.\n- SSH-first connection fallback to Telnet port 23 for connection/negotiation failures, with the actual protocol recorded in progress and backup files. SSH credential rejection continues to the next credential without downgrading to Telnet.\n- Bounded terminal login handling for legacy username/password prompts, including repeated prompts after SSH authentication and fragmented Telnet responses.\n\n### Fixed\n- Saved Credentials table crash when populated rows resolve Apply/Delete button bindings; hide enable-secret values and clear session credential fields when locking the vault.\n- Classify Catalyst C1000 as an IOS switch throughout discovery and backup command selection; reserve wired-interface AP commands for detected access points in automatic profiles.\n- Use the Small Business/CBS command profile and `terminal datadump` paging for SG350 devices, including discovery sessions.\n- Preserve login timeout details in device status and propagate cancellation when discovery workers close their queue.\n\n### Validation\n- Added offline vault encryption, portability, tamper, concurrent-write and legacy-import tests; populated credential-page interaction coverage; login/Telnet tests; and C1000/SG350 pipeline regressions. Physical device and native Linux/macOS validation remain separate from Windows offline checks.",
+  "publishedAt": "2026-10-26T06:45:36.6784999Z",
+  "downloadUrl": "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.4/BulkSwitchBackupPro_Setup.exe",
+  "sha256": "d739a94e53cbd08a0ec6a198668da1b951e9a3b4625d5461f753e74dbeb4d6f0",
+  "fileSizeBytes": 47391312
 }
