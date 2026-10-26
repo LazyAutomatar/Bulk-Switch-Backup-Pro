@@ -31,11 +31,12 @@ namespace BulkBackup.Core.Services
         private static readonly Regex PromptRegex = new(@"(?:^|[\r\n])\s*(?:<[\w.\-]+>|\[[\w.@:/ \-]+\](?:\s*[>#])?|(?:\([\w.\-\s]+\)|[* ]*[\w.@:/\-]+)(?:\([^)]*\))?\s*[>#])\s*$", RegexOptions.Compiled);
         private static readonly Regex PasswordRegex = new(@"[Pp]assword:\s*$", RegexOptions.Compiled);
         private static readonly Regex MoreRegex = new(@"--\s*More\s*--|----\s*More\s*----|Press any key to continue|Press Enter to continue|Would you like to display[^\r\n]*\(y/n\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex DeviceIdRegex = new(@"Device ID:\s*([^\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex DeviceIdRegex = new(@"Device[ -]ID:\s*([^\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex PlatformRegex = new(@"Platform:\s*([^,\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex CapabilitiesRegex = new(@"Capabilities:\s*([^\r\n]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex CdpIpRegex = new(@"(?:Entry address\(es\):|Management address\(es\):)[\s\S]*?(?:IP|IPv4)\s*[Aa]ddress:\s*([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex FallbackIpRegex = new(@"(?:IP|IPv4)\s*[Aa]ddress:\s*([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex FallbackIpRegex = new(@"\b(?:IP|IPv4)(?:\s+address\s*:|\s*:|\s+)\s*([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex PrimaryManagementIpRegex = new(@"(?im)^[ \t]*Primary Management Address:\s*(?:IP|IPv4)\s+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\b", RegexOptions.Compiled);
 
         public static readonly HashSet<string> InvalidHostKeywords = new(StringComparer.OrdinalIgnoreCase)
         {
@@ -515,7 +516,7 @@ namespace BulkBackup.Core.Services
             var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             if (string.IsNullOrWhiteSpace(protocolsOutput)) return map;
 
-            var blocks = Regex.Split(protocolsOutput, @"(?im)^\s*-{15,}\s*$|(?=^[ \t]*(?:Device ID:|Protocol information for ))");
+            var blocks = Regex.Split(protocolsOutput, @"(?im)^\s*-{15,}\s*$|(?=^[ \t]*(?:Device[ -]ID:|Protocol information for ))");
             foreach (var block in blocks)
             {
                 if (string.IsNullOrWhiteSpace(block)) continue;
@@ -543,7 +544,7 @@ namespace BulkBackup.Core.Services
             var list = new List<CdpNeighbor>();
             if (string.IsNullOrWhiteSpace(cdpOutput)) return list;
 
-            var blocks = Regex.Split(cdpOutput, @"(?im)^\s*-{15,}\s*$|(?=^[ \t]*Device ID:)");
+            var blocks = Regex.Split(cdpOutput, @"(?im)^\s*-{15,}\s*$|(?=^[ \t]*Device[ -]ID:)");
             foreach (var block in blocks)
             {
                 if (string.IsNullOrWhiteSpace(block)) continue;
@@ -558,7 +559,8 @@ namespace BulkBackup.Core.Services
                 if (devMatch.Success) n.DeviceName = devMatch.Groups[1].Value.Trim().Split('.')[0];
                 if (string.IsNullOrWhiteSpace(n.DeviceName)) continue;
 
-                var ipMatch = CdpIpRegex.Match(block);
+                var ipMatch = PrimaryManagementIpRegex.Match(block);
+                if (!ipMatch.Success) ipMatch = CdpIpRegex.Match(block);
                 if (ipMatch.Success)
                 {
                     n.IpAddress = ipMatch.Groups[1].Value.Trim();
@@ -858,7 +860,7 @@ namespace BulkBackup.Core.Services
 
             bool switchOrRouter = n.IsLldp ? Cap(@"\b(?:B|R|Bridge|Router)\b") : Cap(@"\b(?:S|R|Switch|Router)\b");
             bool ap = n.IsLldp ? Cap(@"\b(?:W|WLAN|WLAN Access Point|Access[- ]Point)\b")
-                : Cap(@"\b(?:W|T|Access[- ]Point|Trans-Bridge)\b");
+                : Cap(@"\b(?:W|T|Access[- ]Point|Trans[- ]?Bridge)\b");
             bool controller = Model(@"\b(?:AIR-CT[\w-]*|C9800[\w-]*|Wireless Controller)\b");
             bool apModel = Model(@"\b(?:AIR-(?:C|S)?AP[\w-]*|C91[\w-]*|CW91[\w-]*|AP[123456]G[\w-]*|Aironet|CAPWAP)\b");
             bool networkModel = controller || apModel || DevicePlatforms.Recognize(n.Platform) != null ||
@@ -1055,7 +1057,7 @@ namespace BulkBackup.Core.Services
                             continue;
                         }
 
-                        if (builtIn && trimmed == platform?.Paging) continue; // Already applied after identification.
+                        if (builtIn && DevicePlatforms.All.Any(p => trimmed == p.Paging)) continue; // Platform paging was applied after identification.
                         if (!builtIn || !validCommands.Contains(trimmed)) validCommands.Add(trimmed);
                     }
 

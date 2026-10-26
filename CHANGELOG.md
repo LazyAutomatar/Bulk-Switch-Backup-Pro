@@ -4,6 +4,17 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.0.6] - 2026-10-26
+
+### Changed
+- Use one default Cisco switch diagnostic list for IOS/IOS-XE, C1000 and Small Business/CBS switches. Keep platform identification, paging and output parsing appropriate to each device.
+- Include all 16 Network Health Reporter switching commands in default backups: sorted CPU and memory, power, temperature, stack details, stack-ring speed, VTP, CPU-policer statistics and both CDP views. Preserve rejected commands and continue capturing supported diagnostics and configuration.
+- Fall back to unsorted CPU/memory and Small Business VLAN syntax when necessary without relabeling the actual captured command.
+
+### Fixed
+- Parse SG350 detailed CDP `Device-ID`, `Primary Management Address: IP` and `Addresses: IP` fields so advertised AP and C1000 neighbor addresses populate the inventory and backup queue.
+- Recognize the Small Business `TransBridge` capability label so AP neighbors remain APs even without a summary table.
+
 ## [3.0.5] - 2026-10-26
 
 ### Fixed

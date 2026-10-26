@@ -79,7 +79,7 @@ public class RunMonitorAndProfilesTests
         foreach (var platform in DevicePlatforms.All)
         {
             vm.SelectedPreviewPlatform = platform;
-            Assert.Equal(platform.Commands.Where(c => c != platform.Paging && !NetworkEngine.IsConfigurationPushCommand(c)).Distinct(), vm.PreviewCommands);
+            Assert.Equal(platform.Commands.Where(c => !DevicePlatforms.All.Any(p => c == p.Paging) && !NetworkEngine.IsConfigurationPushCommand(c)).Distinct(), vm.PreviewCommands);
             Assert.Contains(platform.Configuration, vm.PreviewCommandsText);
             Assert.Contains(platform.Paging, vm.PreviewPaging);
         }

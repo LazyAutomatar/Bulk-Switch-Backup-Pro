@@ -33,7 +33,7 @@ public partial class MainViewModel : ObservableObject
     private CancellationTokenSource? _cts;
 
     // Application & Developer Details
-    [ObservableProperty] private string appVersion = "3.0.5 Enterprise";
+    [ObservableProperty] private string appVersion = "3.0.6 Enterprise";
     [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";
@@ -79,7 +79,7 @@ public partial class MainViewModel : ObservableObject
     public bool IsFixedProfile => !IsAutoProfile;
     public string CommandSummary => IsAutoProfile ? $"Dynamic · {SupportedPlatforms.Count} platforms" : $"{CommandCount} commands";
     public IReadOnlyList<string> PreviewCommands => SelectedPreviewPlatform.Commands
-        .Where(command => command != SelectedPreviewPlatform.Paging && !NetworkEngine.IsConfigurationPushCommand(command))
+        .Where(command => !DevicePlatforms.All.Any(platform => command == platform.Paging) && !NetworkEngine.IsConfigurationPushCommand(command))
         .Distinct().ToArray();
     public string PreviewCommandsText => string.Join(Environment.NewLine, PreviewCommands);
     public string PreviewCommandSummary => $"{SelectedPreviewPlatform.Kind} · {PreviewCommands.Count} diagnostic commands";

@@ -1,0 +1,60 @@
+Device-ID: 3RD_FLOOR1
+Advertisement version: 2
+Platform: cisco C9115AXI-D
+Capabilities: Router TransBridge
+Interface: gi8, Port ID (outgoing port): GigabitEthernet0
+Holdtime: 149
+Version: Cisco AP Software, ap1g7-k9w8 Version: 17.15.3.28
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 2014-2015 by Cisco Systems, Inc.
+Duplex: full
+Power drawn: 15400 milliwatts
+Primary Management Address: IP 10.158.104.163
+Addresses:
+          IP 10.158.104.163
+          IPv6 fe80::fea0:21e7:4dd7:da08 (link-local)
+---------------------------------------------
+Device-ID: MINE_PLANNING_F1
+Advertisement version: 2
+Platform: cisco C9115AXI-D
+Capabilities: Router TransBridge
+Interface: gi13, Port ID (outgoing port): GigabitEthernet0
+Holdtime: 160
+Version: Cisco AP Software, ap1g7-k9w8 Version: 17.15.3.28
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 2014-2015 by Cisco Systems, Inc.
+Duplex: full
+Power drawn: 15400 milliwatts
+Primary Management Address: IP 10.158.104.149
+Addresses:
+          IP 10.158.104.149
+          IPv6 fe80::af81:f51e:8598:2681 (link-local)
+---------------------------------------------
+Device-ID: BusinessHead_Room
+Advertisement version: 2
+Platform: cisco C9115AXI-D
+Capabilities: Router TransBridge
+Interface: gi24, Port ID (outgoing port): GigabitEthernet0
+Holdtime: 139
+Version: Cisco AP Software, ap1g7-k9w8 Version: 17.15.3.28
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 2014-2015 by Cisco Systems, Inc.
+Duplex: full
+Power drawn: 15400 milliwatts
+Primary Management Address: IP 10.158.104.148
+Addresses:
+          IP 10.158.104.148
+          IPv6 fe80::989e:a794:6077:d0ee (link-local)
+---------------------------------------------
+Device-ID: BARBIL_UPLINK_SW1
+Advertisement version: 2
+Platform: cisco C1000-24P-4G-L
+Capabilities: Switch IGMP
+Interface: gi26, Port ID (outgoing port): GigabitEthernet1/0/2
+Holdtime: 146
+Version: Cisco IOS Software, C1000 Software (C1000-UNIVERSALK9-M), Version 15.2(7)E6, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyri
+Duplex: unknown
+Addresses:
+          IP 10.158.100.18

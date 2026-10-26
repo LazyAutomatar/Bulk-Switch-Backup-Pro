@@ -31,6 +31,31 @@ public sealed class DiscoveryPolicyTests : IDisposable
     }
 
     [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public async Task Actual_Sg350_detail_populates_addresses_and_distinguishes_APs_from_C1000(bool includeAps, bool omitSeparators)
+    {
+        var seed = _transport.Add("192.0.2.1", "ACCESS-SWITCH-3");
+        seed.Outputs["show version"] = "Cisco Small Business SG350-28P";
+        string detail = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Fixtures", "sg350-cdp-detail.txt"));
+        if (omitSeparators) detail = detail.Replace("---------------------------------------------", "");
+        seed.Outputs["show cdp neighbors detail"] = detail;
+        foreach (string ap in new[] { "10.158.104.163", "10.158.104.149", "10.158.104.148" })
+            _transport.Add(ap).Outputs["show version"] = "Cisco Aironet AP Software";
+        _transport.Add("10.158.100.18", "BARBIL_UPLINK_SW1").Outputs["show version"] = "Cisco IOS Software, C1000 Software";
+        await Run(aps: includeAps);
+        foreach (string ap in new[] { "10.158.104.163", "10.158.104.149", "10.158.104.148" })
+            Assert.Equal(includeAps ? 1 : 0, _transport.Attempts.Count(a => a.Host == ap));
+        Assert.Equal(2, _transport.Attempts.Count(a => a.Host == "10.158.100.18"));
+        Assert.DoesNotContain(_transport.Commands, c => c.Host == "192.0.2.1" && c.Command == "show cdp entry *");
+        Assert.DoesNotContain(_logs, l => l.Contains("placeholder:") || l.Contains("no usable management"));
+        Assert.Contains(_logs, l => l.Contains("parsed 4 CDP detail"));
+        Assert.Contains(_progress, p => p.Host == "10.158.100.18" && p.Port == "gi26 -> GigabitEthernet1/0/2");
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Sg350_wrapped_table_traverses_C1000_and_its_downstream_switch(bool includeAps)

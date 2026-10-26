@@ -71,6 +71,36 @@ public sealed class DevicePlatformTests : IDisposable
     }
 
     [Theory]
+    [InlineData("Cisco IOS Software, C1000 Software", "terminal length 0")]
+    [InlineData("Cisco Small Business SG350-28P", "terminal datadump")]
+    public async Task Default_switch_backups_collect_the_health_reporter_contract_with_platform_paging(string identity, string paging)
+    {
+        var device = _transport.Add("192.0.2.1");
+        device.Outputs["show version"] = identity;
+        device.Outputs["show switch stack-ring speed"] = "% Invalid input";
+        await Run("Cisco IOS", CommandProfiles.CiscoIosCommands);
+        string[] healthCommands =
+        [
+            "show version", "show inventory", "show ip interface brief",
+            "show processes cpu sorted", "show processes memory sorted",
+            "show environment power", "show environment temperature",
+            "show switch detail", "show switch stack-ring speed", "show spanning-tree summary",
+            "show vtp status", "show interfaces counters errors", "show interfaces status",
+            "show platform hardware fed switch active qos queue stats internal cpu policer",
+            "show cdp neighbors detail", "show cdp neighbors"
+        ];
+        foreach (string command in healthCommands)
+            Assert.Contains(_transport.Commands, c => c.Command == command);
+        Assert.Single(_transport.Commands, c => c.Command == paging);
+        if (paging == "terminal datadump") Assert.DoesNotContain(_transport.Commands, c => c.Command == "terminal length 0");
+        Assert.Contains(_statuses, s => s.StartsWith("Completed with warnings"));
+        string backup = File.ReadAllText(Assert.Single(Directory.GetFiles(_directory, "*.txt")));
+        Assert.Contains("Command: show switch stack-ring speed\nResult: Rejected or empty".Replace("\n", Environment.NewLine), backup);
+        Assert.Contains("Command: show running-config", backup);
+        Assert.Same(DevicePlatforms.Find("ios")!.Commands, DevicePlatforms.Find("cisco-sb")!.Commands);
+    }
+
+    [Theory]
     [InlineData("% Invalid input detected at '^' marker.")]
     [InlineData("Error: Unrecognized command found at '^' position.")]
     [InlineData("Unknown command")]
