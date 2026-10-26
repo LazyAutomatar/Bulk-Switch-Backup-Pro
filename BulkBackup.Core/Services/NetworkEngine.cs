@@ -22,7 +22,7 @@ namespace BulkBackup.Core.Services
 
         public NetworkEngine(IBackupTransport? transport = null)
         {
-            _transport = transport ?? new SshNetBackupTransport();
+            _transport = new LoginBackupTransport(transport ?? new FallbackBackupTransport());
         }
 
         public delegate void LogAction(string source, string message);
@@ -177,19 +177,21 @@ namespace BulkBackup.Core.Services
             string? parentHost = null)
         {
 
-            progress(ip, 5, "Probing SSH (Port 22)...", "SSH", null, false, parentHost, null);
+            string protocol = "SSH/Telnet";
+            progress(ip, 5, "Probing SSH (22) and Telnet (23)...", protocol, null, false, parentHost, null);
             bool reachable = await _transport.IsReachableAsync(ip, token);
             if (!reachable)
             {
-                progress(ip, 0, "Unreachable / Port 22 Closed", "ERR", null, false, parentHost, null);
-                log("Error", $"Seed {ip} is unreachable on port 22 (timeout or connection refused). Skipping CDP discovery.");
+                progress(ip, 0, "Unreachable / Ports 22 and 23 Closed", "ERR", null, false, parentHost, null);
+                log("Error", $"Seed {ip} is unreachable on ports 22 and 23 (timeout or connection refused). Skipping CDP discovery.");
                 return;
             }
 
-            progress(ip, 15, "Discovering CDP/LLDP neighbors...", "SSH", null, false, parentHost, null);
+            progress(ip, 15, "Discovering CDP/LLDP neighbors...", protocol, null, false, parentHost, null);
 
             IBackupSession? client = null;
             CredentialEntry? activeCred = null;
+            string? connectionFailure = null;
 
             foreach (var cred in candidateCredentials)
             {
@@ -199,6 +201,8 @@ namespace BulkBackup.Core.Services
                     var testClient = await _transport.ConnectAsync(ip, cred, token);
 
                     client = testClient;
+                    protocol = client.Protocol;
+                    if (protocol == "Telnet") log("Transport", "SSH unavailable; using Telnet (unencrypted connection).");
                     activeCred = cred;
                     break;
                 }
@@ -208,6 +212,7 @@ namespace BulkBackup.Core.Services
                 }
                 catch (Exception ex) when (!token.IsCancellationRequested)
                 {
+                    connectionFailure = ex.Message;
                     log("Error", $"Connection error to {ip} with '{cred.Username}': {ex.Message}");
                     break;
                 }
@@ -215,7 +220,7 @@ namespace BulkBackup.Core.Services
 
             if (client == null || activeCred == null)
             {
-                progress(ip, 0, "Discovery Auth Failed", "ERR", null, false, parentHost, null);
+                progress(ip, 0, connectionFailure == null ? "Discovery Auth Failed" : $"Discovery failed: {connectionFailure}", "ERR", null, false, parentHost, null);
                 log("Error", $"All credentials failed on seed {ip}.");
                 return;
             }
@@ -247,7 +252,15 @@ namespace BulkBackup.Core.Services
                     // Update self hostname in queue
                     backupQueue.UpdateHostname(ip, currentHost);
 
-                    await ExecuteRawCommandAsync(stream, "terminal length 0", token);
+                    // Small Business switches use datadump instead of IOS terminal length.
+                    string discoveryIdentity = await ExecuteRawCommandAsync(stream, "show version", token);
+                    var discoveryPlatform = DevicePlatforms.Recognize(DevicePlatforms.Body(discoveryIdentity, "show version"));
+                    if (discoveryPlatform == null)
+                    {
+                        string systemIdentity = await ExecuteRawCommandAsync(stream, "show system", token);
+                        discoveryPlatform = DevicePlatforms.Recognize(DevicePlatforms.Body(systemIdentity, "show system"));
+                    }
+                    await ExecuteRawCommandAsync(stream, discoveryPlatform?.Paging ?? "terminal length 0", token);
 
                     // 1. Protocols table: map Device ID -> IPv4 address fast and reliably
                     string cdpProtocolsOutput = string.Empty;
@@ -295,7 +308,7 @@ namespace BulkBackup.Core.Services
 
                     client.Disconnect();
 
-                    progress(ip, 100, "Discovery complete", "SSH", currentHost, false, parentHost, null);
+                    progress(ip, 100, "Discovery complete", protocol, currentHost, false, parentHost, null);
 
                     var protocolsIpMap = ParseCdpProtocols(cdpProtocolsOutput);
                     var detailNeighbors = ParseCdpNeighborsDetail(cdpDetailOutput, currentHost, ip, protocolsIpMap);
@@ -372,10 +385,15 @@ namespace BulkBackup.Core.Services
             int outstanding = 0;
             void Enqueue(string ip, string? parent)
             {
+                stop.Token.ThrowIfCancellationRequested();
                 if (!claimed.TryAdd(ip, 0)) return;
                 Interlocked.Increment(ref outstanding);
                 if (!queue.Writer.TryWrite((ip, parent)))
+                {
+                    Interlocked.Decrement(ref outstanding);
+                    stop.Token.ThrowIfCancellationRequested();
                     throw new InvalidOperationException("Discovery queue closed before all workers completed.");
+                }
             }
             foreach (string seed in seeds) Enqueue(seed, null);
             if (outstanding == 0) queue.Writer.TryComplete();
@@ -766,7 +784,8 @@ namespace BulkBackup.Core.Services
             // Explicit enabled/system capabilities take precedence over model hints.
             // With no capability TLV, a recognized OS/model is the conservative fallback.
             bool capabilitiesPresent = n.HasCapabilities || !string.IsNullOrWhiteSpace(n.Capabilities);
-            n.IsAp = !controller && (ap || (!capabilitiesPresent && apModel));
+            bool knownSwitch = DevicePlatforms.Recognize(n.Platform)?.Kind == "Switch";
+            n.IsAp = !controller && !knownSwitch && (ap || (!capabilitiesPresent && apModel));
             n.IsNetworkDevice = ap || switchOrRouter || (!capabilitiesPresent && networkModel);
         }
 
@@ -792,28 +811,32 @@ namespace BulkBackup.Core.Services
             string? uplinkDevice = null,
             string? port = null)
         {
-            progress(ip, 5, "Probing SSH (Port 22)...", "SSH", knownHostname, isAp, uplinkDevice, port);
+            string protocol = "SSH/Telnet";
+            progress(ip, 5, "Probing SSH (22) and Telnet (23)...", protocol, knownHostname, isAp, uplinkDevice, port);
 
             bool reachable = await _transport.IsReachableAsync(ip, token);
             if (!reachable)
             {
-                progress(ip, 0, "Unreachable / Port 22 Closed", "ERR", knownHostname, isAp, uplinkDevice, port);
-                log("Error", $"Device {ip} is unreachable (TCP port 22 connection timed out or refused).");
+                progress(ip, 0, "Unreachable / Ports 22 and 23 Closed", "ERR", knownHostname, isAp, uplinkDevice, port);
+                log("Error", $"Device {ip} is unreachable (TCP ports 22 and 23 timed out or refused).");
                 return;
             }
 
             IBackupSession? client = null;
             CredentialEntry? activeCred = null;
+            string? connectionFailure = null;
 
             foreach (var cred in candidateCredentials)
             {
                 token.ThrowIfCancellationRequested();
                 try
                 {
-                    progress(ip, 10, $"Authenticating ({cred.Username})...", "SSH", knownHostname, isAp, uplinkDevice, port);
+                    progress(ip, 10, $"Authenticating ({cred.Username})...", protocol, knownHostname, isAp, uplinkDevice, port);
                     var testClient = await _transport.ConnectAsync(ip, cred, token);
 
                     client = testClient;
+                    protocol = client.Protocol;
+                    if (protocol == "Telnet") log("Transport", "SSH unavailable; using Telnet (unencrypted connection).");
                     activeCred = cred;
                     log("Auth", $"Device {ip} successfully authenticated with user '{cred.Username}'.");
                     break;
@@ -824,6 +847,7 @@ namespace BulkBackup.Core.Services
                 }
                 catch (Exception ex) when (!token.IsCancellationRequested)
                 {
+                    connectionFailure = ex.Message;
                     log("Error", $"Connection error to {ip} with '{cred.Username}': {ex.Message}");
                     if (ex.Message.Contains("timed out") || ex.Message.Contains("No route") || ex.Message.Contains("refused"))
                     {
@@ -834,7 +858,7 @@ namespace BulkBackup.Core.Services
 
             if (client == null || activeCred == null)
             {
-                progress(ip, 0, "Auth Failed (All Creds)", "ERR", knownHostname, isAp, uplinkDevice, port);
+                progress(ip, 0, connectionFailure == null ? "Auth Failed (All Creds)" : $"Connection failed: {connectionFailure}", "ERR", knownHostname, isAp, uplinkDevice, port);
                 log("Error", $"All candidate credentials failed on {ip}.");
                 return;
             }
@@ -846,11 +870,11 @@ namespace BulkBackup.Core.Services
             {
                 using (client)
                 {
-                    progress(ip, 20, "Connected", "SSH", knownHostname, isAp, uplinkDevice, port);
+                    progress(ip, 20, "Connected", protocol, knownHostname, isAp, uplinkDevice, port);
                     using var stream = client.OpenShell();
 
                     string initial = await ReadUntilPromptOrPatternAsync(stream, PromptRegex, 10000, token);
-                    progress(ip, 22, "Identifying device OS...", "SSH", knownHostname, isAp, uplinkDevice, port);
+                    progress(ip, 22, "Identifying device OS...", protocol, knownHostname, isAp, uplinkDevice, port);
                     DevicePlatform? platform = null;
                     var identityEvidence = new StringBuilder();
                     foreach (string probe in DevicePlatforms.Probes)
@@ -892,7 +916,7 @@ namespace BulkBackup.Core.Services
                         }
                     }
 
-                    progress(ip, 25, "Session Ready", "SSH", hostname, isAp, uplinkDevice, port);
+                    progress(ip, 25, "Session Ready", protocol, hostname, isAp, uplinkDevice, port);
                     if (!string.IsNullOrEmpty(platform?.Paging))
                     {
                         string pagingOutput;
@@ -932,7 +956,7 @@ namespace BulkBackup.Core.Services
                     sb.AppendLine("Identity evidence:");
                     sb.AppendLine(identityEvidence.ToString().TrimEnd());
                     sb.AppendLine($"Auth User   : {activeCred.Username}");
-                    sb.AppendLine($"Protocol    : SSH (Interactive Shell)");
+                    sb.AppendLine($"Protocol    : {protocol} (Interactive Shell)");
                     sb.AppendLine("==================================================\n");
 
                     var validCommands = new List<string>();
@@ -968,7 +992,7 @@ namespace BulkBackup.Core.Services
                         string cmd = validCommands[i];
 
                         int pct = 25 + (int)(((double)(i + 1) / validCommands.Count) * 65);
-                        progress(ip, pct, $"Running: {cmd}", "SSH", hostname, isAp, uplinkDevice, port);
+                        progress(ip, pct, $"Running: {cmd}", protocol, hostname, isAp, uplinkDevice, port);
 
                         bool accepted = false;
                         foreach (string attempt in DevicePlatforms.Alternatives(platform, cmd))
@@ -1012,14 +1036,14 @@ namespace BulkBackup.Core.Services
                     if ((builtIn || validCommands.Contains(platform?.Configuration ?? "") || validCommands.Any(c => c is "show run" or "show running-config" or "show run-config" or "show run-config commands")) && !configurationCaptured)
                     {
                         await SavePartialCaptureAsync(backupDir, ip, hostname, sb.ToString(), token);
-                        progress(ip, 100, $"Partial diagnostics saved: configuration unavailable ({successful} accepted, {rejected} rejected). See Command Results.", "SSH", hostname, isAp, uplinkDevice, port);
+                        progress(ip, 100, $"Partial diagnostics saved: configuration unavailable ({successful} accepted, {rejected} rejected). See Command Results.", protocol, hostname, isAp, uplinkDevice, port);
                         log("Warning", $"Partial diagnostics saved for {ip}; previous configuration backup preserved.");
                         return;
                     }
 
                     if (writeConfig && !isAp && platform?.Save == "write memory")
                     {
-                        progress(ip, 95, "Saving Config (write memory)...", "SSH", hostname, isAp, uplinkDevice, port);
+                        progress(ip, 95, "Saving Config (write memory)...", protocol, hostname, isAp, uplinkDevice, port);
                         try
                         {
                             string saveOutput = await ExecuteRawCommandAsync(stream, "write memory", token, timeoutMs: 25000);
@@ -1061,7 +1085,7 @@ namespace BulkBackup.Core.Services
                         if (File.Exists(temporaryFile)) File.Delete(temporaryFile);
                     }
 
-                    progress(ip, 100, $"Completed{(rejected > 0 ? " with warnings" : "")} ({successful} accepted, {rejected} rejected)", "SSH", hostname, isAp, uplinkDevice, port);
+                    progress(ip, 100, $"Completed{(rejected > 0 ? " with warnings" : "")} ({successful} accepted, {rejected} rejected)", protocol, hostname, isAp, uplinkDevice, port);
                     log("Backup", $"Backup captured ({successful} accepted, {rejected} rejected) for {hostname} ({ip}) -> {Path.GetFileName(filename)}");
                 }
             }

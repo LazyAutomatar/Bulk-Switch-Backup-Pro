@@ -11,6 +11,7 @@ public interface IBackupTransport
 
 public interface IBackupSession : IDisposable
 {
+    string Protocol => "SSH";
     IBackupShell OpenShell();
     void Disconnect();
 }

@@ -59,7 +59,8 @@ public static class DevicePlatforms
             Has(@"AireOS|Cisco Controller|Cisco Wireless Controller|Product Name\s*\.+\s*Cisco.*(?:Controller|Wireless)") ? "aireos" :
             Has(@"NX-OS|Nexus Operating System") ? "nxos" :
             Has(@"\b(?:CBS[23]\d\d|SG[235]\d\d|SF[235]\d\d)[\w-]*\b|Cisco Small Business") ? "cisco-sb" :
-            Has(@"Cisco IOS.*(?:C[123]\d00|AP[1236]G)|Cisco.*Aironet") ? "cisco-ap" :
+            Has(@"\bC1000[\w-]*\b|Catalyst\s*1000") ? "ios" :
+            Has(@"\b(?:AP[1236]G\d*|C[123]\d00-(?:K9W7|K9W8)|AIR-(?:AP|CAP|LAP)[\w-]+)\b|Cisco.*Aironet") ? "cisco-ap" :
             Has(@"Cisco IOS|IOS-XE Software|IOS XE Software") ? "ios" :
             Has(@"Arista|vEOS") ? "arista" : Has(@"\bJUNOS\b|\bJunos\b") ? "junos" :
             Has(@"ArubaOS-CX|AOS-CX") ? "aruba-cx" :

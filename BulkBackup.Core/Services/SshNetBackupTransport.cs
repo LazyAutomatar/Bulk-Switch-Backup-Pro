@@ -33,7 +33,19 @@ public sealed class SshNetBackupTransport : IBackupTransport
 
     public async Task<IBackupSession> ConnectAsync(string host, CredentialEntry credential, CancellationToken token)
     {
-        var client = new SshClient(host, credential.Username, credential.Password);
+        var keyboard = new KeyboardInteractiveAuthenticationMethod(credential.Username);
+        keyboard.AuthenticationPrompt += (_, args) =>
+        {
+            foreach (var prompt in args.Prompts)
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(prompt.Request, @"(?i)^(?:\s*password\s*:|.*'s password\s*:)") && !prompt.IsEchoed)
+                    prompt.Response = credential.Password;
+                else if (System.Text.RegularExpressions.Regex.IsMatch(prompt.Request, @"(?i)^\s*(?:username|login)\s*:"))
+                    prompt.Response = credential.Username;
+            }
+        };
+        var client = new SshClient(new ConnectionInfo(host, credential.Username,
+            new PasswordAuthenticationMethod(credential.Username, credential.Password), keyboard));
         client.ConnectionInfo.Timeout = TimeSpan.FromSeconds(7);
         try
         {

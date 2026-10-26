@@ -62,6 +62,7 @@ public sealed class DiscoveryPolicyTests : IDisposable
     [InlineData("controller", "Unknown vendor", false)]
     [InlineData("NEIGHBOR", "ArubaOS-CX Version 10.13", true)]
     [InlineData("NEIGHBOR", "cisco C9300-48P", true)]
+    [InlineData("NEIGHBOR", "cisco C1000-24T-4G-L", true)]
     public async Task Missing_capabilities_requires_model_or_os_evidence_not_a_name(string name, string description, bool admitted)
     {
         Setup(Lldp(name: name, description: description, enabled: null).Replace("System Capabilities: B,R\n", ""));
@@ -77,6 +78,17 @@ public sealed class DiscoveryPolicyTests : IDisposable
         Setup(Lldp(system: "B,W", enabled: "W"));
         await Run(aps: include);
         Assert.Equal(include ? 1 : 0, _transport.Attempts.Count(a => a.Host == "192.0.2.2"));
+    }
+
+    [Fact]
+    public async Task C1000_model_is_a_switch_even_with_bridge_ap_capability_hint()
+    {
+        Setup(Lldp(description: "Cisco C1000-24T-4G-L", system: "B,W", enabled: "B,W"));
+        _transport.Devices["192.0.2.2"].Outputs["show version"] = "Cisco IOS Software, C1000 Software, Version 15.2";
+        await Run(aps: false);
+        Assert.Equal(2, _transport.Attempts.Count(a => a.Host == "192.0.2.2"));
+        Assert.DoesNotContain(_transport.Commands, c => c.Command.Contains("wired", StringComparison.OrdinalIgnoreCase));
+        Assert.Equal(2, Directory.GetFiles(_directory, "*_Switch.txt").Length);
     }
 
     [Fact]

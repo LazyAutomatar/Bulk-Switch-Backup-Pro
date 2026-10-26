@@ -18,6 +18,8 @@ public sealed class DevicePlatformTests : IDisposable
     {
         { "ios", "Cisco IOS Software, C2960 Software, Version 15.2" },
         { "ios", "Cisco IOS XE Software, Version 17.12.4" },
+        { "ios", "Cisco IOS Software, C1000 Software (C1000-UNIVERSALK9-M), Version 15.2(7)E" },
+        { "cisco-sb", "System Description: SG350-28 28-Port Gigabit Managed Switch" },
         { "nxos", "Cisco Nexus Operating System (NX-OS) Software" },
         { "c9800", "Cisco IOS XE Software\nCisco Wireless Controller C9800-CL" },
         { "aireos", "Product Name.................................. Cisco Controller\nProduct Version............................... 8.10.190.0" },
@@ -64,6 +66,8 @@ public sealed class DevicePlatformTests : IDisposable
         Assert.EndsWith($"_{platform.Kind}.txt", file);
         Assert.Contains($"Detected OS : {platform.Name}", File.ReadAllText(file));
         Assert.Contains(_statuses, s => s.StartsWith("Completed"));
+        if (platform.Kind == "Switch")
+            Assert.DoesNotContain(_transport.Commands, c => c.Command.Contains("wired", StringComparison.OrdinalIgnoreCase));
     }
 
     [Theory]
