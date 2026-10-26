@@ -1,9 +1,9 @@
 {
-  "version": "3.0.5",
-  "title": "Bulk Switch Backup Pro 3.0.5",
-  "releaseNotes": "### Fixed\n- Synchronize the theme toggle with the actual application theme at startup and after switching between light and dark.\n- Repair public release workflow conditions and the versioned installer signature-check path.\n- Parse SG350/CBS CDP tables with split headings and wrapped device names, models and remote ports; traverse C1000 and Small Business switch neighbors using their advertised management addresses.\n- Use the Small Business `show cdp entry * protocol` address lookup, fall back to `show cdp entry *` when detailed neighbors are absent, and preserve multiple CDP records without dashed separators.\n- Identify discovery platforms from full `show inventory` output when version/system output is insufficient. Log parsed neighbor counts and explain when a switch cannot be traversed because no usable management IPv4 address was advertised.\n\n### Added\n- Small Business automatic backups include hardware inventory, CDP/LLDP topology and startup configuration alongside the running configuration and existing diagnostics.",
-  "publishedAt": "2026-10-26T07:17:57.8514947Z",
-  "downloadUrl": "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.5/BulkSwitchBackupPro_Setup.exe",
-  "sha256": "cda30be76b1ca50e5a2e648b3ae65d0e1955b7e5eabb930498e8c06863301543",
-  "fileSizeBytes": 47392360
+  "version": "3.0.6",
+  "title": "Bulk Switch Backup Pro 3.0.6",
+  "releaseNotes": "### Changed\n- Use one default Cisco switch diagnostic list for IOS/IOS-XE, C1000 and Small Business/CBS switches. Keep platform identification, paging and output parsing appropriate to each device.\n- Include all 16 Network Health Reporter switching commands in default backups: sorted CPU and memory, power, temperature, stack details, stack-ring speed, VTP, CPU-policer statistics and both CDP views. Preserve rejected commands and continue capturing supported diagnostics and configuration.\n- Fall back to unsorted CPU/memory and Small Business VLAN syntax when necessary without relabeling the actual captured command.\n\n### Fixed\n- Parse SG350 detailed CDP `Device-ID`, `Primary Management Address: IP` and `Addresses: IP` fields so advertised AP and C1000 neighbor addresses populate the inventory and backup queue.\n- Recognize the Small Business `TransBridge` capability label so AP neighbors remain APs even without a summary table.",
+  "publishedAt": "2026-10-26T09:44:53.7269238Z",
+  "downloadUrl": "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.0.6/BulkSwitchBackupPro_Setup.exe",
+  "sha256": "c5c6b99a3f1940840d628f6e3aaee055a6a17bd49f013a2b4fa482f0d8591238",
+  "fileSizeBytes": 47392568
 }
