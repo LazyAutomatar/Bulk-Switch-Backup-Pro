@@ -4,6 +4,8 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.0.4] - 2026-10-26
+
 ### Added
 - Portable master-password credential vault for Windows, Linux and macOS using AES-256-GCM and PBKDF2-SHA256. Create, unlock and lock the vault from Saved Credentials; explicitly import existing Windows DPAPI profiles on their original Windows account.
 - SSH-first connection fallback to Telnet port 23 for connection/negotiation failures, with the actual protocol recorded in progress and backup files. SSH credential rejection continues to the next credential without downgrading to Telnet.

@@ -33,7 +33,7 @@ public partial class MainViewModel : ObservableObject
     private CancellationTokenSource? _cts;
 
     // Application & Developer Details
-    [ObservableProperty] private string appVersion = "3.0.3 Enterprise";
+    [ObservableProperty] private string appVersion = "3.0.4 Enterprise";
     [ObservableProperty] private string framework = ".NET 10.0 Desktop Runtime with Avalonia UI 11 & FluentAvalonia";
     [ObservableProperty] private string developerName = "Yash Nalawde";
     [ObservableProperty] private string developerLinkedIn = "https://www.linkedin.com/in/yash-nalawde";

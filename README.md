@@ -184,7 +184,7 @@ flowchart LR
 5. **Export On Demand**:
    - Backups are safely staged in temporary isolation. Click **Save to Folder...** to persist to your local directory or **Export ZIP...** to download a compressed archive.
 
-### Credential vault and legacy switch connections (next build)
+### Credential vault and legacy switch connections (3.0.4)
 
 Saved Credentials uses a portable **AES-256-GCM** vault with a master-password key derived using **PBKDF2-SHA256 (600,000 iterations, random salt)**. Create a master password of at least 12 characters and keep it safe: there is no password recovery. The master password and encryption key are never written to disk. The vault starts locked on each application launch; unlock it before using saved credential fallback. Lock clears the displayed session credentials and the vault's in-memory key; a backup already in progress retains the credentials it started with.
 

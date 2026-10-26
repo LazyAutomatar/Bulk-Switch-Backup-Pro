@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -104,7 +104,7 @@ public class UpdateService : IUpdateService
         Timeout = TimeSpan.FromHours(1)
     };
 
-    public const string DefaultCurrentVersion = "3.0.3";
+    public const string DefaultCurrentVersion = "3.0.4";
     public const string GitHubRepo = "LazyAutomatar/Bulk-Switch-Backup-Pro";
 
     static UpdateService()
