@@ -27,6 +27,8 @@ jobs:
   build-and-release:
     name: Build & Publish Release
     runs-on: windows-latest
+    env:
+      SIGNING_PFX_BASE64: ${{ secrets.WINDOWS_SIGNING_PFX_BASE64 }}
 
     steps:
       - name: Checkout Code
@@ -40,7 +42,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Load and validate public code-signing identity
-        if: ${{ secrets.WINDOWS_SIGNING_PFX_BASE64 != '' }}
+        if: ${{ env.SIGNING_PFX_BASE64 != '' }}
         shell: pwsh
         env:
           SIGNING_PFX_BASE64: ${{ secrets.WINDOWS_SIGNING_PFX_BASE64 }}
@@ -80,7 +82,7 @@ jobs:
           }
 
       - name: Run Cross-Compiler Pipeline
-        if: ${{ secrets.WINDOWS_SIGNING_PFX_BASE64 != '' }}
+        if: ${{ env.SIGNING_PFX_BASE64 != '' }}
         shell: pwsh
         env:
           CERT_PASS: ${{ secrets.WINDOWS_SIGNING_PFX_PASSWORD }}
@@ -88,7 +90,7 @@ jobs:
           ./publish-all.ps1 -Configuration Release -Version "${{ steps.ver.outputs.version }}" -Repo "$env:RELEASES_REPO"
 
       - name: Retrieve locally signed Windows packages for owner-authorized release
-        if: ${{ secrets.WINDOWS_SIGNING_PFX_BASE64 == '' }}
+        if: ${{ env.SIGNING_PFX_BASE64 == '' }}
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.RELEASES_PAT }}
@@ -96,7 +98,7 @@ jobs:
           New-Item -ItemType Directory -Path dist -Force | Out-Null
           gh release download "${{ steps.ver.outputs.tag }}" --repo "$env:RELEASES_REPO" --dir dist --clobber --pattern '*.exe' --pattern '*win-x64.zip' --pattern 'update_manifest.json' --pattern '*.cer'
           if ($LASTEXITCODE -ne 0) { throw 'Locally signed draft artifacts are required.' }
-          foreach ($file in @('BulkSwitchBackupPro.exe', 'BulkSwitchBackupPro_Setup.exe', "BulkSwitchBackupPro_Setup_$($steps.ver.outputs.tag).exe")) {
+          foreach ($file in @('BulkSwitchBackupPro.exe', 'BulkSwitchBackupPro_Setup.exe', 'BulkSwitchBackupPro_Setup_${{ steps.ver.outputs.tag }}.exe')) {
             $path = Join-Path dist $file
             $signature = Get-AuthenticodeSignature -LiteralPath $path
             if ($signature.SignerCertificate.Thumbprint -ne '6C7AA04A7196660417CCE9B5C5BD42ED84408366' -or $null -eq $signature.TimeStamperCertificate -or $signature.Status -notin @('Valid', 'NotTrusted', 'UnknownError')) {

@@ -10,7 +10,7 @@
 
 <br/>
 
-[![Latest Release](https://img.shields.io/badge/Release-v3.0.3%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v3.0.5%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
 [![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
@@ -39,6 +39,7 @@
 
 #### Network Discovery & Topology
 - **Recursive CDP & LLDP Crawl** — Discovers your entire multi-tier switching fabric from a single seed switch.
+- **SG350/CBS and C1000 Discovery** — Reconstructs wrapped Small Business CDP tables, merges advertised management addresses, and recursively visits switch neighbors. Devices without a usable advertised IPv4 address remain in inventory with a diagnostic explaining why traversal cannot continue. Small Business automatic backups also capture inventory, neighbor details and startup configuration.
 - **Universal Multi-Token Port Tokenizer** — Full support for 25G `Twe` (TwentyFiveGigE), 100G `Hu`, 40G `Fo`, 10G `Ten`/`Te`, and 1G `Gig`/`Gi`.
 - **Hierarchical Uplink Tracking** — Preserves parent switch linkage (Core $\rightarrow$ Distribution $\rightarrow$ Access) with live port-channel mapping.
 - **Collision-Proof HostKey Engine** — Canonical hostname normalization (`HostKey.Same`) preventing neighbor drops across domain tags.
@@ -100,7 +101,7 @@
 
 <br/><br/>
 
-### Public Release Artifacts (v3.0.3 Enterprise)
+### Public Release Artifacts (v3.0.5 Enterprise)
 
 | Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- |
@@ -184,7 +185,7 @@ flowchart LR
 5. **Export On Demand**:
    - Backups are safely staged in temporary isolation. Click **Save to Folder...** to persist to your local directory or **Export ZIP...** to download a compressed archive.
 
-### Credential vault and legacy switch connections (3.0.4)
+### Credential vault and legacy switch connections (3.0.5)
 
 Saved Credentials uses a portable **AES-256-GCM** vault with a master-password key derived using **PBKDF2-SHA256 (600,000 iterations, random salt)**. Create a master password of at least 12 characters and keep it safe: there is no password recovery. The master password and encryption key are never written to disk. The vault starts locked on each application launch; unlock it before using saved credential fallback. Lock clears the displayed session credentials and the vault's in-memory key; a backup already in progress retains the credentials it started with.
 
@@ -302,7 +303,7 @@ For wide result tables, use the wheel over the horizontal scrollbar, or hold
 
 ## Windows code signing
 
-Version 3.0.3 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
+Version 3.0.5 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
 
 By default, public Windows packaging requires a trusted code-signing certificate and a
 verified timestamp. Configure GitHub Actions secrets `WINDOWS_SIGNING_PFX_BASE64`

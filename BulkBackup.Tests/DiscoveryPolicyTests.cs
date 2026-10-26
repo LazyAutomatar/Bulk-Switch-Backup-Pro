@@ -31,6 +31,56 @@ public sealed class DiscoveryPolicyTests : IDisposable
     }
 
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Sg350_wrapped_table_traverses_C1000_and_its_downstream_switch(bool includeAps)
+    {
+        var seed = _transport.Add("192.0.2.1", "ACCESS-SWITCH-3");
+        seed.Outputs["show version"] = "Firmware version 2.5";
+        seed.Outputs["show inventory"] = "NAME: \"1\" DESCR: \"SG350-28P 28-Port Gigabit PoE Managed Switch\"\nPID: SG350-28P-K9";
+        seed.Outputs["show cdp neighbors"] = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Fixtures", "sg350-cdp-table.txt"));
+        seed.Outputs["show cdp entry * protocol"] = "Protocol information for BARBIL_UPLINK_SW1:\n IP address: 192.0.2.2\nProtocol information for 3RD_FLOOR1:\n IP address: 192.0.2.4";
+        var uplink = _transport.Add("192.0.2.2", "BARBIL_UPLINK_SW1");
+        uplink.Outputs["show version"] = "Cisco IOS Software, C1000 Software, Version 15.2";
+        uplink.Outputs["show cdp neighbors detail"] = "Device ID: DOWNSTREAM\nEntry address(es):\n IP address: 192.0.2.3\nPlatform: Cisco SG350-28P, Capabilities: Switch IGMP\nInterface: GigabitEthernet1/0/3, Port ID (outgoing port): gi1";
+        _transport.Add("192.0.2.3", "DOWNSTREAM");
+        _transport.Add("192.0.2.4", "3RD_FLOOR1");
+        await Run(aps: includeAps);
+        Assert.Contains(_transport.Commands, c => c.Host == "192.0.2.1" && c.Command == "terminal datadump");
+        Assert.Equal(2, _transport.Attempts.Count(a => a.Host == "192.0.2.2"));
+        Assert.Equal(2, _transport.Attempts.Count(a => a.Host == "192.0.2.3"));
+        Assert.Equal(includeAps ? 1 : 0, _transport.Attempts.Count(a => a.Host == "192.0.2.4"));
+        Assert.Contains(_progress, p => p.Host == "192.0.2.2" && p.Port != null && p.Port.Contains("GigabitEthernet1/0/2"));
+    }
+
+    [Fact]
+    public async Task Detail_records_without_separators_do_not_lose_neighbors()
+    {
+        var seed = _transport.Add("192.0.2.1", "CORE");
+        seed.Outputs["show cdp neighbors detail"] = "Device ID: ONE\nIP address: 192.0.2.2\nPlatform: Cisco C1000-24P-4G-L, Capabilities: Switch\nDevice ID: TWO\nIP address: 192.0.2.3\nPlatform: Cisco SG350-28P, Capabilities: Switch";
+        _transport.Add("192.0.2.2", "ONE");
+        _transport.Add("192.0.2.3", "TWO");
+        await Run();
+        Assert.Equal(2, _transport.Attempts.Count(a => a.Host == "192.0.2.2"));
+        Assert.Equal(2, _transport.Attempts.Count(a => a.Host == "192.0.2.3"));
+    }
+
+    [Fact]
+    public async Task C1000_officegate_sample_traverses_uplink_as_switch()
+    {
+        var seed = _transport.Add("192.0.2.1", "OFFICEGATE1");
+        seed.Outputs["show version"] = "Cisco IOS Software, C1000 Software (C1000-UNIVERSALK9-M), Version 15.2(7)E6";
+        seed.Outputs["show cdp neighbors"] = "Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID\nBARBIL_UPLINK_SW1\n                 Gig 1/0/10        132              S I   C1000-24P Gig 1/0/7\n\nTotal cdp entries displayed : 1";
+        seed.Outputs["show cdp neighbors detail"] = "-------------------------\nDevice ID: BARBIL_UPLINK_SW1\nEntry address(es):\n  IP address: 10.158.100.18\nPlatform: cisco C1000-24P-4G-L,  Capabilities: Switch IGMP\nInterface: GigabitEthernet1/0/10,  Port ID (outgoing port): GigabitEthernet1/0/7\nHoldtime : 177 sec\n\nVersion :\nCisco IOS Software, C1000 Software (C1000-UNIVERSALK9-M), Version 15.2(7)E6\n\nadvertisement version: 2\nVTP Management Domain: ''\nNative VLAN: 1\nDuplex: full\nManagement address(es):\n  IP address: 10.158.100.18\n\nTotal cdp entries displayed : 1";
+        _transport.Add("10.158.100.18", "BARBIL_UPLINK_SW1");
+        await Run(aps: false);
+        Assert.Equal(2, _transport.Attempts.Count(a => a.Host == "10.158.100.18"));
+        Assert.Contains(_progress, p => p.Host == "10.158.100.18" && p.Port != null && p.Port.Contains("GigabitEthernet1/0/7"));
+        Assert.DoesNotContain(_transport.Commands, c => c.Command.Contains("wired"));
+        Assert.Equal(2, Directory.GetFiles(_directory, "*_Switch.txt").Length);
+    }
+
+    [Theory]
     [InlineData("B", "B", "Unknown device", true)]
     [InlineData("B,R", "R", "Unknown device", true)]
     [InlineData("Bridge, Router", "Bridge", "Unknown device", true)]

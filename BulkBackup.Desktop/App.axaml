@@ -3,7 +3,7 @@
              xmlns:sty="using:FluentAvalonia.Styling"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              x:Class="BulkBackup.Desktop.App"
-             RequestedThemeVariant="Dark">
+             RequestedThemeVariant="Default">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -27,7 +27,7 @@
     </Application.Resources>
 
     <Application.Styles>
-        <sty:FluentAvaloniaTheme PreferSystemTheme="True" PreferUserAccentColor="True" />
+        <sty:FluentAvaloniaTheme PreferSystemTheme="False" PreferUserAccentColor="True" />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 
         <!-- Theme-Aware ContentDialog Solid Styling (No tinted black backdrop, no blurred black shadows) -->

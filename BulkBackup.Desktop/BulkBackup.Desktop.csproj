@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
@@ -6,9 +6,9 @@
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>3.0.4</Version>
-    <AssemblyVersion>3.0.4.0</AssemblyVersion>
-    <FileVersion>3.0.4.0</FileVersion>
+    <Version>3.0.5</Version>
+    <AssemblyVersion>3.0.5.0</AssemblyVersion>
+    <FileVersion>3.0.5.0</FileVersion>
     <Product>Bulk Switch Backup Pro</Product>
     <Authors>Yash Nalawde</Authors>
     <Company>Yash Nalawde</Company>

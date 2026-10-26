@@ -22,7 +22,7 @@ public static class DevicePlatforms
         new("c9800", "Cisco Catalyst 9800 IOS-XE", "WLC", "terminal length 0", "show running-config", CommandProfiles.CiscoWlcCommands, true, "write memory"),
         new("aireos", "Cisco AireOS", "WLC", "config paging disable", "show run-config commands", CommandProfiles.CiscoAireOsWlcCommands),
         new("cisco-ap", "Cisco IOS Access Point", "AP", "terminal length 0", "show run", CommandProfiles.CiscoApCommands, true),
-        Switch("cisco-sb", "Cisco Small Business / CBS", "terminal datadump", "show running-config", ["show version", "show system", "show interfaces status", "show vlan", "show running-config"], true),
+        Switch("cisco-sb", "Cisco Small Business / CBS", "terminal datadump", "show running-config", ["show version", "show system", "show inventory", "show interfaces status", "show vlan", "show cdp neighbors detail", "show cdp neighbors", "show lldp neighbors detail", "show running-config", "show startup-config"], true),
         Switch("arista", "Arista EOS", "terminal length 0", "show running-config", ["show version", "show inventory", "show interfaces status", "show vlan", "show port-channel summary", "show lldp neighbors detail", "show running-config", "show startup-config"], true, "write memory"),
         Switch("junos", "Juniper Junos", "set cli screen-length 0", "show configuration | no-more", ["show version", "show chassis hardware", "show chassis alarms", "show interfaces terse", "show vlans", "show lldp neighbors detail", "show configuration | no-more"]),
         Switch("aruba-cx", "Aruba AOS-CX", "no page", "show running-config", ["show version", "show system", "show interface brief", "show vlan", "show lldp neighbor-info", "show running-config", "show startup-config"], true, "write memory"),
@@ -81,7 +81,7 @@ public static class DevicePlatforms
         return id == null ? null : Find(id);
     }
 
-    public static string[] Probes => ["show version", "show sysinfo", "display version", "get system status", "show system", "show sys-info", "show microcode", "show switch", "show system-info", "/system resource print"];
+    public static string[] Probes => ["show version", "show sysinfo", "display version", "get system status", "show system", "show inventory", "show sys-info", "show microcode", "show switch", "show system-info", "/system resource print"];
 
     public static bool IsRejected(string output) => Regex.IsMatch(output,
         @"(?im)^\s*(?:%\s*)?(?:Error\s*:?\s*)?(?:Invalid (?:input|command|parameter)|Unrecognized command|Unknown command|Incomplete command|Ambiguous command|Incorrect usage|Syntax error|Command (?:not found|not supported|not authorized|authorization failed)|Permission denied|Access denied|Authorization failed|Not enough permissions|Insufficient privileges|Unrecognized word|Wrong parameter|Bad command name)\b|(?im)^\s*%\s*(?:Invalid|Error|Unrecognized|Unknown|Incomplete|Ambiguous)|(?im)^\s*Error:|(?im)^\s*syntax error,");

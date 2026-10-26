@@ -260,13 +260,20 @@ namespace BulkBackup.Core.Services
                         string systemIdentity = await ExecuteRawCommandAsync(stream, "show system", token);
                         discoveryPlatform = DevicePlatforms.Recognize(DevicePlatforms.Body(systemIdentity, "show system"));
                     }
+                    if (discoveryPlatform == null)
+                    {
+                        string inventoryIdentity = await ExecuteRawCommandAsync(stream, "show inventory", token);
+                        discoveryPlatform = DevicePlatforms.Recognize(DevicePlatforms.Body(inventoryIdentity, "show inventory"));
+                    }
                     await ExecuteRawCommandAsync(stream, discoveryPlatform?.Paging ?? "terminal length 0", token);
 
                     // 1. Protocols table: map Device ID -> IPv4 address fast and reliably
                     string cdpProtocolsOutput = string.Empty;
                     try
                     {
-                        cdpProtocolsOutput = await ExecuteRawCommandAsync(stream, "show cdp entry * protocols", token, timeoutMs: 12000);
+                        string command = discoveryPlatform?.Id == "cisco-sb" ? "show cdp entry * protocol" : "show cdp entry * protocols";
+                        cdpProtocolsOutput = await ExecuteRawCommandAsync(stream, command, token, timeoutMs: 12000);
+                        if (DevicePlatforms.IsRejected(cdpProtocolsOutput)) log("CDP", $"{ip}: '{command}' rejected; continuing with detailed CDP/LLDP.");
                     }
                     catch (Exception ex) when (!token.IsCancellationRequested)
                     {
@@ -282,6 +289,18 @@ namespace BulkBackup.Core.Services
                     catch (Exception ex) when (!token.IsCancellationRequested)
                     {
                         log("CDP", $"Error running 'show cdp neighbors detail' on {ip}: {ex.Message}");
+                    }
+                    if (discoveryPlatform?.Id == "cisco-sb" && !DeviceIdRegex.IsMatch(cdpDetailOutput))
+                    {
+                        try
+                        {
+                            log("CDP", $"{ip}: no detailed neighbor records; trying 'show cdp entry *'.");
+                            cdpDetailOutput = await ExecuteRawCommandAsync(stream, "show cdp entry *", token, timeoutMs: 25000);
+                        }
+                        catch (Exception ex) when (!token.IsCancellationRequested)
+                        {
+                            log("CDP", $"Optional 'show cdp entry *' skipped on {ip}: {ex.Message}");
+                        }
                     }
 
                     // 3. Tabular CDP (captures ports across 25G Twe, 10G Ten, 1G Gig, Fo 40G, Hu 100G)
@@ -301,9 +320,9 @@ namespace BulkBackup.Core.Services
                     {
                         lldpDetailOutput = await ExecuteRawCommandAsync(stream, "show lldp neighbors detail", token, timeoutMs: 15000);
                     }
-                    catch (Exception) when (!token.IsCancellationRequested)
+                    catch (Exception ex) when (!token.IsCancellationRequested)
                     {
-                        // LLDP is optional if switch doesn't have it enabled
+                        log("LLDP", $"Optional LLDP discovery on {ip}: {ex.Message}");
                     }
 
                     client.Disconnect();
@@ -316,6 +335,7 @@ namespace BulkBackup.Core.Services
                     var lldpNeighbors = ParseLldpNeighborsDetail(lldpDetailOutput, currentHost, ip);
 
                     var combinedNeighbors = CombineDiscoveredNeighbors(detailNeighbors, tableNeighbors, lldpNeighbors);
+                    log("Discovery", $"{currentHost}: parsed {detailNeighbors.Count} CDP detail, {tableNeighbors.Count} CDP table and {lldpNeighbors.Count} LLDP neighbors.");
 
                     foreach (var neighbor in combinedNeighbors)
                     {
@@ -361,6 +381,8 @@ namespace BulkBackup.Core.Services
                             // Scheduling claims are independent of inventory merges/promotions.
                             if (!isAp && IsUsableDiscoveryAddress(target.IpAddress))
                                 enqueue(target.IpAddress, currentHost);
+                            else if (!isAp)
+                                log("Discovery", $"Cannot traverse {neighbor.DeviceName} via {currentHost}: no usable management IPv4 address in CDP/LLDP; retained in inventory.");
                         }
                     }
 
@@ -457,7 +479,8 @@ namespace BulkBackup.Core.Services
                         existing.IpAddress = n.IpAddress;
                     }
 
-                    if ((string.IsNullOrEmpty(existing.Platform) || existing.Platform.Equals("Unknown", StringComparison.OrdinalIgnoreCase)) &&
+                    if ((string.IsNullOrEmpty(existing.Platform) || existing.Platform.Equals("Unknown", StringComparison.OrdinalIgnoreCase) ||
+                        (DevicePlatforms.Recognize(existing.Platform) == null && DevicePlatforms.Recognize(n.Platform) != null)) &&
                         !string.IsNullOrEmpty(n.Platform) && !n.Platform.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
                     {
                         existing.Platform = n.Platform;
@@ -476,6 +499,7 @@ namespace BulkBackup.Core.Services
                     existing.IsEndpoint |= n.IsEndpoint;
                     existing.IsNetworkDevice |= n.IsNetworkDevice;
                     existing.IsAp = !existing.IsEndpoint && (existing.IsAp || n.IsAp);
+                    if (DevicePlatforms.Recognize(existing.Platform)?.Kind == "Switch") existing.IsAp = false;
                 }
             }
 
@@ -491,11 +515,12 @@ namespace BulkBackup.Core.Services
             var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             if (string.IsNullOrWhiteSpace(protocolsOutput)) return map;
 
-            var blocks = Regex.Split(protocolsOutput, @"-{15,}");
+            var blocks = Regex.Split(protocolsOutput, @"(?im)^\s*-{15,}\s*$|(?=^[ \t]*(?:Device ID:|Protocol information for ))");
             foreach (var block in blocks)
             {
                 if (string.IsNullOrWhiteSpace(block)) continue;
                 var devMatch = DeviceIdRegex.Match(block);
+                if (!devMatch.Success) devMatch = Regex.Match(block, @"(?im)^\s*Protocol information for\s+([^:\r\n]+):");
                 if (!devMatch.Success) continue;
                 string dev = devMatch.Groups[1].Value.Trim();
 
@@ -518,7 +543,7 @@ namespace BulkBackup.Core.Services
             var list = new List<CdpNeighbor>();
             if (string.IsNullOrWhiteSpace(cdpOutput)) return list;
 
-            var blocks = Regex.Split(cdpOutput, @"-{20,}");
+            var blocks = Regex.Split(cdpOutput, @"(?im)^\s*-{15,}\s*$|(?=^[ \t]*Device ID:)");
             foreach (var block in blocks)
             {
                 if (string.IsNullOrWhiteSpace(block)) continue;
@@ -531,6 +556,7 @@ namespace BulkBackup.Core.Services
 
                 var devMatch = DeviceIdRegex.Match(block);
                 if (devMatch.Success) n.DeviceName = devMatch.Groups[1].Value.Trim().Split('.')[0];
+                if (string.IsNullOrWhiteSpace(n.DeviceName)) continue;
 
                 var ipMatch = CdpIpRegex.Match(block);
                 if (ipMatch.Success)
@@ -572,6 +598,8 @@ namespace BulkBackup.Core.Services
 
         private static List<CdpNeighbor> ParseCdpNeighborsTable(string rawText, string currentHost, string currentIp, Dictionary<string, string> protocolsIpMap)
         {
+            if (Regex.IsMatch(rawText, @"(?im)^\s*Device ID\s+Local\s+Adv\s+Time To\s+Capability"))
+                return ParseSmallBusinessCdpTable(rawText, currentHost, currentIp, protocolsIpMap);
             var list = new List<CdpNeighbor>();
             if (string.IsNullOrWhiteSpace(rawText)) return list;
 
@@ -719,6 +747,60 @@ namespace BulkBackup.Core.Services
             }
 
             return list;
+        }
+
+        private static List<CdpNeighbor> ParseSmallBusinessCdpTable(string output, string currentHost, string currentIp,
+            Dictionary<string, string> protocolsIpMap)
+        {
+            var neighbors = new List<CdpNeighbor>();
+            Match[]? columns = null;
+            string[]? cells = null;
+            bool platformWrapped = false;
+            void Finish()
+            {
+                if (cells == null || !IsValidCiscoDeviceId(cells[0])) return;
+                var neighbor = new CdpNeighbor
+                {
+                    DeviceName = cells[0], LocalPort = cells[1], Capabilities = cells[4],
+                    Platform = cells[5], RemotePort = cells[6], UplinkDevice = currentHost, UplinkIp = currentIp,
+                    IpAddress = protocolsIpMap.GetValueOrDefault(HostKey.Of(cells[0]), "")
+                };
+                ClassifyNeighbor(neighbor);
+                neighbors.Add(neighbor);
+            }
+            foreach (string line in output.Replace("\r", "").Split('\n'))
+            {
+                if (columns == null)
+                {
+                    // The separator supplies column positions even when headings span two lines.
+                    if (Regex.IsMatch(line, @"^\s*-{3,}(?:\s+-{3,}){6}\s*$"))
+                        columns = Regex.Matches(line, @"-{3,}").Cast<Match>().ToArray();
+                    continue;
+                }
+                if (DevicePlatforms.IsPrompt(line.Trim()) || line.TrimStart().StartsWith("Total", StringComparison.OrdinalIgnoreCase)) break;
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                var parts = columns.Select(c => line.Length <= c.Index ? "" :
+                    line.Substring(c.Index, Math.Min(c.Length, line.Length - c.Index)).Trim()).ToArray();
+                bool startsRow = IsValidCiscoInterface(parts[1]) && int.TryParse(parts[2], out _) && int.TryParse(parts[3], out _);
+                if (startsRow)
+                {
+                    Finish();
+                    cells = parts;
+                    platformWrapped = parts[5].Length == columns[5].Length;
+                }
+                else if (cells != null && parts[1].Length == 0 && parts[2].Length == 0 && parts[3].Length == 0)
+                {
+                    cells[0] += parts[0];
+                    cells[6] += parts[6];
+                    if (parts[5].Length > 0)
+                    {
+                        cells[5] += (platformWrapped || cells[5].Length == 0 ? "" : " ") + parts[5];
+                        platformWrapped = parts[5].Length == columns[5].Length;
+                    }
+                }
+            }
+            Finish();
+            return neighbors;
         }
 
         private static List<CdpNeighbor> ParseLldpNeighborsDetail(string output, string currentHost, string currentIp)

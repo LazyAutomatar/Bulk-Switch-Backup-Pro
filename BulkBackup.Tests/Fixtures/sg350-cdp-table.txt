@@ -1,0 +1,20 @@
+ACCESS-SWITCH-3#sh cdp nei
+Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater, P - VoIP Phone
+                  M - Remotely-Managed Device, C - CAST Phone Port,
+                  W - Two-Port MAC Relay
+
+    Device ID       Local      Adv  Time To Capability   Platform     Port ID
+                    Interface  Ver. Live
+------------------ ----------- ---- ------- ---------- ------------ -----------
+    3RD_FLOOR1         gi8      2     176      R T     cisco        GigabitEthe
+                                                       C9115AXI-D   rnet0
+ MINE_PLANNING_F1     gi13      2     138      R T     cisco        GigabitEthe
+                                                       C9115AXI-D   rnet0
+BusinessHead_Room     gi24      2     151      R T     cisco        GigabitEthe
+                                                       C9115AXI-D   rnet0
+BARBIL_UPLINK_SW1     gi26      2     157      S I     cisco        GigabitEthe
+                                                       C1000-24P-4G rnet1/0/2
+                                                       -L
+
+ACCESS-SWITCH-3#

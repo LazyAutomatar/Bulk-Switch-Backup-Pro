@@ -4,6 +4,18 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.0.5] - 2026-10-26
+
+### Fixed
+- Synchronize the theme toggle with the actual application theme at startup and after switching between light and dark.
+- Repair public release workflow conditions and the versioned installer signature-check path.
+- Parse SG350/CBS CDP tables with split headings and wrapped device names, models and remote ports; traverse C1000 and Small Business switch neighbors using their advertised management addresses.
+- Use the Small Business `show cdp entry * protocol` address lookup, fall back to `show cdp entry *` when detailed neighbors are absent, and preserve multiple CDP records without dashed separators.
+- Identify discovery platforms from full `show inventory` output when version/system output is insufficient. Log parsed neighbor counts and explain when a switch cannot be traversed because no usable management IPv4 address was advertised.
+
+### Added
+- Small Business automatic backups include hardware inventory, CDP/LLDP topology and startup configuration alongside the running configuration and existing diagnostics.
+
 ## [3.0.4] - 2026-10-26
 
 ### Added

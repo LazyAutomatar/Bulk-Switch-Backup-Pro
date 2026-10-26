@@ -41,10 +41,7 @@ public partial class MainWindowViewModel : ObservableObject
         {
             Application.Current.ActualThemeVariantChanged += (s, e) =>
             {
-                if (_appState.CurrentThemeIndex == 0)
-                {
-                    Dispatcher.UIThread.Post(() => UpdateThemeState(0));
-                }
+                Dispatcher.UIThread.Post(() => UpdateThemeState(_appState.CurrentThemeIndex));
             };
         }
     }
@@ -76,25 +73,9 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void UpdateThemeState(int themeIndex)
     {
-        if (themeIndex == 2)
-        {
-            _isDark = false;
-            ThemeSymbol = Symbol.Highlight;
-            ThemeButtonText = "Light Mode";
-        }
-        else if (themeIndex == 1)
-        {
-            _isDark = true;
-            ThemeSymbol = Symbol.DarkTheme;
-            ThemeButtonText = "Dark Mode";
-        }
-        else // 0: System Default
-        {
-            bool isActuallyDark = Application.Current?.ActualThemeVariant != ThemeVariant.Light;
-            _isDark = isActuallyDark;
-            ThemeSymbol = isActuallyDark ? Symbol.DarkTheme : Symbol.Highlight;
-            ThemeButtonText = isActuallyDark ? "Dark (System)" : "Light (System)";
-        }
+        _isDark = Application.Current is { } app ? app.ActualThemeVariant == ThemeVariant.Dark : themeIndex == 1;
+        ThemeSymbol = _isDark ? Symbol.DarkTheme : Symbol.Highlight;
+        ThemeButtonText = (_isDark ? "Dark" : "Light") + (themeIndex == 0 ? " (System)" : " Mode");
     }
 
     private void SyncRunningStatus()
@@ -110,7 +91,8 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void ToggleTheme()
     {
-        int newTheme = _isDark ? 2 : 1;
+        bool actualDark = Application.Current is { } app ? app.ActualThemeVariant == ThemeVariant.Dark : _isDark;
+        int newTheme = actualDark ? 2 : 1;
         _appState.SetTheme(newTheme);
     }
 }

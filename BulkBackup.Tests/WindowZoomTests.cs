@@ -12,6 +12,29 @@ namespace BulkBackup.Tests;
 
 public class WindowZoomTests
 {
+    [AvaloniaFact]
+    public void ThemeToggleMatchesActualLightStartupAndBothToggleDirections()
+    {
+        var app = Application.Current!;
+        var original = app.RequestedThemeVariant;
+        try
+        {
+            app.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light;
+            var state = new AppState();
+            var vm = new MainWindowViewModel(state);
+            Assert.Equal("Light (System)", vm.ThemeButtonText);
+            vm.ToggleThemeCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(Avalonia.Styling.ThemeVariant.Dark, app.ActualThemeVariant);
+            Assert.Equal("Dark Mode", vm.ThemeButtonText);
+            vm.ToggleThemeCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(Avalonia.Styling.ThemeVariant.Light, app.ActualThemeVariant);
+            Assert.Equal("Light Mode", vm.ThemeButtonText);
+        }
+        finally { app.RequestedThemeVariant = original; Dispatcher.UIThread.RunJobs(); }
+    }
+
     [Theory]
     [InlineData(1366, 728, 1.5)]
     [InlineData(1920, 1040, 2.0)]

@@ -7,7 +7,7 @@ namespace BulkBackup.Desktop.Services;
 public class AppState
 {
     // Theme Management: 0 = System Default, 1 = Dark Mode, 2 = Light Mode
-    public int CurrentThemeIndex { get; private set; } = 1;
+    public int CurrentThemeIndex { get; private set; } = 0;
     public event Action<int>? ThemeChanged;
 
     public void SetTheme(int themeIndex)
