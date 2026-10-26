@@ -60,7 +60,7 @@ public static class DevicePlatforms
             Has(@"NX-OS|Nexus Operating System") ? "nxos" :
             Has(@"\b(?:CBS[23]\d\d|SG[235]\d\d|SF[235]\d\d)[\w-]*\b|Cisco Small Business") ? "cisco-sb" :
             Has(@"\bC1000[\w-]*\b|Catalyst\s*1000") ? "ios" :
-            Has(@"\b(?:AP[1236]G\d*|C[123]\d00-(?:K9W7|K9W8)|AIR-(?:AP|CAP|LAP)[\w-]+)\b|Cisco.*Aironet") ? "cisco-ap" :
+            Has(@"\b(?:AP[1236]G\d*|C[123]\d00-(?:K9W7|K9W8)|AIR-(?:AP|CAP|LAP)[\w-]+)\b|Cisco.*Aironet|AP-COS|\bC91[0-9]{2}[A-Z-]*\b") ? "cisco-ap" :
             Has(@"Cisco IOS|IOS-XE Software|IOS XE Software") ? "ios" :
             Has(@"Arista|vEOS") ? "arista" : Has(@"\bJUNOS\b|\bJunos\b") ? "junos" :
             Has(@"ArubaOS-CX|AOS-CX") ? "aruba-cx" :

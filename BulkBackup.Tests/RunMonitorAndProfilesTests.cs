@@ -80,7 +80,7 @@ public class RunMonitorAndProfilesTests
         foreach (var platform in DevicePlatforms.All)
         {
             vm.SelectedPreviewPlatform = platform;
-            Assert.Equal(platform.Commands.Where(c => !DevicePlatforms.All.Any(p => c == p.Paging) && !NetworkEngine.IsConfigurationPushCommand(c)).Distinct(), vm.PreviewCommands);
+            Assert.Equal(AssessmentProfiles.For(platform, "C9300", false).Where(c => !DevicePlatforms.All.Any(p => c == p.Paging) && !NetworkEngine.IsConfigurationPushCommand(c)).Distinct(), vm.PreviewCommands);
             Assert.Contains(platform.Configuration, vm.PreviewCommandsText);
             Assert.Contains(platform.Paging, vm.PreviewPaging);
         }
@@ -90,6 +90,28 @@ public class RunMonitorAndProfilesTests
         vm.SelectedProfileIndex = 4;
         Assert.Equal("show version\nshow version\nshow running-config", vm.CustomCommandsText);
         Assert.Equal("3 commands", vm.CommandSummary);
+    }
+
+    [AvaloniaFact]
+    public void AssessmentShowsReadOnlyPlansAndKeepsCustomDraftWhenReturningToBackup()
+    {
+        using var fixture = new UiFixture();
+        var vm = fixture.ViewModel;
+        vm.SelectedProfileIndex = 4;
+        vm.CustomCommandsText = "show version\nshow running-config";
+        vm.WriteConfig = true;
+        vm.CollectionPurposeIndex = 1;
+        Assert.True(vm.IsAssessment);
+        Assert.True(vm.IsAutoProfile);
+        Assert.False(vm.IsCustomProfile);
+        Assert.False(vm.WriteConfig);
+        Assert.Contains("show spanning-tree summary", vm.PreviewCommands);
+        Assert.Contains("show environment temperature", vm.PreviewCommands);
+        vm.CounterRateSampling = true;
+        vm.CollectionPurposeIndex = 0;
+        Assert.False(vm.CounterRateSampling);
+        Assert.True(vm.IsCustomProfile);
+        Assert.Equal("show version\nshow running-config", vm.CustomCommandsText);
     }
 
     [AvaloniaFact]

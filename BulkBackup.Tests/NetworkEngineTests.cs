@@ -30,7 +30,7 @@ public sealed class NetworkEngineTests : IDisposable
     {
         var device = _transport.Add("192.0.2.1", "ACCESS-01");
         device.Outputs["show version"] = "Cisco IOS XE Software, Version 17.12.4";
-        device.Outputs["show running-config"] = "hostname ACCESS-01";
+        device.Outputs["show running-config"] = "hostname ACCESS-01\nend";
         var result = await RunAsync(commands: ["! heading", "", " show version ", "show running-config"]);
         Assert.Equal(_directory, result);
         Assert.Equal(["show version", "terminal length 0", "show version", "show running-config"], _transport.Commands.Select(x => x.Command));
@@ -38,7 +38,7 @@ public sealed class NetworkEngineTests : IDisposable
         Assert.Contains("192.0.2.1_ACCESS-01_Switch.txt", Assert.Single(Directory.GetFiles(_directory)));
         Assert.Contains("Hostname    : ACCESS-01", content);
         Assert.Contains("Cisco IOS XE Software, Version 17.12.4", content);
-        Assert.Contains("hostname ACCESS-01", content);
+        Assert.Contains("hostname ACCESS-01\nend", content);
         Assert.DoesNotContain("test-password", content + string.Join('\n', _logs));
         Assert.DoesNotContain("test-enable-secret", content + string.Join('\n', _logs));
         Assert.Contains(_progress, p => p.Status.StartsWith("Completed"));

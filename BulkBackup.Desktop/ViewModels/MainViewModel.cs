@@ -61,6 +61,23 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string backupDirectory = "Temporary Session Staging";
 
     // Profiles & Commands
+    [ObservableProperty] private int collectionPurposeIndex;
+    [ObservableProperty] private bool counterRateSampling;
+    [ObservableProperty] private int counterIntervalSeconds = 30;
+    public IReadOnlyList<string> CollectionPurposes { get; } = new[] { "Configuration Backup", "Assessment" };
+    public bool IsAssessment => CollectionPurposeIndex == 1;
+    partial void OnCollectionPurposeIndexChanged(int value)
+    {
+        if (value == 1) WriteConfig = false;
+        else CounterRateSampling = false;
+        OnPropertyChanged(nameof(IsAssessment));
+        OnPropertyChanged(nameof(IsAutoProfile));
+        OnPropertyChanged(nameof(IsFixedProfile));
+        OnPropertyChanged(nameof(IsCustomProfile));
+        OnPropertyChanged(nameof(CommandSummary));
+        OnSelectedPreviewPlatformChanged(SelectedPreviewPlatform);
+    }
+
     [ObservableProperty] private int selectedProfileIndex = 5;
     [ObservableProperty] private string customCommandsText = string.Empty;
     [ObservableProperty] private int commandCount = 56;
@@ -74,17 +91,17 @@ public partial class MainViewModel : ObservableObject
         "Custom CLI Command Script", "Auto-detect (multi-vendor switches / WLC)"
     };
     public IReadOnlyList<DevicePlatform> SupportedPlatforms => DevicePlatforms.All;
-    public bool IsAutoProfile => SelectedProfileIndex == 5;
-    public bool IsCustomProfile => SelectedProfileIndex == 4;
+    public bool IsAutoProfile => SelectedProfileIndex == 5 || IsAssessment;
+    public bool IsCustomProfile => SelectedProfileIndex == 4 && !IsAssessment;
     public bool IsFixedProfile => !IsAutoProfile;
     public string CommandSummary => IsAutoProfile ? $"Dynamic · {SupportedPlatforms.Count} platforms" : $"{CommandCount} commands";
-    public IReadOnlyList<string> PreviewCommands => SelectedPreviewPlatform.Commands
+    public IReadOnlyList<string> PreviewCommands => AssessmentProfiles.For(SelectedPreviewPlatform, "C9300", IsAssessment)
         .Where(command => !DevicePlatforms.All.Any(platform => command == platform.Paging) && !NetworkEngine.IsConfigurationPushCommand(command))
         .Distinct().ToArray();
     public string PreviewCommandsText => string.Join(Environment.NewLine, PreviewCommands);
     public string PreviewCommandSummary => $"{SelectedPreviewPlatform.Kind} · {PreviewCommands.Count} diagnostic commands";
     public string PreviewPaging => $"Paging setup: {SelectedPreviewPlatform.Paging}";
-    public string PreviewConfiguration => $"Required configuration capture: {SelectedPreviewPlatform.Configuration}";
+    public string PreviewConfiguration => $"Configuration capture: {SelectedPreviewPlatform.Configuration}; stack commands require a supported detected model";
 
     // Status & Metrics
     [ObservableProperty] private bool isRunning = false;
@@ -523,6 +540,8 @@ public partial class MainViewModel : ObservableObject
         }
 
         var engine = new NetworkEngine();
+        var captureOptions = new CaptureOptions(IsAssessment, CounterRateSampling, CounterIntervalSeconds,
+            typeof(MainViewModel).Assembly.GetName().Version?.ToString());
         CommandFailures.Clear();
         VisibleCommandFailures.Clear();
         SelectedCommandFailure = null;
@@ -626,8 +645,7 @@ public partial class MainViewModel : ObservableObject
 
                         _metricsDirty = true;
                     }),
-                    _cts.Token
-                );
+                    _cts.Token, captureOptions);
             });
 
             // Process already-posted progress callbacks before calculating the final summary.
@@ -780,6 +798,7 @@ public partial class MainViewModel : ObservableObject
 
         try
         {
+            selectedFolder = Path.Combine(selectedFolder, "Private_Backup_" + DateTime.UtcNow.ToString("yyyyMMdd_HHmmss") + "_" + Guid.NewGuid().ToString("N")[..8]);
             await Task.Run(() => CopyDirectoryContents(sourceDir, selectedFolder));
             AppendLog("System", $"All backup files successfully saved to: {selectedFolder}");
             await _dialogService.ShowMessageAsync("Save Complete", $"Successfully saved backup files to:\n{selectedFolder}");
@@ -804,26 +823,40 @@ public partial class MainViewModel : ObservableObject
 
     private static void CopyDirectoryContents(string sourceDir, string targetDir)
     {
+        string sourceRoot = Path.GetFullPath(sourceDir).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        string targetRoot = Path.GetFullPath(targetDir).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        if (targetRoot.StartsWith(sourceRoot, comparison))
+            throw new IOException("Choose a destination outside the temporary session directory.");
         if (!Directory.Exists(targetDir))
         {
-            Directory.CreateDirectory(targetDir);
+            PrivateStorage.CreateDirectory(targetDir);
         }
 
         foreach (var file in Directory.GetFiles(sourceDir))
         {
+            if (new FileInfo(file).LinkTarget != null) throw new IOException("Backup exports cannot include symbolic links.");
             var targetFile = Path.Combine(targetDir, Path.GetFileName(file));
-            File.Copy(file, targetFile, true);
+            using var input = File.OpenRead(file);
+            using var output = PrivateStorage.CreateFile(targetFile);
+            input.CopyTo(output);
         }
 
         foreach (var dir in Directory.GetDirectories(sourceDir))
         {
+            if (new DirectoryInfo(dir).LinkTarget != null) throw new IOException("Backup exports cannot include symbolic links.");
             var targetSubDir = Path.Combine(targetDir, Path.GetFileName(dir));
             CopyDirectoryContents(dir, targetSubDir);
         }
     }
 
     [RelayCommand]
-    private async Task ExportZipAsync()
+    private async Task ExportZipAsync() => await ExportArchiveAsync(false);
+
+    [RelayCommand]
+    private async Task ExportSharingZipAsync() => await ExportArchiveAsync(true);
+
+    private async Task ExportArchiveAsync(bool redacted)
     {
         string sourceDir = !string.IsNullOrWhiteSpace(LastBackupDirectory) && Directory.Exists(LastBackupDirectory)
             ? LastBackupDirectory
@@ -835,14 +868,14 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        string defaultZipName = $"Switch_Backups_{DateTime.Now:yyyyMMdd_HHmmss}.zip";
-        var savePath = await _dialogService.ShowSaveFileDialogAsync("Export Backups As ZIP Archive", defaultZipName, "zip", "ZIP Archives");
+        string defaultZipName = $"Switch_{(redacted ? "Sharing_Redacted" : "Private_Backups")}_{DateTime.Now:yyyyMMdd_HHmmss}.zip";
+        var savePath = await _dialogService.ShowSaveFileDialogAsync(redacted ? "Export Redacted Sharing ZIP" : "Export Private Raw Backup ZIP", defaultZipName, "zip", "ZIP Archives");
 
         if (!string.IsNullOrEmpty(savePath))
         {
             try
             {
-                await Task.Run(() => BackupArchive.Create(sourceDir, savePath));
+                await Task.Run(() => BackupArchive.Create(sourceDir, savePath, redacted));
                 AppendLog("System", $"Exported backups ZIP successfully to: {savePath}");
                 await _dialogService.ShowMessageAsync("Export Complete", $"Successfully exported backup archive to:\n{savePath}");
             }

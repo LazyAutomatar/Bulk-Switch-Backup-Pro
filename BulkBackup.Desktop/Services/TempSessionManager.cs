@@ -16,21 +16,9 @@ public static class TempSessionManager
     /// </summary>
     public static string CreateNewSession()
     {
-        try
-        {
-            if (!Directory.Exists(SessionsRoot))
-            {
-                Directory.CreateDirectory(SessionsRoot);
-            }
-        }
-        catch { }
-
-        string sessionDir = Path.Combine(SessionsRoot, $"Session_{DateTime.Now:yyyyMMdd_HHmmss}");
-        try
-        {
-            Directory.CreateDirectory(sessionDir);
-        }
-        catch { }
+        BulkBackup.Core.Services.PrivateStorage.CreateDirectory(SessionsRoot);
+        string sessionDir = Path.Combine(SessionsRoot, $"Session_{DateTime.UtcNow:yyyyMMdd_HHmmss}_{Guid.NewGuid():N}");
+        BulkBackup.Core.Services.PrivateStorage.CreateDirectory(sessionDir);
 
         return sessionDir;
     }
@@ -53,3 +41,4 @@ public static class TempSessionManager
         }
     }
 }
+

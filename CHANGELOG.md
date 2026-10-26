@@ -2,6 +2,26 @@
 
 Changes for Bulk Switch Backup Pro are tracked independently from the other network applications.
 
+## [Unreleased]
+
+### Added
+- Offer a read-only Assessment collection profile alongside Configuration Backup, aligned with Network Health Reporter's Catalyst Commands screen; gate stack commands by supported model.
+- Export explicit AP version, inventory, controller and wired-interface commands without requiring one CAPWAP dialect to succeed.
+- Extend the existing capture manifest with snapshot ID, collector/profile versions, independent device family/hardware/HA/stack metadata, collection windows and per-attempt UTC timing/duration.
+- Preserve exact requested, canonical and executed commands separately, with unmodified attempt output and detailed accepted/unsupported/unauthorized/timeout/truncated/empty outcomes.
+- Optional timestamped interface-error/discard samples and reset-aware interval rates for IOS/IOS-XE and NX-OS, without interpreting lifetime totals as current loss or AP disconnect evidence.
+- Separate Private ZIP and redacted Sharing ZIP exports; redact secrets in both text and manifest while retaining diagnostic configuration and topology identifiers.
+
+### Fixed
+- Require prompt framing and complete output evidence, including IOS/9800 configuration end markers, before calling a capture complete or replacing a valid configuration.
+- Freeze and hash per-run files; export one snapshot without mixing older configuration or omitting unreachable/unattempted targets.
+- Protect new files/directories with owner-only permissions/ACLs, prevent concurrent runs in one destination, and isolate Save to Folder exports.
+
+### Validation
+- 230 offline/headless tests passed; the Avalonia desktop build and branding audit passed. Live firmware and Windows ACL behavior remain unverified.
+
+See [Assessment exports](ASSESSMENT_EXPORTS.md) for schema compatibility, command provenance, counter interpretation and redaction boundaries.
+
 ## [3.0.7] - 2026-10-26
 
 ### Added
