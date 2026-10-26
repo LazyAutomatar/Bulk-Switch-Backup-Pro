@@ -4,6 +4,22 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.0.4] - 2026-10-26
+
+### Added
+- Portable master-password credential vault for Windows, Linux and macOS using AES-256-GCM and PBKDF2-SHA256. Create, unlock and lock the vault from Saved Credentials; explicitly import existing Windows DPAPI profiles on their original Windows account.
+- SSH-first connection fallback to Telnet port 23 for connection/negotiation failures, with the actual protocol recorded in progress and backup files. SSH credential rejection continues to the next credential without downgrading to Telnet.
+- Bounded terminal login handling for legacy username/password prompts, including repeated prompts after SSH authentication and fragmented Telnet responses.
+
+### Fixed
+- Saved Credentials table crash when populated rows resolve Apply/Delete button bindings; hide enable-secret values and clear session credential fields when locking the vault.
+- Classify Catalyst C1000 as an IOS switch throughout discovery and backup command selection; reserve wired-interface AP commands for detected access points in automatic profiles.
+- Use the Small Business/CBS command profile and `terminal datadump` paging for SG350 devices, including discovery sessions.
+- Preserve login timeout details in device status and propagate cancellation when discovery workers close their queue.
+
+### Validation
+- Added offline vault encryption, portability, tamper, concurrent-write and legacy-import tests; populated credential-page interaction coverage; login/Telnet tests; and C1000/SG350 pipeline regressions. Physical device and native Linux/macOS validation remain separate from Windows offline checks.
+
 ## [3.0.3] - 2026-10-25
 
 ### Added
