@@ -338,3 +338,8 @@ instruction to trust it on other computers. Self-signed installers can still tri
 warnings; publicly trusted signatures also need SmartScreen reputation.
 
 See [Microsoft's SmartScreen guidance](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation).
+
+
+### Assessment and private sharing
+
+Use the **Collection profile** selector to choose Configuration Backup or a read-only Assessment. Assessment can collect two timestamped interface-counter samples. **Private ZIP** retains raw configuration; **Sharing ZIP** redacts secrets while preserving device/port relationships. Both carry the existing capture manifest with additive snapshot, identity, timing and completeness metadata. See [Assessment exports](ASSESSMENT_EXPORTS.md).
