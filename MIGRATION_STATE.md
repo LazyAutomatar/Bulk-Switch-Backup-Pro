@@ -116,3 +116,18 @@ The user's later instruction authorized continuing through all nine applications
 - Use a fixed 1–64 worker queue, deduplicated IP claims and indexed inventory merges. Preserve placeholder promotion, cycles, cancellation and separate backup/discovery phases.
 - Index desktop row updates, refresh aggregate counters on the session timer, and drain pending callbacks before finalizing. Read SSH prompt/pager tails without copying all accumulated output per chunk.
 - Expanded synthetic checks include 100-node cyclic and 128-node chain inventories. Production throughput and native UI load testing remain unverified.
+
+
+### Assessment snapshots and sharing follow-up (26 October 2026)
+
+- Branch `feature/assessment-snapshots-sharing`, based on main `7c3e9fed6afe95d9e784e6247e61c77623f83b61`. Preserve the v3.0.7 manifest schema and newer login/reconnect/partial-capture workflows.
+- Add read-only Assessment plans, AP evidence, supported stack gating, independent identity fields, per-attempt timing/raw output/completeness, isolated snapshot exports, optional counter samples and private/redacted exports.
+- Reporter Commands screen reference: `5c87329a2d896271b7cb4efee87296f8a396f3fc`. Reporter is unchanged.
+- See `ASSESSMENT_EXPORTS.md` for format and operational boundaries. No release, tag or merge is part of this feature work.
+- Validation: 230 tests passed, desktop build passed, branding audit and whitespace checks passed.
+
+### Public release 3.1.0 preparation (27 October 2026)
+
+- User authorized public release and explicitly selected unsigned Windows packages. Version labels, platform manifests, installer defaults and update-service version are synchronized to 3.1.0.
+- Promote assessment notes to the dated 3.1.0 changelog; retain signing by default and expose unsigned Windows packaging only through an explicit workflow input.
+- Release status remains pending until the public pipeline and all assets are verified.

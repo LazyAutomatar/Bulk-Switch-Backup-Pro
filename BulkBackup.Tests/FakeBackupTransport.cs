@@ -129,7 +129,7 @@ internal sealed class FakeBackupTransport : IBackupTransport
                 _responses.Enqueue(_device.PagerMarker[(_device.PagerMarker.Length / 2)..]);
                 return;
             }
-            var output = _device.Outputs.GetValueOrDefault(text, "captured " + text);
+            var output = _device.Outputs.GetValueOrDefault(text, "captured " + text + (text is "show running-config" or "show run" ? "\r\nend" : ""));
             _responses.Enqueue($"{text}\r\n{output}\r\n{Prompt}");
         }
         public void Dispose() => Interlocked.Increment(ref _transport._shellsDisposed);

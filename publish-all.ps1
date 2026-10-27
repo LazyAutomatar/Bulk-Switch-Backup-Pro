@@ -4,10 +4,12 @@ param(
     [string]$Configuration = "Release",
     [string]$Version,
     [switch]$AllowDevelopmentCertificate,
+    [switch]$UnsignedWindows,
     [ValidatePattern('^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$')][string]$Repo = "LazyAutomatar/Bulk-Switch-Backup-Pro"
 )
 
 $ErrorActionPreference = "Stop"
+if ($UnsignedWindows -and $AllowDevelopmentCertificate) { throw "Choose unsigned packaging or development signing, not both." }
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Join-Path $ScriptDir "BulkBackup.Desktop"
 $DistDir = Join-Path $ScriptDir "dist"
@@ -43,7 +45,7 @@ function Get-InnoCompiler {
 }
 
 $buildWin = $Target -eq "all" -or $Target -eq "win" -or $Target -eq "win-x64"
-if ($buildWin) {
+if ($buildWin -and -not $UnsignedWindows) {
     & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -CheckCertificateOnly -AllowDevelopmentCertificate:$AllowDevelopmentCertificate
 }
 $buildMacArm = $Target -eq "all" -or $Target -eq "mac" -or $Target -eq "osx-arm64"
@@ -94,7 +96,7 @@ function Publish-Target {
         # Sync standalone .exe to dist root
         $mainExe = Join-Path $winTargetDir "BulkSwitchBackupPro.exe"
         if (Test-Path $mainExe) {
-            & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $mainExe -AllowDevelopmentCertificate:$AllowDevelopmentCertificate
+            if (-not $UnsignedWindows) { & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $mainExe -AllowDevelopmentCertificate:$AllowDevelopmentCertificate }
             $destExe = Join-Path $DistDir "BulkSwitchBackupPro.exe"
             for ($attempt = 1; $attempt -le 5; $attempt++) {
                 try {
@@ -150,7 +152,7 @@ function Publish-Target {
                 $setupVer = Join-Path $DistDir "BulkSwitchBackupPro_Setup_v$Version.exe"
                 $setupGen = Join-Path $DistDir "BulkSwitchBackupPro_Setup.exe"
                 if (Test-Path $setupVer) {
-                    & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $setupVer -AllowDevelopmentCertificate:$AllowDevelopmentCertificate
+                    if (-not $UnsignedWindows) { & (Join-Path $ScriptDir 'scripts/sign-windows-artifact.ps1') -FilePath $setupVer -AllowDevelopmentCertificate:$AllowDevelopmentCertificate }
                     Copy-Item $setupVer -Destination $setupGen -Force
                     $setupSize = [math]::Round((Get-Item $setupVer).Length / 1MB, 2)
                     $results.Add([PSCustomObject]@{
@@ -285,10 +287,16 @@ Write-Host "All distribution packages ready in: $DistDir`n" -ForegroundColor Cya
 
 
 if ($buildWin) {
+    if ($UnsignedWindows) {
+        $oldCertificate = Join-Path $DistDir "BulkSwitchBackupPro_CodeSigning.cer"
+        if (Test-Path $oldCertificate) { Remove-Item -LiteralPath $oldCertificate -Force }
+        Write-Warning "Explicit unsigned Windows release: no Authenticode signature or publisher trust is supplied."
+    }
     $installer = Join-Path $DistDir 'BulkSwitchBackupPro_Setup.exe'
     if (-not (Test-Path $installer)) { throw 'Windows update manifest requires a successfully built Inno Setup installer.' }
     $manifest = [ordered]@{
         version = $Version; title = "Bulk Switch Backup Pro $Version"
+        windowsSigning = $(if ($UnsignedWindows) { "unsigned" } elseif ($AllowDevelopmentCertificate) { "developmentCertificate" } else { "signed" })
         releaseNotes = $releaseNotes
         publishedAt = [DateTime]::UtcNow.ToString('o')
         downloadUrl = "https://github.com/$Repo/releases/download/v$Version/BulkSwitchBackupPro_Setup.exe"

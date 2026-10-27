@@ -35,10 +35,11 @@ public class ChangelogAndUpdateTests
     {
         var vm = new AboutViewModel(new FakeUpdater());
         int before = vm.ChangelogHistory.Count;
-        vm.SyncIncomingVersionToChangelog("3.1.0", "First notes");
-        vm.SyncIncomingVersionToChangelog("v3.1.0", "Corrected notes");
+        string futureVersion = new Version(Version.Parse(UpdateService.DefaultCurrentVersion).Major + 1, 0, 0).ToString();
+        vm.SyncIncomingVersionToChangelog(futureVersion, "First notes");
+        vm.SyncIncomingVersionToChangelog("v" + futureVersion, "Corrected notes");
         Assert.Equal(before + 1, vm.ChangelogHistory.Count);
-        Assert.Equal("v3.1.0", vm.ChangelogHistory[0].VersionTag);
+        Assert.Equal("v" + futureVersion, vm.ChangelogHistory[0].VersionTag);
         Assert.Equal("Corrected notes", vm.ChangelogHistory[0].Notes);
         Assert.Contains(vm.ChangelogHistory, entry => entry.VersionTag == "v3.0.0");
     }

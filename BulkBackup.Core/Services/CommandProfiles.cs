@@ -134,6 +134,10 @@ namespace BulkBackup.Core.Services
         public static readonly string[] CiscoApCommands = new[]
         {
             "terminal length 0",
+            "show version",
+            "show capwap client rcb",
+            "show capwap client config",
+            "show controllers dot11Radio 0",
             "show run",
             "show interfaces wired 0",
             "show inventory"

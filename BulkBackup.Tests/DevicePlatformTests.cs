@@ -84,7 +84,7 @@ public sealed class DevicePlatformTests : IDisposable
             "show version", "show inventory", "show ip interface brief",
             "show processes cpu sorted", "show processes memory sorted",
             "show environment power", "show environment temperature",
-            "show switch detail", "show switch stack-ring speed", "show spanning-tree summary",
+            "show spanning-tree summary",
             "show vtp status", "show interfaces counters errors", "show interfaces status",
             "show platform hardware fed switch active qos queue stats internal cpu policer",
             "show cdp neighbors detail", "show cdp neighbors"
@@ -93,9 +93,9 @@ public sealed class DevicePlatformTests : IDisposable
             Assert.Contains(_transport.Commands, c => c.Command == command);
         Assert.Single(_transport.Commands, c => c.Command == paging);
         if (paging == "terminal datadump") Assert.DoesNotContain(_transport.Commands, c => c.Command == "terminal length 0");
-        Assert.Contains(_statuses, s => s.StartsWith("Completed with warnings"));
+        Assert.DoesNotContain(_transport.Commands, c => c.Command.StartsWith("show switch"));
         string backup = File.ReadAllText(Assert.Single(Directory.GetFiles(_directory, "*.txt")));
-        Assert.Contains("Command: show switch stack-ring speed\nResult: Rejected or empty".Replace("\n", Environment.NewLine), backup);
+        Assert.DoesNotContain("Command: show switch stack-ring speed", backup);
         Assert.Contains("Command: show running-config", backup);
         Assert.Same(DevicePlatforms.Find("ios")!.Commands, DevicePlatforms.Find("cisco-sb")!.Commands);
     }
@@ -143,7 +143,7 @@ public sealed class DevicePlatformTests : IDisposable
     {
         var device = _transport.Add("192.0.2.1");
         device.Outputs["show running-config"] = "% Invalid input detected";
-        device.Outputs["show run"] = "hostname test-switch";
+        device.Outputs["show run"] = "hostname test-switch\nend";
         await Run();
         var text = File.ReadAllText(Assert.Single(Directory.GetFiles(_directory)));
         Assert.Contains("Command: show run\nResult: Accepted", text.Replace("\r", ""));

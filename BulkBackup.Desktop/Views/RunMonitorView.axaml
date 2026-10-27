@@ -51,6 +51,11 @@
                     <Border Height="1" Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,14"/>
 
                     <!-- Section 2: Command Profile Selection -->
+                    <TextBlock Text="Collection profile" FontWeight="SemiBold"/>
+                    <ComboBox ItemsSource="{Binding CollectionPurposes}" SelectedIndex="{Binding CollectionPurposeIndex}" HorizontalAlignment="Stretch" Margin="0,0,0,8"/>
+                    <CheckBox Content="Sample errors/discards twice" IsChecked="{Binding CounterRateSampling}" IsEnabled="{Binding IsAssessment}"/>
+                    <NumericUpDown Value="{Binding CounterIntervalSeconds}" IsVisible="{Binding IsAssessment}" Minimum="1" Maximum="300" Increment="1" ToolTip.Tip="Seconds between counter samples"/>
+                    <TextBlock IsVisible="{Binding IsAssessment}" Text="Assessment is read-only. Rates cover only the sampled interval." TextWrapping="Wrap" Margin="0,0,0,8"/>
                     <DockPanel Margin="0,0,0,4">
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
                             <ui:SymbolIcon Symbol="Code" FontSize="16" Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="0,0,6,0"/>
@@ -106,7 +111,7 @@
                     </DockPanel>
                     <Slider Minimum="1" Maximum="30" Value="{Binding MaxConcurrency}" Margin="0,0,0,8"/>
 
-                    <CheckBox Content="Write running-config to startup" IsChecked="{Binding WriteConfig}" Margin="0,0,0,14"/>
+                    <CheckBox Content="Write running-config to startup" IsChecked="{Binding WriteConfig}" IsEnabled="{Binding !IsAssessment}" Margin="0,0,0,14"/>
 
                     <Border Height="1" Background="{DynamicResource DividerStrokeColorDefaultBrush}" Margin="0,0,0,14"/>
 
@@ -353,12 +358,13 @@
                                     <TextBlock Text="Save to Folder" FontSize="11"/>
                                 </StackPanel>
                             </Button>
-                            <Button Command="{Binding ExportZipCommand}" IsEnabled="{Binding HasCompletedBackups}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand" ToolTip.Tip="Compress all device backups into a single .zip archive">
+                            <Button Command="{Binding ExportZipCommand}" IsEnabled="{Binding HasCompletedBackups}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand" ToolTip.Tip="Private raw backup: contains configuration secrets. Use Sharing ZIP to redact secrets.">
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Save" FontSize="12" Margin="0,0,4,0"/>
-                                    <TextBlock Text="Export ZIP" FontSize="11"/>
+                                    <TextBlock Text="Private ZIP" FontSize="11"/>
                                 </StackPanel>
                             </Button>
+                            <Button Content="Sharing ZIP" Command="{Binding ExportSharingZipCommand}" IsEnabled="{Binding HasCompletedBackups}" Height="26" Margin="0,0,6,0" ToolTip.Tip="Redact credentials and key material while preserving device/port relationships. Review custom secret formats before sharing."/>
                             <Button Command="{Binding OpenBackupFolderCommand}" IsEnabled="{Binding HasCompletedBackups}" Height="26" Padding="8,0" Margin="0,0,6,0" Cursor="Hand" ToolTip.Tip="Open temporary session directory in File Explorer">
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="Open" FontSize="12" Margin="0,0,4,0"/>

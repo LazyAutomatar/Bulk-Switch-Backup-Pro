@@ -17,7 +17,15 @@
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Spacing="6" Margin="0,0,0,12">
-                    <TextBlock Text="Execution mode" FontWeight="SemiBold"/>
+                    <TextBlock Text="Collection profile" FontWeight="SemiBold"/>
+                    <ComboBox ItemsSource="{Binding CollectionPurposes}" SelectedIndex="{Binding CollectionPurposeIndex}"/>
+                    <CheckBox Content="Sample interface errors/discards twice" IsChecked="{Binding CounterRateSampling}" IsEnabled="{Binding IsAssessment}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsAssessment}">
+                        <TextBlock Text="Sample interval (seconds)" VerticalAlignment="Center"/>
+                        <NumericUpDown Value="{Binding CounterIntervalSeconds}" Minimum="1" Maximum="300" Increment="1" Width="110"/>
+                    </StackPanel>
+                    <TextBlock Text="Assessment is read-only. Counter rates describe only the sampled interval and do not prove AP disconnections." TextWrapping="Wrap" IsVisible="{Binding IsAssessment}"/>
+                    <TextBlock Text="Device platform" FontWeight="SemiBold"/>
                     <controls:ProfileComboBox x:Name="ReferenceProfileSelector" ItemsSource="{Binding ProfileNames}" SelectedIndex="{Binding SelectedProfileIndex}"
                                              HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinWidth="480" MaxDropDownHeight="360"/>
                 </StackPanel>
