@@ -125,3 +125,9 @@ The user's later instruction authorized continuing through all nine applications
 - Reporter Commands screen reference: `5c87329a2d896271b7cb4efee87296f8a396f3fc`. Reporter is unchanged.
 - See `ASSESSMENT_EXPORTS.md` for format and operational boundaries. No release, tag or merge is part of this feature work.
 - Validation: 230 tests passed, desktop build passed, branding audit and whitespace checks passed.
+
+### Public release 3.1.0 preparation (27 October 2026)
+
+- User authorized public release and explicitly selected unsigned Windows packages. Version labels, platform manifests, installer defaults and update-service version are synchronized to 3.1.0.
+- Promote assessment notes to the dated 3.1.0 changelog; retain signing by default and expose unsigned Windows packaging only through an explicit workflow input.
+- Release status remains pending until the public pipeline and all assets are verified.

@@ -4,6 +4,12 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-10-27
+
+### Packaging
+- This owner-authorized release supplies **unsigned Windows application and installer packages**. Windows may show Unknown publisher or SmartScreen prompts. SHA-256 hashes remain available in the update manifest.
+- Add an explicit unsigned-release workflow option; signed packaging remains the default for other releases.
+
 ### Added
 - Offer a read-only Assessment collection profile alongside Configuration Backup, aligned with Network Health Reporter's Catalyst Commands screen; gate stack commands by supported model.
 - Export explicit AP version, inventory, controller and wired-interface commands without requiring one CAPWAP dialect to succeed.

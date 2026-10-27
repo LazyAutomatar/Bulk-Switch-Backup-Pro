@@ -16,6 +16,10 @@ on:
       tag_name:
         description: 'Tag name for release (e.g. v2.5.0)'
         required: true
+      allow_unsigned_windows:
+        description: 'Explicitly publish unsigned Windows packages (owner authorization required)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -42,7 +46,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Load and validate public code-signing identity
-        if: ${{ env.SIGNING_PFX_BASE64 != '' }}
+        if: ${{ !inputs.allow_unsigned_windows && env.SIGNING_PFX_BASE64 != '' }}
         shell: pwsh
         env:
           SIGNING_PFX_BASE64: ${{ secrets.WINDOWS_SIGNING_PFX_BASE64 }}
@@ -70,6 +74,8 @@ jobs:
             throw "Bad tag '$($env:TAG_NAME)'. Use vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-beta.1"
           }
           $version = $env:TAG_NAME.TrimStart('v')
+          [xml]$project = Get-Content BulkBackup.Desktop/BulkBackup.Desktop.csproj -Raw
+          if ([string]$project.Project.PropertyGroup.Version -ne $version) { throw 'Release version does not match the checked-out source.' }
           "tag=$($env:TAG_NAME)" >> $env:GITHUB_OUTPUT
           "version=$version" >> $env:GITHUB_OUTPUT
           "prerelease=$($version.Contains('-').ToString().ToLower())" >> $env:GITHUB_OUTPUT
@@ -82,15 +88,20 @@ jobs:
           }
 
       - name: Run Cross-Compiler Pipeline
-        if: ${{ env.SIGNING_PFX_BASE64 != '' }}
+        if: ${{ !inputs.allow_unsigned_windows && env.SIGNING_PFX_BASE64 != '' }}
         shell: pwsh
         env:
           CERT_PASS: ${{ secrets.WINDOWS_SIGNING_PFX_PASSWORD }}
         run: |
           ./publish-all.ps1 -Configuration Release -Version "${{ steps.ver.outputs.version }}" -Repo "$env:RELEASES_REPO"
 
+      - name: Build explicitly authorized unsigned release
+        if: ${{ inputs.allow_unsigned_windows }}
+        shell: pwsh
+        run: ./publish-all.ps1 -Configuration Release -Version "${{ steps.ver.outputs.version }}" -Repo "$env:RELEASES_REPO" -UnsignedWindows
+
       - name: Retrieve locally signed Windows packages for owner-authorized release
-        if: ${{ env.SIGNING_PFX_BASE64 == '' }}
+        if: ${{ !inputs.allow_unsigned_windows && env.SIGNING_PFX_BASE64 == '' }}
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.RELEASES_PAT }}
@@ -131,6 +142,23 @@ jobs:
             Write-Host "Manifest version: $($m.version)"
           }
 
+      - name: Verify unsigned package identity and manifest
+        if: ${{ inputs.allow_unsigned_windows }}
+        shell: pwsh
+        run: |
+          foreach ($file in @('BulkSwitchBackupPro.exe', 'BulkSwitchBackupPro_Setup.exe', 'BulkSwitchBackupPro_Setup_${{ steps.ver.outputs.tag }}.exe')) {
+            $path = Join-Path dist $file
+            if ((Get-AuthenticodeSignature -LiteralPath $path).Status -ne 'NotSigned') { throw "Unexpected signature state on $file" }
+            $info = (Get-Item -LiteralPath $path).VersionInfo
+            if ($info.CompanyName.Trim() -ne 'Yash Nalawde' -or $info.FileVersion -ne '${{ steps.ver.outputs.version }}.0') { throw "Version/publisher mismatch on $file" }
+          }
+          $manifest = Get-Content dist/update_manifest.json -Raw | ConvertFrom-Json
+          if ($manifest.windowsSigning -ne 'unsigned' -or $manifest.version -ne '${{ steps.ver.outputs.version }}' -or $manifest.sha256 -ne (Get-FileHash dist/BulkSwitchBackupPro_Setup.exe -Algorithm SHA256).Hash.ToLowerInvariant() -or $manifest.fileSizeBytes -ne (Get-Item dist/BulkSwitchBackupPro_Setup.exe).Length) { throw 'Unsigned installer manifest mismatch.' }
+          foreach ($rid in @('osx-x64.zip', 'osx-arm64.zip', 'linux-x64.tar.gz', 'linux-arm64.tar.gz')) {
+            if (-not (Test-Path "dist/BulkSwitchBackupPro-$rid")) { throw "Missing package $rid" }
+          }
+          if (Test-Path dist/BulkSwitchBackupPro_CodeSigning.cer) { throw 'Unsigned releases must not include a signing certificate.' }
+
       - name: Publish to public releases repo
         uses: softprops/action-gh-release@v2
         with:
@@ -167,6 +195,7 @@ jobs:
           if (Test-Path "LICENSE.md") { Copy-Item "LICENSE.md" "$tmpDir\LICENSE.md" -Force }
           if (Test-Path "CHANGELOG.md") { Copy-Item "CHANGELOG.md" "$tmpDir\CHANGELOG.md" -Force }
           if (Test-Path "PLATFORM_SUPPORT.md") { Copy-Item "PLATFORM_SUPPORT.md" "$tmpDir\PLATFORM_SUPPORT.md" -Force }
+          if (Test-Path "ASSESSMENT_EXPORTS.md") { Copy-Item "ASSESSMENT_EXPORTS.md" "$tmpDir\ASSESSMENT_EXPORTS.md" -Force }
           New-Item -ItemType Directory -Path "$tmpDir\dist" -Force | Out-Null
           Copy-Item "dist/update_manifest.json" "$tmpDir\dist\update_manifest.json" -Force
           if (Test-Path "Logo.png") { Copy-Item "Logo.png" "$tmpDir\Logo.png" -Force }
