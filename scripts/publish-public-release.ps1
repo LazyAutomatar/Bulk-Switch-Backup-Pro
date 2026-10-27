@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "3.0.3",
+    [string]$Version = "3.1.0",
     [string]$Repo = "LazyAutomatar/Bulk-Switch-Backup-Pro"
 )
 
@@ -92,6 +92,7 @@ try {
     if (Test-Path (Join-Path $root "LICENSE.md")) { Copy-Item (Join-Path $root "LICENSE.md") -Destination "LICENSE.md" -Force }
     if (Test-Path (Join-Path $root "CHANGELOG.md")) { Copy-Item (Join-Path $root "CHANGELOG.md") -Destination "CHANGELOG.md" -Force }
     if (Test-Path (Join-Path $root "PLATFORM_SUPPORT.md")) { Copy-Item (Join-Path $root "PLATFORM_SUPPORT.md") -Destination "PLATFORM_SUPPORT.md" -Force }
+    if (Test-Path (Join-Path $root "ASSESSMENT_EXPORTS.md")) { Copy-Item (Join-Path $root "ASSESSMENT_EXPORTS.md") -Destination "ASSESSMENT_EXPORTS.md" -Force }
     if (Test-Path (Join-Path $root "Logo.png")) { Copy-Item (Join-Path $root "Logo.png") -Destination "Logo.png" -Force }
     
     if (Test-Path (Join-Path $root "Assets")) {
@@ -102,6 +103,9 @@ try {
     # Copy update manifest
     if (-not (Test-Path "dist")) { New-Item -ItemType Directory -Path "dist" -Force | Out-Null }
     Copy-Item (Join-Path $root "dist\update_manifest.json") -Destination "dist\update_manifest.json" -Force
+    if (-not (Test-Path (Join-Path $root "dist\BulkSwitchBackupPro_CodeSigning.cer")) -and (Test-Path "dist\BulkSwitchBackupPro_CodeSigning.cer")) {
+        Remove-Item "dist\BulkSwitchBackupPro_CodeSigning.cer" -Force
+    }
 
     git config user.name "Yash Nalawde"
     git config user.email "146139825+Majordean0303@users.noreply.github.com"
