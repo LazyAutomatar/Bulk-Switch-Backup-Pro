@@ -10,7 +10,7 @@
 
 <br/>
 
-[![Latest Release](https://img.shields.io/badge/Release-v3.0.7%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v3.2.0%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
 [![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
@@ -39,7 +39,9 @@
 
 #### Network Discovery & Topology
 - **Recursive CDP & LLDP Crawl** — Discovers your entire multi-tier switching fabric from a single seed switch.
-- **Unified Cisco Switch Diagnostics** — IOS/IOS-XE, C1000 and SG350/CBS use the same default diagnostic list, including all 16 Network Health Reporter switching commands. Device-specific paging and parsing remain automatic. Unsupported commands are recorded in Command Results while supported commands and configuration capture continue; actual available health evidence depends on the device.
+- **Unified Enterprise Cisco Switch Audit** — 60+ diagnostic and show commands covering hardware health (`show post`, `show power inline`, `show env power/fan/temperature`), stack & chassis resilience (`show switch stack-ports summary`, `show stack-power`, `show stackwise-virtual link/dual-active-detection`, `show redundancy`), Layer 2/3 and optics health (`show interfaces transceiver detail`, `show udld`, `show storm-control`, `show errdisable recovery/detect`, `show spanning-tree inconsistentports/blockedports`), first-hop redundancy (`show standby`, `show vrrp`, `show ip sla`), network security snooping (`show port-security`, `show ip dhcp snooping/binding/conflict`, `show ip arp inspection`, `show ip verify source`, `show device-tracking database`, `show authentication sessions`, `show aaa servers`, `show crypto pki certificates`), and configuration synchronization diffs (`show archive config differences nvram:startup-config system:running-config`).
+- **Comprehensive Catalyst 9800 WLC Telemetry** — 50+ deep operational commands spanning High Availability & Chassis (`show chassis`, `show chassis rmi`, `show redundancy summary`), wireless profiles & SSIDs (`show wireless summary`, `show wlan all`, `show wireless profile policy detailed`, `show wireless profile flex summary/detailed`), AP fleet & radio telemetry (`show ap config general`, `show ap image`, `show ap rf-profile summary`, `show ap dot11 5ghz/2.4ghz channel & txpower`, `show ap uptime`, `show wireless stats ap history`, `show ap dot11 5ghz cleanair config`), client lifecycle (`show wireless stats client delete reasons`, `show wireless mobility summary`), and cryptographic/AAA validation (`show crypto pki certificates`, `show aaa servers`).
+- **Default Custom Script Diagnostics** — Out-of-the-box support for sorted CPU/memory, chassis temperatures, and hardware FED CPU policer queue diagnostics (`show processes cpu sorted`, `show processes memory sorted`, `show environment temperature`, `show platform hardware fed switch active qos queue stats internal cpu policer`).
 - **SG350/CBS and C1000 Discovery** — Reconstructs wrapped Small Business CDP tables, merges advertised management addresses, and recursively visits switch neighbors. Devices without a usable advertised IPv4 address remain in inventory with a diagnostic explaining why traversal cannot continue. Small Business automatic backups also capture inventory, neighbor details and startup configuration.
 - **Universal Multi-Token Port Tokenizer** — Full support for 25G `Twe` (TwentyFiveGigE), 100G `Hu`, 40G `Fo`, 10G `Ten`/`Te`, and 1G `Gig`/`Gi`.
 - **Hierarchical Uplink Tracking** — Preserves parent switch linkage (Core $\rightarrow$ Distribution $\rightarrow$ Access) with live port-channel mapping.
@@ -102,7 +104,7 @@
 
 <br/><br/>
 
-### Public Release Artifacts (v3.0.7 Enterprise)
+### Public Release Artifacts (v3.2.0 Enterprise)
 
 | Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- |
@@ -314,7 +316,7 @@ For wide result tables, use the wheel over the horizontal scrollbar, or hold
 
 ## Windows code signing
 
-Version 3.0.7 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
+Version 3.2.0 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
 
 By default, public Windows packaging requires a trusted code-signing certificate and a
 verified timestamp. Configure GitHub Actions secrets `WINDOWS_SIGNING_PFX_BASE64`

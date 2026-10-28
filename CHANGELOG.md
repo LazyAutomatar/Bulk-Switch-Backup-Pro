@@ -4,6 +4,27 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.2.0] - 2026-10-28
+
+### Added
+- **Comprehensive Cisco Switch Enterprise Audit Template**: Expanded the built-in Cisco Switch (IOS / IOS-XE) template with extensive operational, hardware, security, and protocol inspection commands:
+  - Hardware & Stacking: `show switch stack-ports summary`, `show switch virtual`, `show stack-power`, `show stackwise-virtual`, `show stackwise-virtual link`, `show stackwise-virtual dual-active-detection`, `show post`, `show redundancy`.
+  - Power & Environment: `show power inline`, `show env power`, `show env fan`, `show environment temperature`.
+  - Interfaces & L2/L3 Diagnostics: `show interfaces transceiver detail`, `show udld`, `show storm-control`, `show errdisable recovery`, `show errdisable detect`, `show spanning-tree inconsistentports`, `show spanning-tree blockedports`, `show spanning-tree active`, `show spanning-tree root`, `show vlan`.
+  - First-Hop Redundancy & IP Protocols: `show standby brief`, `show standby all`, `show vrrp brief`, `show vrrp all`, `show ip protocols`, `show ip route summary`, `show ip sla summary`, `show ip sla statistics`.
+  - Network Security & Snooping: `show port-security`, `show port-security address`, `show ip dhcp snooping`, `show ip dhcp binding`, `show ip dhcp conflict`, `show ip source binding`, `show ip arp inspection`, `show ip verify source`, `show device-tracking database`, `show authentication sessions`, `show aaa servers`, `show access-lists`, `show crypto pki certificates`.
+  - System Auditing: `show license usage`, `show log | include Interface`, `show archive config differences nvram:startup-config system:running-config`.
+- **Comprehensive Cisco Catalyst 9800 WLC Template**: Integrated enterprise wireless controller operational state and telemetry:
+  - High Availability & Chassis: `show chassis`, `show chassis rmi`, `show redundancy summary`.
+  - Wireless & SSIDs: `show wireless summary`, `show wlan all`, `show wireless profile policy detailed`, `show wireless profile flex summary`, `show wireless profile flex detailed`, `show wireless country configured`.
+  - AP Fleet & Radios: `show ap config general`, `show ap image`, `show ap rf-profile summary`, `show ap dot11 5ghz channel`, `show ap dot11 24ghz channel`, `show ap dot11 5ghz txpower`, `show ap dot11 24ghz txpower`.
+  - Clients & Infrastructure: `show wireless stats client delete reasons`, `show interfaces transceiver detail`, `show aaa servers`, `show crypto pki certificates`, `show archive config differences nvram:startup-config system:running-config`.
+- **Default Customizable Template Enhancement**: Updated the custom script default template to include sorted CPU, sorted memory, temperature, and CPU policer hardware diagnostics out-of-the-box.
+
+### Validation
+- 230 offline and headless UI tests passed.
+- Solo branding audit passed with 100% clean attribution to Yash Nalawde.
+
 ## [3.1.0] - 2026-10-27
 
 ### Packaging
