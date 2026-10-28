@@ -52,3 +52,28 @@ $zip = Join-Path $output 'BulkSwitchBackupPro-local-beta-win-x64.zip'
 Compress-Archive -Path (Join-Path $app '*') -DestinationPath $zip -CompressionLevel Optimal -Force
 Write-Host "Local beta ready: $exe"
 Write-Host "Portable ZIP: $zip"
+
+$iscc = @(
+    "C:\Users\$env:USERNAME\AppData\Local\Programs\Antigravity IDE\resources\app\node_modules\innosetup\bin\ISCC.exe",
+    "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+    "${env:ProgramFiles}\Inno Setup 6\ISCC.exe",
+    "${env:LOCALAPPDATA}\Programs\Inno Setup 6\ISCC.exe"
+) | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+if (-not $iscc) { $iscc = (Get-Command iscc -ErrorAction SilentlyContinue).Source }
+if ($iscc) {
+    Write-Host "Compiling Local Beta Installer with Inno Setup..." -ForegroundColor Cyan
+    $version = ([Diagnostics.FileVersionInfo]::GetVersionInfo($exe).FileVersion -split '\.')[0..2] -join '.'
+    & $iscc /Q "/DMyAppVersion=$version" "/DMyAppSourceDir=$app" "/DMyAppOutputDir=$output" /DBetaBuild (Join-Path $root 'installer.iss')
+    if ($LASTEXITCODE -eq 0) {
+        $installer = Join-Path $output 'BulkSwitchBackupPro_LocalBeta_Setup.exe'
+        Write-Host "Beta Installer ready: $installer"
+    }
+}
+
+$artifacts = @($exe, $zip)
+$installerPath = Join-Path $output 'BulkSwitchBackupPro_LocalBeta_Setup.exe'
+if (Test-Path $installerPath) { $artifacts += $installerPath }
+
+$artifacts | ForEach-Object {
+    "$((Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash.ToLowerInvariant())  $([IO.Path]::GetFileName($_))"
+} | Set-Content (Join-Path $output 'SHA256SUMS.txt') -Encoding utf8
