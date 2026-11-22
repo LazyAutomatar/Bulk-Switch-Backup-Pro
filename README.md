@@ -10,7 +10,7 @@
 
 <br/>
 
-[![Latest Release](https://img.shields.io/badge/Release-v3.2.0%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
+[![Latest Release](https://img.shields.io/badge/Release-v3.3.0%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
 [![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
 [![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
 [![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
@@ -104,7 +104,7 @@
 
 <br/><br/>
 
-### Public Release Artifacts (v3.2.0 Enterprise)
+### Public Release Artifacts (v3.3.0 Enterprise)
 
 | Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
 | :--- | :--- | :--- | :--- | :--- |
@@ -201,6 +201,8 @@ Connections prefer SSH on port 22. If SSH is unavailable or negotiation fails, t
 Automatic profiles recognize **Catalyst C1000 as an IOS switch** and **SG350 as Cisco Small Business**, which uses `terminal datadump`. AP-only wired-interface commands are confined to detected AP profiles. Explicit custom scripts remain under your control.
 
 ### Catalyst 9800 evidence and ZIP manifests
+
+Default Cisco backups include Network Health Reporter diagnostics for Catalyst switches, Catalyst 9800 controllers, and access points. The switch profile captures full interface output and MAC address table counts, with stack port details gated by model. Recognized Cisco IOS/IOS-XE routers use a dedicated plan for inventory, IPv4 interfaces, CDP, and configuration. Catalyst 1000 and Small Business switches retain the shared switch diagnostics with platform-specific paging.
 
 The Catalyst 9800 WLC profile attempts `show platform resources`, `show environment all`, `show ap uptime`, `show wireless stats ap history`, `show wireless wps rogue ap summary`, and `show ap dot11 5ghz cleanair config`, in addition to its existing configuration and diagnostic commands. Availability depends on the IOS-XE release, hardware and operator permissions. Each command is captured under its actual command name. Logging is not substituted for AP history, and a 5 GHz radio summary is not substituted for CleanAir configuration. Unsupported evidence remains unavailable for the health reporter.
 
@@ -316,7 +318,7 @@ For wide result tables, use the wheel over the horizontal scrollbar, or hold
 
 ## Windows code signing
 
-Version 3.2.0 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
+Version 3.3.0 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
 
 By default, public Windows packaging requires a trusted code-signing certificate and a
 verified timestamp. Configure GitHub Actions secrets `WINDOWS_SIGNING_PFX_BASE64`
@@ -344,4 +346,4 @@ See [Microsoft's SmartScreen guidance](https://learn.microsoft.com/windows/apps/
 
 ### Assessment and private sharing
 
-Use the **Collection profile** selector to choose Configuration Backup or a read-only Assessment. Assessment can collect two timestamped interface-counter samples. **Private ZIP** retains raw configuration; **Sharing ZIP** redacts secrets while preserving device/port relationships. Both carry the existing capture manifest with additive snapshot, identity, timing and completeness metadata. See [Assessment exports](ASSESSMENT_EXPORTS.md).
+Use the **Collection profile** selector to choose Configuration Backup or a read-only Assessment. Assessment can collect two timestamped interface-counter samples. **Private ZIP** retains raw configuration and secrets. **Sharing ZIP** redacts recognized secret patterns while preserving device/port relationships; custom formats may be missed, so review it before sharing. Neither ZIP is password-encrypted. Both carry the existing capture manifest with additive snapshot, identity, timing and completeness metadata. See [Assessment exports](ASSESSMENT_EXPORTS.md).

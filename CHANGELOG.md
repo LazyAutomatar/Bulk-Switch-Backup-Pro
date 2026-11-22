@@ -4,6 +4,23 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 
 ## [Unreleased]
 
+## [3.3.0] - 2026-11-22
+
+### Added
+- Align default Catalyst backups with the Network Health Reporter suite by adding full interface output, MAC address table counts, and stack port details on supported models. Include the supplied additional diagnostics in Catalyst Assessment.
+- Use a dedicated backup profile for recognized Cisco IOS/IOS-XE routers. Capture version, inventory, IPv4 interfaces, both CDP views, and configuration.
+- Accept CIDR and IP ranges in the target list. Add a subnet filter field, quick vault preset selector, per-device elapsed time, and a device context menu.
+
+### Changed
+- Reduce repeated transport work through per-run Telnet availability caching and reuse of credentials already verified during discovery. Batch UI log updates and move file logging off the UI thread.
+
+### Fixed
+- Keep the main navigation pane collapsed at startup and let the Logs action buttons wrap into consistent, larger controls on narrow layouts.
+- Clarify that Private ZIP retains raw secrets, Sharing ZIP only redacts recognized secret patterns, and neither ZIP is password-encrypted.
+- Make scrollbars available in the run view and keep the console following new output.
+- Align title bar controls and reserve space between the theme button and the Windows caption buttons.
+- Update About with the current profile count, collection modes, export options, and installed release history.
+
 ## [3.2.0] - 2026-10-28
 
 ### Added
@@ -24,6 +41,11 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 ### Validation
 - 230 offline and headless UI tests passed.
 - Solo branding audit passed with 100% clean attribution to Yash Nalawde.
+
+## [3.1.1-beta.1] - 2026-10-28
+
+### Added
+- Preview the expanded Cisco switch and Catalyst 9800 command templates later released in 3.2.0. The beta build script also gained support for creating a separate Windows installer and package checksums.
 
 ## [3.1.0] - 2026-10-27
 
