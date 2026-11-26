@@ -2,8 +2,6 @@
 
 Changes for Bulk Switch Backup Pro are tracked independently from the other network applications.
 
-## [Unreleased]
-
 ## [3.3.0] - 2026-11-22
 
 ### Added
