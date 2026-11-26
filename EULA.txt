@@ -39,7 +39,9 @@ state alterations on target network devices.
 
 4. CREDENTIAL PRIVACY & TELEMETRY
 Saved credentials in the application vault are encrypted locally on the host 
-machine using the Windows Data Protection API (DPAPI) tied to the current user. 
+machine using authenticated AES-256-GCM encryption with PBKDF2-SHA256 key derivation
+governed by a user-defined master password. No unencrypted credentials, keys, or 
+passwords are ever stored in plaintext or transmitted across machines. 
 No credentials, device configurations, network topology records, or customer 
 telemetry are ever transmitted to the Licensor or third parties.
 

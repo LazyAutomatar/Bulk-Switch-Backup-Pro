@@ -12,6 +12,7 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 - Accept CIDR and IP ranges in the target list. Add a subnet filter field, quick vault preset selector, per-device elapsed time, and a device context menu.
 
 ### Changed
+- Replaced Windows DPAPI dependency with the native cross-platform AES-256-GCM / PBKDF2 (600,000 iterations) credential vault architecture from Network Health Reporter, removing System.Security.Cryptography.ProtectedData and machine-bound legacy vault imports.
 - Reduce repeated transport work through per-run Telnet availability caching and reuse of credentials already verified during discovery. Batch UI log updates and move file logging off the UI thread.
 
 ### Fixed
@@ -69,7 +70,7 @@ Changes for Bulk Switch Backup Pro are tracked independently from the other netw
 ### Validation
 - 230 offline/headless tests passed; the Avalonia desktop build and branding audit passed. Live firmware and Windows ACL behavior remain unverified.
 
-See [Assessment exports](ASSESSMENT_EXPORTS.md) for schema compatibility, command provenance, counter interpretation and redaction boundaries.
+See [Assessment exports](docs/ASSESSMENT_EXPORTS.md) for schema compatibility, command provenance, counter interpretation and redaction boundaries.
 
 ## [3.0.7] - 2026-10-26
 
@@ -196,7 +197,7 @@ See [Assessment exports](ASSESSMENT_EXPORTS.md) for schema compatibility, comman
 - Preserve the validated .NET 10 migration, cancellation behavior, offline tests and packaging fixes when reconciling the obsolete rollback branch.
 
 ### Compatibility
-- Platform templates are covered by simulated SSH tests; live firmware and production performance require device validation. See PLATFORM_SUPPORT.md for the matrix and limits.
+- Platform templates are covered by simulated SSH tests; live firmware and production performance require device validation. See docs/PLATFORM_SUPPORT.md for the matrix and limits.
 - Recursive topology discovery remains Cisco-oriented; provide management IPs directly for mixed-vendor fleets.
 - Automatic installer launch is Windows-only; macOS and Linux users download the matching release package.
 

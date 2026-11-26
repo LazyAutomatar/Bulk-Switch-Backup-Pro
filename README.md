@@ -1,349 +1,322 @@
-<div align="center">
-
-<br/>
-
-<img src="Logo.png" alt="Bulk Switch Backup Pro Icon" width="180" />
+<img src="Logo.png" alt="Bulk Switch Backup Pro" width="80">
 
 # Bulk Switch Backup Pro
 
-### High-Performance Enterprise Network Switch Configuration & Topology Automation Engine
-
-<br/>
-
-[![Latest Release](https://img.shields.io/badge/Release-v3.3.0%20Enterprise-0078D4?style=for-the-badge&logo=cisco&logoColor=white&labelColor=0d1117)](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases)
-[![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20macOS%20%7C%20Linux-10B981?style=for-the-badge&logo=linux&logoColor=white&labelColor=0d1117)](#downloads)
-[![Distribution](https://img.shields.io/badge/Distribution-Public%20Release%20Builds-8A2BE2?style=for-the-badge&logo=github&logoColor=white&labelColor=0d1117)](#downloads)
-[![Runtime](https://img.shields.io/badge/.NET%2010-Avalonia%20UI%2011-512BD4?style=for-the-badge&logo=dotnet&logoColor=white&labelColor=0d1117)](#architecture)
-[![Security Hardened](https://img.shields.io/badge/Security-ASLR%20%7C%20DEP%20%7C%20SHA--256-blueviolet?style=for-the-badge&logo=shield&logoColor=white&labelColor=0d1117)](#security)
-
-<br/>
-
-[**Downloads**](#downloads) · [**Features**](#features) · [**Distribution Model**](#distribution-model) · [**Quick Start**](#quick-start) · [**Security**](#security) · [**Author**](#author) · [**Disclaimer**](#disclaimer)
-
-<br/>
-
-</div>
-
-> [!IMPORTANT]
-> **Enterprise Safety Guarantee:** Bulk Switch Backup Pro runs strictly non-intrusive, read-only diagnostic and show commands (`show run`, `show version`, etc.) during discovery and crawl phases. IP Phones (`SEP*`, `CP-*`, `ATA`, `78xx`, `88xx`) are automatically identified and excluded from SSH probing. Switch state is never modified without explicit operator opt-in (`write memory` checkbox).
+[![Release Version](https://img.shields.io/badge/version-3.3.0-blue.svg)](CHANGELOG.md)
+[![Platform](https://img.shields.io/badge/platform-Windows%20|%20macOS%20|%20Linux-lightgrey.svg)](#downloads)
+[![License](https://img.shields.io/badge/license-Freeware%20EULA-green.svg)](EULA.txt)
+[![Author](https://img.shields.io/badge/developer-Yash%20Nalawde-orange.svg)](#author)
 
 ---
 
-<div align="center">
+Back up a managed switch, router, wireless controller, or access point from one desktop. Give the app a management address and CLI credentials. It collects the configuration and diagnostics into per-device text files, then packages them with a manifest that tells you **which devices answered, which commands worked, and what evidence is missing**. Network administrators can keep the raw backup for recovery or prepare a redacted copy for troubleshooting and Network Health Reporter.
 
-<h1><a id="features"></a>Features</h1>
+[Downloads](#downloads) · [First backup](#quick-start) · [Feature guide](#feature-guide) · [Command Reference](#command-reference) · [Failed commands](#results) · [ZIP exports](#exports) · [Support](#support)
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
+![Run and Monitor with target input and profile settings on the left and three example device results on the right](Assets/readme/run-monitor.png)
 
-#### Network Discovery & Topology
-- **Recursive CDP & LLDP Crawl** — Discovers your entire multi-tier switching fabric from a single seed switch.
-- **Unified Enterprise Cisco Switch Audit** — 60+ diagnostic and show commands covering hardware health (`show post`, `show power inline`, `show env power/fan/temperature`), stack & chassis resilience (`show switch stack-ports summary`, `show stack-power`, `show stackwise-virtual link/dual-active-detection`, `show redundancy`), Layer 2/3 and optics health (`show interfaces transceiver detail`, `show udld`, `show storm-control`, `show errdisable recovery/detect`, `show spanning-tree inconsistentports/blockedports`), first-hop redundancy (`show standby`, `show vrrp`, `show ip sla`), network security snooping (`show port-security`, `show ip dhcp snooping/binding/conflict`, `show ip arp inspection`, `show ip verify source`, `show device-tracking database`, `show authentication sessions`, `show aaa servers`, `show crypto pki certificates`), and configuration synchronization diffs (`show archive config differences nvram:startup-config system:running-config`).
-- **Comprehensive Catalyst 9800 WLC Telemetry** — 50+ deep operational commands spanning High Availability & Chassis (`show chassis`, `show chassis rmi`, `show redundancy summary`), wireless profiles & SSIDs (`show wireless summary`, `show wlan all`, `show wireless profile policy detailed`, `show wireless profile flex summary/detailed`), AP fleet & radio telemetry (`show ap config general`, `show ap image`, `show ap rf-profile summary`, `show ap dot11 5ghz/2.4ghz channel & txpower`, `show ap uptime`, `show wireless stats ap history`, `show ap dot11 5ghz cleanair config`), client lifecycle (`show wireless stats client delete reasons`, `show wireless mobility summary`), and cryptographic/AAA validation (`show crypto pki certificates`, `show aaa servers`).
-- **Default Custom Script Diagnostics** — Out-of-the-box support for sorted CPU/memory, chassis temperatures, and hardware FED CPU policer queue diagnostics (`show processes cpu sorted`, `show processes memory sorted`, `show environment temperature`, `show platform hardware fed switch active qos queue stats internal cpu policer`).
-- **SG350/CBS and C1000 Discovery** — Reconstructs wrapped Small Business CDP tables, merges advertised management addresses, and recursively visits switch neighbors. Devices without a usable advertised IPv4 address remain in inventory with a diagnostic explaining why traversal cannot continue. Small Business automatic backups also capture inventory, neighbor details and startup configuration.
-- **Universal Multi-Token Port Tokenizer** — Full support for 25G `Twe` (TwentyFiveGigE), 100G `Hu`, 40G `Fo`, 10G `Ten`/`Te`, and 1G `Gig`/`Gi`.
-- **Hierarchical Uplink Tracking** — Preserves parent switch linkage (Core $\rightarrow$ Distribution $\rightarrow$ Access) with live port-channel mapping.
-- **Collision-Proof HostKey Engine** — Canonical hostname normalization (`HostKey.Same`) preventing neighbor drops across domain tags.
-- **Multi-Command Telemetry Ingestion** — Combines `show cdp entry * protocols`, detailed CDP, tabular CDP, and LLDP detail without data loss.
-
-#### Supported Hardware & Profiles
-- **Cisco Catalyst Switches** — IOS and IOS-XE (2960, 3560, 3750, 3850, 9200, 9300, 9300X, 9400, 9500, 9600).
-- **Cisco Nexus Switches** — NX-OS (N3K, N5K, N7K, N9K).
-- **Cisco Wireless LAN Controllers** — Catalyst 9800 WLC (IOS-XE) & AireOS (5520, 8540, 3504).
-- **Cisco Access Points** — Autonomous, Lightweight, and Catalyst APs (`AIR-AP`, `CW91`, `C9105/9115/9120/9130`).
-- **Custom Command Profiles** — Define arbitrary diagnostic command batches.
-
-    </td>
-    <td width="50%" valign="top">
-
-#### Performance & Concurrency Engine
-- **High-Concurrency Async Workers** — Run parallel SSH backups across up to 30 simultaneous devices with thread throttling.
-- **Multi-Credential Vault with Fallback** — AES-encrypted credential vault with automatic failover rotation on auth rejection.
-- **Adaptive Privileged Escalation** — Intelligent `enable` prompt detection with secret injection and terminal paging suppression (`terminal length 0` / `config paging disable`).
-- **Subnet & VLAN Filtering** — Scope discovery to specific CIDR subnets or management VLANs.
-
-#### Modern Experience & Staging
-- **Zero-Friction Temporary Staging** — Backups stage into an isolated temp workspace and auto-purge on exit.
-- **On-Demand Export Options** — One-click **Save to Folder...** or **Export ZIP...** archive after execution.
-- **Windows 11 Fluent UI** — FluentAvalonia 3-way dark/light theme sync, crisp dynamic scaling via `LayoutTransformControl`.
-- **Cross-Platform Native Runtime** — Pre-compiled self-contained native builds for Windows, macOS, and Linux.
-
-    </td>
-  </tr>
-</table>
-
-</div>
-
----
-
-<div align="center">
-
-<h1><a id="distribution-model"></a>Distribution & Collaboration Model</h1>
-
-</div>
+*Run & Monitor in v3.3.0, with synthetic device rows. The first switch reached 100% with two rejected commands. Read the Status column before treating a finished run as a complete capture.*
 
 > [!NOTE]
-> **Closed-Source Core Engine · 100% Free & Publicly Distributable Release Packages**  
-> Bulk Switch Backup Pro is engineered as an enterprise-grade commercial utility with a **closed-source core engine**, while providing **completely free, public, pre-compiled release packages** for the network community.
-> 
-> - **Free Public Releases:** Download and run on unlimited production switches with no license keys, timeouts, or telemetry tracking.
-> - **Open Public Collaboration:** Community issue tracking, feature requests, device profile templates, and test matrices are managed openly in this repository.
-> - **Enterprise Code Hardening:** Every public binary is compiled with ASLR, DEP, deterministic builds, and cryptographic SHA-256 signatures.
+> **What's New in v3.3.0** (22 November 2026)
+> - **Dedicated Cisco Router Plan**: Automatic recognition of Cisco routers with a focused backup plan for version, hardware inventory, IPv4 interfaces, neighbor details, and running/startup configurations.
+> - **Expanded Catalyst Switch Backups**: Adds full interface status and transceiver details, MAC address table counts, stack-port details, power inline, and stackwise-virtual information on supported models.
+> - **Subnets & IP Ranges**: Enter entire subnets (e.g. `10.10.20.0/24`) and IP ranges (e.g. `192.168.1.10-50`) directly in the target box with automatic duplicate removal.
+> - **Cross-Platform Encrypted Credential Vault**: Save and reuse device logins across Windows, macOS, and Linux with quick presets, automatic login failover, and an easy vault reset option.
+> - **Smoother Desktop Workflow**: Filter discovery by subnet, track elapsed time per device, resize result columns, right-click any device to copy its IP/hostname or inspect failures, and follow live logs with auto-scroll.
+>
+> See the full [Changelog](CHANGELOG.md) for complete release details.
 
----
+## Feature guide
 
-<div align="center">
+| If you want to… | Open this part of the app | What to look for |
+| --- | --- | --- |
+| Back up a list or subnet | **Run & Monitor → Target Devices** | [Addresses, ranges, CIDR and file import](#target-formats) |
+| Find which switch and port an AP uses | **Run & Monitor → Recursive CDP / LLDP Neighbor Crawl** | [Neighbor discovery, AP inclusion and missing IPs](#discover-devices-from-a-seed) |
+| See which commands Auto will try for a device family | **Command Reference → Supported device platforms** | [Command palettes and model-specific commands](#command-reference) |
+| Collect a site-specific set of commands | **Command Reference → Custom CLI Command Script** | [Editable script and a four-command example](#custom-cli-scripts) |
+| Reuse logins across runs | **Saved Credentials** | [Vault setup, credential fallback and migration](#security) |
+| Explain a warning or a missing configuration | **Run & Monitor → Failed commands** | [Per-device inspection, command outcomes and JSON failure reports](#results) |
+| Keep a recovery copy or send diagnostics to another engineer | **Run & Monitor → Private ZIP / Sharing ZIP** | [Export choices](#exports) and [a before-and-after redaction example](#sharing-zip-redaction) |
+| Check what an upgrade changes | **About & System** | [Installed changelog and incoming release notes](#review-changes-before-upgrading) |
 
-<h1><a id="downloads"></a>Downloads & Installation</h1>
+<a id="downloads"></a>
 
-<a href="https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/windows/cozy.svg" alt="Download for Windows" height="55"/></a>
-<a href="https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/apple/cozy.svg" alt="Download for macOS" height="55"/></a>
-<a href="https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases" target="_blank" rel="noopener noreferrer"><img src="https://cdn.jsdelivr.net/gh/JMcrafter26/badges@main/src/assets/supported/linux/cozy.svg" alt="Download for Linux" height="55"/></a>
+## Download and install
 
-<br/><br/>
+Choose the package for the computer **running the backups**. Everything needed to run the app is included—no extra runtime installation is required. Your network devices just need to be reachable over SSH or Telnet with an account that can read configurations and diagnostics.
 
-### Public Release Artifacts (v3.3.0 Enterprise)
+| Collector | Package from the v3.3.0 release | How to start |
+| --- | --- | --- |
+| Windows x64 | [Setup wizard](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro_Setup.exe) | Run the installer, then open **Bulk Switch Backup Pro** from Start. |
+| Windows x64, portable | [Portable ZIP](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro-win-x64.zip) or [standalone EXE](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro.exe) | Extract the ZIP and run `BulkSwitchBackupPro.exe`, or run the standalone executable. |
+| macOS | [Apple Silicon](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro-osx-arm64.zip) · [Intel](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro-osx-x64.zip) | Extract the ZIP and move `BulkSwitchBackupPro.app` into Applications. |
+| Linux | [x64](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro-linux-x64.tar.gz) · [ARM64](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro-linux-arm64.tar.gz) | Extract the archive and run the included binary or install the application menu entry as shown below. |
 
-| Platform | Architecture | Package Format | Download Link | SHA-256 Checksum |
-| :--- | :--- | :--- | :--- | :--- |
-| **Windows** | x64 (64-bit) | Standalone Executable | [`BulkSwitchBackupPro.exe`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro.exe) | See release checksums |
-| **Windows** | x64 (64-bit) | Windows Setup Wizard | [`BulkSwitchBackupPro_Setup.exe`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro_Setup.exe) | See release checksums |
-| **Windows** | x64 (64-bit) | Portable ZIP Archive | [`BulkSwitchBackupPro-win-x64.zip`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-win-x64.zip) | See release checksums |
-| **macOS** | Apple Silicon (M1–M4) | Native `.app` (ZIP) | [`BulkSwitchBackupPro-osx-arm64.zip`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-osx-arm64.zip) | See release checksums |
-| **macOS** | Intel x64 | Native `.app` (ZIP) | [`BulkSwitchBackupPro-osx-x64.zip`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-osx-x64.zip) | See release checksums |
-| **Linux** | x64 (64-bit) | Native Binary + Desktop | [`BulkSwitchBackupPro-linux-x64.tar.gz`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-linux-x64.tar.gz) | See release checksums |
-| **Linux** | ARM64 | Native Binary + Desktop | [`BulkSwitchBackupPro-linux-arm64.tar.gz`](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest/download/BulkSwitchBackupPro-linux-arm64.tar.gz) | See release checksums |
+<details>
+<summary>Linux launch and desktop installation</summary>
 
-</div>
+For the x64 package, run these commands from the download directory. Substitute `linux-arm64` in both paths for ARM64.
 
-#### Windows silent installation:
+```sh
+tar -xzf BulkSwitchBackupPro-linux-x64.tar.gz
+cd linux-x64
+chmod +x BulkSwitchBackupPro
+./BulkSwitchBackupPro
+```
 
-The latest Windows installer supports unattended installation. Run this from the
-folder containing the downloaded setup executable:
+For a system-wide install, run `sudo bash ./install.sh` from the extracted directory. The installer places the app under `/opt/bulkswitchbackuppro` and adds the `bulkswitchbackuppro` launcher.
+
+</details>
+
+<details>
+<summary>Silent installation and Windows signing</summary>
+
+Download the [silent installation launcher](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro_Install_Silent.cmd) into the same folder as `BulkSwitchBackupPro_Setup.exe`. Run the launcher from PowerShell.
 
 ```powershell
-$setup = Start-Process -FilePath .\BulkSwitchBackupPro_Setup.exe -ArgumentList '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS /NORESTARTAPPLICATIONS /LOG' -Wait -PassThru
-$setup.ExitCode
+.\BulkSwitchBackupPro_Install_Silent.cmd
+$LASTEXITCODE
 ```
 
-Alternatively, download `BulkSwitchBackupPro_Install_Silent.cmd` from the
-[latest release](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/latest)
-beside `BulkSwitchBackupPro_Setup.exe` and run the launcher. It waits for setup,
-returns its exit code, and writes `%TEMP%\BulkSwitchBackupPro-Silent-Install.log`.
-It also accepts an installer path, optional installation directory, and optional
-log path as quoted arguments, in that order.
+The launcher waits for setup, returns its exit code, and writes `%TEMP%\BulkSwitchBackupPro-Silent-Install.log`. Its optional arguments are the installer path, installation directory, and log path, in that order.
 
-Silent mode hides the installation wizard, prevents automatic restarts, and does
-not open the app afterward. Close active backup jobs before upgrading.
-Windows security or elevation prompts may still appear. Installer success is
-exit code `0`; consult the log for any other exit code. Author and publisher:
-**Yash Nalawde**. See [Inno Setup's command-line reference](https://jrsoftware.org/ishelp/topic_setupcmdline.htm).
+The v3.3.0 Windows executable and installer carry Yash Nalawde publisher metadata and a timestamped self-signed signature. Windows may display SmartScreen or Unknown Publisher warnings. To check the installer download, compare `Get-FileHash .\BulkSwitchBackupPro_Setup.exe -Algorithm SHA256` with the `sha256` field in the [v3.3.0 update manifest](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/update_manifest.json).
 
-#### Linux Installation:
-Extract the `.tar.gz` and run the included desktop installer:
-```bash
-tar -xzf BulkSwitchBackupPro-linux-x64.tar.gz
-cd BulkSwitchBackupPro-linux-x64
-chmod +x install.sh BulkSwitchBackupPro
-./install.sh
+</details>
+
+<a id="quick-start"></a>
+
+## Run your first backup
+
+```text
+┌───────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
+│ 1. Define Targets     │ ───► │ 2. Parallel Collection  │ ───► │ 3. Verify & Export      │
+│ IPs, CIDR, Range, Seed│      │ SSH / Telnet (1-30 th.) │      │ Private/Sharing ZIP     │
+│ Optional Subnet Filter│      │ Identity & CLI Discovery│      │ Manifest & JSON Errors  │
+└───────────────────────┘      └─────────────────────────┘      └─────────────────────────┘
 ```
 
-#### macOS Installation:
-Extract the `.zip`, drag `BulkSwitchBackupPro.app` to `/Applications`, and open.
+The worked example uses **WLC-9800** at **192.0.2.1**, a documentation address. Substitute the management address of a controller or switch you administer.
 
----
+1. Open **Run & Monitor**. Under **Target Devices**, enter the management address. Leave **Recursive CDP / LLDP Neighbor Crawl** off for this single-device run.
+2. Keep **Command Profile** on **Auto-detect (multi-vendor switches / WLC)**. Auto inspects the device identity and selects the commands for that platform. Open **Command Reference** from the side menu to preview the plan.
+3. Enter **Username** and **Password**. Supply an **Enable Secret** if the device requires it to read privileged output. Leave **Write running-config to startup** unchecked for an ordinary backup.
+4. Click **Start Backup**. Follow the device’s **Protocol**, **Elapsed**, and **Status**. If a command is rejected, open **Failed commands** above the log to inspect the CLI response.
+5. Click **Private ZIP** to keep the raw capture. Open the ZIP and look for the device text file and `capture-manifest.json`. Export before closing the app because the default session directory is temporary.
 
-<div align="center">
+### Target formats
 
-<h1><a id="quick-start"></a>Quick Start & Workflow</h1>
+| Input method | Example | What the collector does |
+| --- | --- | --- |
+| Individual target | `192.0.2.1` | Queues the address. Enter one target per line for an easy-to-review list. |
+| IPv4 CIDR | `192.0.2.8/30` | Queues `192.0.2.9` and `192.0.2.10`. The target parser supports /20 through /32. A /31 includes both addresses. |
+| Inclusive range | `192.0.2.10-12` or `192.0.2.10-192.0.2.12` | Queues .10, .11 and .12. Overlapping entries are deduplicated. |
+| **Import IP List from File...** | A TXT or CSV file containing `192.0.2.1` | Replaces the target list with distinct IPv4 address strings found anywhere in the file. No header is required. Enter CIDR and range expressions directly in the target box for expansion. |
 
-</div>
+### Discover devices from a seed
 
-```mermaid
-flowchart LR
-    A["Seed Switch IP\n(e.g. 10.22.36.1)"] --> B["Recursive CDP/LLDP\nDiscovery Crawl"]
-    B --> C{"Hardware Classifier"}
-    C -->|"Catalyst / Nexus"| D["Switch Backup Queue"]
-    C -->|"9800 / AireOS"| E["WLC Backup Queue"]
-    C -->|"Catalyst AP"| F["AP Backup Queue"]
-    C -->|"IP Phone (SEP/CP)"| G["Automatically Skipped"]
-    D --> H["Parallel Workers\n(Up to 30 Threads)"]
-    E --> H
-    F --> H
-    H --> I["Isolated Temp Staging\n(Auto-Purged on Exit)"]
-    I --> J["Save to Folder..."]
-    I --> K["Export ZIP..."]
+Start with a switch you administer, enable **Recursive CDP / LLDP Neighbor Crawl**, and set **Discovery Subnet Filter (Optional)** to the management network you intend to collect. Enable **Include Discovered Access Points** for AP inventory and backup. Both discovery and AP inclusion start off.
+
+For example, suppose `SW-01` advertises `AP-01` on its local `Gi1/0/8`, with remote port `GigabitEthernet0` and management IP `192.0.2.20`. The AP row gives you two different ways to investigate it. **Uplink** and **Port Link** identify the switch and wired port to inspect for link or power problems. The **IP Address** lets the collector open a separate session to the AP for its own wired-interface, radio and CAPWAP output. A WLC capture supplies the controller’s view of APs and clients.
+
+| What the seed reports | What happens during discovery and backup |
+| --- | --- |
+| A neighboring switch with a usable management IPv4 address | The collector queues the switch and checks its neighbors in turn. Repeated sightings of the same address share a traversal entry. |
+| A recognized AP with a usable management IPv4 address | With AP inclusion enabled, the collector queues an AP backup. Traversal stops at the AP. |
+| A device name and ports, with no usable address | The collector retains the eligible neighbor in inventory. A later matching advertisement can supply the address. If none does, the device has no CLI capture. You can enter a separately verified management address as a target. |
+| A phone, endpoint or neighbor with insufficient infrastructure evidence | The collector skips the advertised neighbor before attempting a login. |
+
+**Catalyst 1000 and SG/SF/CBS switches participate in traversal.** The collector combines the CDP summary (device and ports), detailed CDP records, CDP protocol address output and LLDP detail. It handles wrapped switch and port names. On Small Business switches it also tries `show cdp entry *` when detailed neighbor records are missing. A rejected optional lookup appears in the log and the other lookups continue. Discovery coverage depends on what the switch advertises and which output formats the collector recognizes.
+
+**Worker Threads** controls parallel device collection from 1 to 30. Its initial value is twice the collector’s processor count, bounded between 6 and 16. **Execution Logs & Events** shows connection and command progress as it happens.
+
+<a id="features"></a>
+
+## Choose a collection mode and device profile
+
+| Goal | Selection | What you get |
+| --- | --- | --- |
+| Keep configurations & diagnostics | **Auto-detect** | Platform-specific diagnostics plus the required configuration command. Saving running configuration to startup is a separate opt-in on supported devices. |
+| Supply your own diagnostics | **Custom CLI Command Script** | Edit the commands in **Command Reference**. Review them for the device family and account privileges before starting. |
+
+### Command Reference
+
+In **Command Reference**, select **Auto-detect (multi-vendor switches / WLC)** and choose a family under **Supported device platforms**. The panel shows its device type, diagnostic command count, paging setup, configuration capture command and ordered command list. Selecting a family here changes the preview. During a run, the collector reads identity evidence from each device and builds its actual command list. Auto stops after identification if it cannot recognize the OS.
+
+![Command Reference with Juniper Junos selected, showing the paging command, configuration command and seven diagnostics](Assets/readme/command-reference.png)
+
+For example, the Junos palette uses `set cli screen-length 0` for paging and `show configuration | no-more` for configuration. An IOS switch uses `terminal length 0` and `show running-config`. The four named Cisco templates in the selector are read-only starting points. Built-in runs still adapt to the detected device. Stack commands in the preview require a supported model at capture time.
+
+| Cisco family | Commands | Evidence to look for |
+| --- | :---: | --- |
+| Catalyst IOS/IOS-XE Switches | **88** | Full interface status & transceiver diagnostics, CPU/memory sorted stats, environment power/fans/temperature, MAC address table count, CDP/LLDP neighbors, and spanning-tree root/inconsistent ports. Stack models get stack detail, ring speed, stack-power, stackwise-virtual, and stack-ports summary. |
+| Catalyst 9800 WLC | **62** | Chassis HA & RMI, AP fleet general config, image versions, RF profiles, CleanAir channels, transmit power, client delete reasons, transceivers, AAA servers, and PKI certificates. |
+| Cisco Nexus (NX-OS) | **20** | System resources, environment, port channels, interface error counters, neighbor detail, logging logfile, and running/startup configurations. |
+| Cisco AireOS Controllers | **20** | Joined APs, AP join statistics, client summary, WLANs, rogue devices, and mobility telemetry. Configuration command: `show run-config commands`. |
+| Recognized IOS/IOS-XE Routers | **7** | Version, hardware inventory, IPv4 interface brief, both CDP neighbor views (detail and summary), running-config, and startup-config. |
+| Cisco Access Points | **8** | `show interfaces wired 0` uplink, `show capwap client rcb` and `config`, radio controllers, inventory, and `show run`. |
+| Catalyst 1000 and SG/SF/CBS | **88** / Switch | Shared switch diagnostics including inventory, interface status, and both CDP views. C1000 uses IOS paging; Small Business switches use `terminal datadump`. Both execute switch command plans. |
+| Custom CLI Default Template | **10** | Default customizable starter template including sorted CPU, sorted memory, temperatures, and hardware CPU policer diagnostics. |
+
+The 30 palettes also cover Arista EOS, Juniper Junos, Aruba AOS-CX and ProVision, HPE/H3C Comware, Huawei VRP, Dell OS10/OS9/OS6, Extreme EXOS and VOSS, Ruckus/Brocade FastIron, Alcatel-Lucent OmniSwitch, FortiSwitchOS, MikroTik RouterOS, NETGEAR, D-Link, TP-Link, Ubiquiti EdgeSwitch, AlliedWare Plus, Ruijie RGOS, ZTE ZXR10 and SONiC. The platform matrix lists the configuration command for each family. [Platform support matrix](docs/PLATFORM_SUPPORT.md)
+
+### Custom CLI scripts
+
+1. Choose **Configuration Backup → Custom CLI Command Script**. Open **Command Reference** and enter one command per line. Blank lines and lines starting with `!` are ignored. **Clear** empties the working list and **Reset template** reloads the supplied example.
+2. For a short IOS switch backup, enter the block below. Use devices that accept the same CLI syntax for that run.
+
+   ```text
+   ! IOS switch identity, interface addresses and configuration
+   show version
+   show inventory
+   show ip interface brief
+   show running-config
+   ```
+
+3. Start the backup from **Run & Monitor**. The collector probes the device identity, applies its known paging setup, and attempts your permitted commands in order. An explicitly targeted device with an unrecognized OS can run a reviewed custom script. APs added by discovery receive the AP command list. Recognized configuration-change commands are suppressed and logged.
+4. Include the platform’s configuration command when you need a recovery copy. A script containing only successful diagnostics can produce a file with `configurationCaptured` set to `false`. To persist a supported device’s running configuration to startup, explicitly select **Write running-config to startup**.
+
+<a id="security"></a>
+
+## Connect with session or saved credentials
+
+For a single run, enter a username, password and optional enable secret in **Run & Monitor**. For reuse across runs on Windows, macOS or Linux, open **Saved Credentials**. The vault starts locked. A new master password requires at least 12 characters and has no recovery mechanism.
+
+| Vault control | When to use it |
+| --- | --- |
+| **Create / Unlock Vault → Save Credential** | Give a login a recognizable label, such as *Branch switches*. Save the device username, password and optional enable secret. |
+| **Apply to Session** or **Quick Preset (Unlocked Vault)** | Fill the active session fields with one chosen login directly from Run & Monitor. |
+| **Failover to saved credentials if needed** | Allow the collector to try additional logins from the unlocked pool after the active login fails. Clear this option when only the selected account should be tried. |
+| **Lock Vault** or **Delete** | Locking clears active credential fields and wipes key material from RAM. Delete removes the selected preset. |
+| **Forgot Password? Erase & Reset Vault** | Completely erases an inaccessible vault and reinitializes clean storage if the master password is lost. |
+
+Your saved logins are stored in a portable, password-protected encrypted vault—no cloud account is required, and it works identically across Windows, macOS, and Linux. Sensitive login details are cleared from memory as soon as you lock the vault or close the app. To move your saved logins to another computer, copy `BulkSwitchBackupPro/Credentials/vault.json` from your user application-data folder (`%APPDATA%` on Windows, `~/.config` on Linux/macOS) to the target machine and unlock it with the same master password.
+
+The collector tries SSH on port 22 first. A connection or negotiation failure can trigger Telnet on port 23. Telnet carries credentials and device output in clear text, so use it on a trusted management network. An SSH authentication rejection advances to the next available credential. The **Protocol** column identifies the connection actually used.
+
+Older switches can present a second `Username:` and `Password:` after the initial `login:` exchange. The collector handles repeated prompts with a bounded retry count and waits for a device prompt before sending backup commands. A rejected login or password-change prompt ends that login attempt.
+
+<a id="results"></a>
+
+## Read a result and investigate a failure
+
+**Run & Monitor** displays total devices, devices in progress, completed devices, and failures alongside a live session timer. Use **Elapsed** and **Status** to follow each device's progress in real time. **Cancel Backup** signals active workers to stop gracefully.
+
+The results table lets you resize columns, keeps key columns visible while scrolling, and includes built-in vertical and horizontal scrollbars. Right-click any device row to access quick actions:
+* **Inspect Failed Commands**: Instantly opens Command Results filtered specifically to that device.
+* **Copy IP Address**: Copies the device management IP address to your clipboard.
+* **Copy Hostname**: Copies the resolved device hostname to your clipboard.
+
+On smaller screens, roll the mouse wheel over the horizontal scrollbar or hold **Shift + mouse wheel** to view **Uplink** and **Port Link** columns. Use the zoom controls in the title bar or keyboard shortcuts (<kbd>Ctrl</kbd> + <kbd>+</kbd>, <kbd>Ctrl</kbd> + <kbd>−</kbd>, and <kbd>Ctrl</kbd> + <kbd>0</kbd>) to resize the interface.
+
+| Device result | What to check next |
+| --- | --- |
+| Completed | Open the device text file for the captured configuration and diagnostic command headers. |
+| Completed with warnings | Check the manifest’s `configurationCaptured` flag and each command outcome. A device can reach 100% while individual diagnostics are missing. |
+| Partial diagnostics saved | Other commands succeeded but the required configuration was unusable. The `.partial-diagnostics.txt` file contains the surviving evidence. An earlier complete backup is preserved. |
+| No usable configuration backup was captured | No command in the capture plan produced usable output. Check the login, privileges and device responses before trying again. |
+| Unreachable or skipped | Check management addressing, transport, and discovery settings. The current manifest can record a target without an output file. |
+
+### Inspect and export failed commands
+
+1. When a run ends with command failures, the app opens **Command Results** for the whole run. To investigate one device, select its row in **Run & Monitor** and choose **Inspect Failed Commands** from the context menu. **Failed commands** above the log also uses the selected device’s IP. Clear the search box to see all failures again. The context menu also offers **Copy IP Address** and **Copy Hostname**.
+2. Search by IP, hostname, command or error. Select a row for its time, command, error and device response. Each response in this view is limited to 4,000 characters. The device text file and manifest hold the underlying capture.
+3. Choose **Export failed commands** before starting another backup. It writes `failed-commands.json` with **all failures from the current run**, including rows outside the active filter. This separate report can contain raw device text. To send redacted evidence, use **Sharing ZIP**.
+
+**Execution Logs & Events** shows the connection, discovery and command sequence. **Copy** copies the event log and **Clear** clears its display. For a command-by-command audit, open the device’s manifest record. It preserves the requested command and each actual attempt, including a rejected spelling followed by a successful equivalent.
+
+| Manifest command outcome | How to interpret it |
+| --- | --- |
+| `accepted` | The output passed the command’s completion checks. For IOS, recognized IOS routers and Catalyst 9800 running configuration, these include a returned prompt and trailing `end`. |
+| `unsupported` or `unauthorized` | Inspect the device response for a syntax or privilege error. The collector tries a defined equivalent where available and continues with other commands. |
+| `empty`, `timedOut` or `truncated` | The output was missing or incomplete. After a session error the collector attempts a fresh connection for later commands. The per-command capture limit is 32 MiB. |
+| `failed`, `cancelled` or `notAttempted` | Read the reason and timestamps to see where collection stopped and which evidence is missing. |
+
+<details>
+<summary>See a rejected command in the desktop app</summary>
+
+![Command Results filtered to a synthetic switch, with show vlan selected and its Invalid input response visible](Assets/readme/command-results.png)
+
+The selected switch returned `% Invalid input` for `show vlan`. Other commands on that switch can still produce a usable configuration backup.
+
+</details>
+
+<a id="exports"></a>
+
+## Export and read a snapshot
+
+| Action / Artifact | Use it for | Contents |
+| --- | --- | --- |
+| **Private ZIP** | Complete disaster recovery & internal audit | Unredacted `.txt` backups and `capture-manifest.json`. Captures retain original secrets, passwords, and keys for full hardware restoration. |
+| **Sharing ZIP** | Peer review & support escalation | Cryptographically redacted `.txt` captures and sanitized manifest. Recognized secret patterns are replaced with deterministic correlation tokens. |
+| **Save to Folder** | Unpacked local directory export | Raw backup files, command logs, and session metadata exported directly into a specified directory path. |
+| **failed-commands.json** | Automation error triage | Standalone structured failure export from Command Results listing target IP, hostname, requested command, error description, and raw device response. |
+| **Open Temp** | Immediate session inspection | Direct shortcut to the active working staging folder. Export required archives before quitting the session. |
+
+Both ZIP formats are ordinary, unencrypted archives. Each current-run ZIP verifies the snapshot file hashes before export. Older folders without a manifest list their text files under `unverifiedFiles`.
+
+### Sharing ZIP redaction
+
+The sharing export replaces each recognized **whole secret value** with a token. For example, a synthetic SNMP configuration line would look like this in the two exports. The token shown is illustrative.
+
+| Private ZIP | Sharing ZIP |
+| --- | --- |
+| `snmp-server community demoOnly RO` | `snmp-server community [REDACTED-37AF1039DB84] RO` |
+
+The same matched value gets the same token throughout one export, so an engineer can correlate references without seeing the value. Each export uses a fresh random key. The redactor processes device text and strings inside `capture-manifest.json`, including command responses.
+
+| Replaced when recognized | Retained for diagnosis |
+| --- | --- |
+| Passwords, enable secrets, passphrases, SNMP communities and SNMPv3 auth/privacy values | Device names, management IPs, serial numbers, interfaces and port links |
+| Wireless pre-shared keys, TACACS/RADIUS keys, private-key blocks, recognized token/API-key assignments and the capture’s `Auth User` header | VLANs, spanning-tree settings, counters, command names and the surrounding CLI syntax |
+
+Review free-text descriptions and vendor-specific secret formats before sharing. The raw snapshot stays in the session directory and the sharing archive’s hashes describe the redacted files. ZIP export writes to the local destination you select. **Save to Folder** and **Private ZIP** retain the original values.
+
+### Check what Network Health Reporter can import
+
+For the synthetic controller in the quick start, a successful capture yields this archive layout.
+
+```text
+capture-manifest.json
+192.0.2.1_WLC-9800_WLC.txt
 ```
 
-1. **Input Seed Switch or IP List**:
-   - Provide your seed Core/Distribution switch IP address (or import a batch IP list from text file).
-2. **Configure Multi-Credential Vault**:
-   - Enter your primary network credentials and enable secret. In Saved Credentials, create or unlock the encrypted vault before adding fallback credentials.
-3. **Select Execution Profile**:
-   - Choose from **Cisco Switch (IOS / IOS-XE)**, **Cisco Nexus (NX-OS)**, **Cisco Catalyst 9800 WLC**, **Cisco AireOS WLC**, or **Custom Profile**.
-4. **Initiate Traversal & Backup**:
-   - Click **Start Backup**. The engine recursively maps the network topology, classifies hardware, captures configurations concurrently, and logs status in real time.
-5. **Export On Demand**:
-   - Backups are safely staged in temporary isolation. Click **Save to Folder...** to persist to your local directory or **Export ZIP...** to download a compressed archive.
+Open the text file to read the output beneath each command header. Open the manifest to decide whether the capture contains the evidence you need. These selected fields describe the controller in the project's offline export fixture.
 
-### Credential vault and legacy switch connections (3.0.6)
+```json
+{
+  "ipAddress": "192.0.2.1",
+  "hostname": "WLC-9800",
+  "platform": "c9800",
+  "status": "success",
+  "configurationCaptured": true
+}
+```
 
-Saved Credentials uses a portable **AES-256-GCM** vault with a master-password key derived using **PBKDF2-SHA256 (600,000 iterations, random salt)**. Create a master password of at least 12 characters and keep it safe: there is no password recovery. The master password and encryption key are never written to disk. The vault starts locked on each application launch; unlock it before using saved credential fallback. Lock clears the displayed session credentials and the vault's in-memory key; a backup already in progress retains the credentials it started with.
-
-The encrypted file is `BulkSwitchBackupPro/Credentials/vault.json` beneath .NET's per-user `ApplicationData` folder: normally `%APPDATA%` on Windows, `$XDG_CONFIG_HOME` (or `~/.config`) on Linux, and `~/Library/Application Support` on macOS. Copy that file to the equivalent directory on another computer and unlock it using the same master password. Back it up before moving or replacing it. On Linux/macOS, newly written vault files have owner-only read/write permissions.
-
-For existing Windows profiles, create/unlock the vault and choose **Import Legacy Windows Credentials** on the original Windows account. This explicitly imports the old DPAPI `.cred` files and preserves those originals. The imported `vault.json` can then be moved between supported operating systems. Passwords and enable secrets are not displayed in the credentials table.
-
-Connections prefer SSH on port 22. If SSH is unavailable or negotiation fails, the engine attempts Telnet on port 23 and labels the session **Telnet** in progress and saved backups. Telnet sends credentials and traffic without encryption, so use this fallback only on a trusted management network. Rejected SSH credentials trigger credential rotation rather than a Telnet downgrade. Legacy terminal `login:`, `Username:` and `Password:` prompts are handled before commands begin; forced password changes are reported for manual attention.
-
-Automatic profiles recognize **Catalyst C1000 as an IOS switch** and **SG350 as Cisco Small Business**, which uses `terminal datadump`. AP-only wired-interface commands are confined to detected AP profiles. Explicit custom scripts remain under your control.
-
-### Catalyst 9800 evidence and ZIP manifests
-
-Default Cisco backups include Network Health Reporter diagnostics for Catalyst switches, Catalyst 9800 controllers, and access points. The switch profile captures full interface output and MAC address table counts, with stack port details gated by model. Recognized Cisco IOS/IOS-XE routers use a dedicated plan for inventory, IPv4 interfaces, CDP, and configuration. Catalyst 1000 and Small Business switches retain the shared switch diagnostics with platform-specific paging.
-
-The Catalyst 9800 WLC profile attempts `show platform resources`, `show environment all`, `show ap uptime`, `show wireless stats ap history`, `show wireless wps rogue ap summary`, and `show ap dot11 5ghz cleanair config`, in addition to its existing configuration and diagnostic commands. Availability depends on the IOS-XE release, hardware and operator permissions. Each command is captured under its actual command name. Logging is not substituted for AP history, and a 5 GHz radio summary is not substituted for CleanAir configuration. Unsupported evidence remains unavailable for the health reporter.
-
-Rejected commands are recorded and collection continues. When a command times out or its session fails, later commands use a fresh authenticated shell with privilege and paging setup reapplied; output from the incomplete shell cannot become another command's evidence. A missing required running configuration produces a `.partial-diagnostics.txt` file rather than replacing a previous complete backup. **Save configuration (`write memory`) is off by default and runs only when the existing save option is explicitly selected and the required configuration capture succeeded.**
-
-New ZIP exports contain a root `capture-manifest.json` with schema version 1. It records requested targets, UTC run/capture timestamps, device IP and hostname, detected platform/type, selected and resolved profiles, identity evidence, transport, configuration-capture state, output filename, and save-option state. Each command has a stage (`identity`, `setup`, `capture`, or `save`), a status (`success`, `unsupported`, `failure`, or `notAttempted`), a reason when unavailable, and timestamped attempts with the actual command used. Device status is `success`, `partial`, `failure`, `unreachable`, `skipped`, or `notAttempted`. A device is successful only after configuration and all capture commands succeeded; partial diagnostic availability does not establish complete device health.
-
-The staging folder retains this metadata in `.capture/capture-manifest.json`. ZIP export includes only the current run's recorded output files, so an old router backup in the folder cannot imply a successful new capture. Unreachable targets are explicitly recorded without an output file. Targets omitted from the request are not reported as captured. Legacy folders without capture metadata export their text files as `unverifiedFiles`, with no inferred successful devices. Credentials are not written to the manifest.
-
----
-
-<div align="center">
-
-<h1><a id="security"></a>Enterprise Security Hardening</h1>
-
-</div>
-
-Bulk Switch Backup Pro is engineered to meet strict corporate cybersecurity standards for enterprise management utilities:
-
-- **Address Space Layout Randomization (ASLR):** Compiled with `HighEntropyVA=true` preventing memory injection attacks.
-- **Data Execution Prevention (DEP):** Strict hardware-enforced code execution boundaries.
-- **Cryptographic Release Verification:** Integrated auto-updater verifies SHA-256 hashes against trusted release manifests prior to staging or execution.
-- **Least-Privilege UAC (`asInvoker`):** The application runs strictly with standard user privileges and never prompts for elevated administrator permissions during normal operation.
-- **Zero-Footprint Session Staging:** Output files remain in isolated temporary storage and are purged automatically upon process termination unless explicitly saved by the user.
-
----
-
-<div align="center">
-
-<h1><a id="support"></a>Community & Collaboration</h1>
-
-We welcome community feedback, feature requests, and issue reports!
-
-[**Report Bug / Issue**](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/issues) · [**Request Feature**](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/issues) · [**Command Profile Proposals**](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/discussions)
-
-</div>
-
----
-
-<div align="center">
-
-<h1><a id="author"></a>Author & Attribution</h1>
-
-Designed and engineered by **Yash Nalawde** (Independent Developer)
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Yash%20Nalawde-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yash-nalawde)
-[![GitHub](https://img.shields.io/badge/GitHub-Majordean0303-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Majordean0303)
-
-</div>
-
----
-
-<div align="center">
-
-<h1><a id="disclaimer"></a>Disclaimer & Legal Notice</h1>
-
-Bulk Switch Backup Pro is an independent network administration and automation utility.
-
-- **Non-Affiliation:** Cisco, Cisco Catalyst, Cisco Nexus, Cisco AireOS, Cisco IOS, Cisco IOS-XE, and Cisco Aironet are registered trademarks of Cisco Systems, Inc. This project is not affiliated with, endorsed by, or sponsored by Cisco Systems, Inc.
-- **Operational Responsibility:** While this application incorporates strict safety mechanisms (including IP phone exclusions, paging suppression, and read-only diagnostic commands), network administrators are solely responsible for verifying command sets against their corporate change control policies before execution on production campus and datacenter networks.
-
-</div>
-
-## Migration development checks
-
-Development targets the .NET 10 SDK and PowerShell 7. Run
-`./scripts/test-core.ps1` for offline core tests, or `./scripts/test-all.ps1`
-for the full core gate followed by an Avalonia desktop build. Use
-`-Filter 'FullyQualifiedName~Cancellation' -NoRestore` on the core runner for
-focused checks. Detailed validation logs and TRX results are stored under ignored
-`artifacts/`; no matching tests is a failing result.
-
-Read [MIGRATION_STATE.md](MIGRATION_STATE.md) for the current checkpoint and next
-bounded task, [MIGRATION_ROADMAP.md](MIGRATION_ROADMAP.md) for the serial app
-sequence, and [CHANGELOG.md](CHANGELOG.md) for this app's changes.
-
-
-## Multi-vendor automatic backup
-
-Auto-detect is the default command profile. Each backup identifies the device OS
-before choosing commands and records rejected commands instead of treating them
-as successful captures. See [platform support and validation](PLATFORM_SUPPORT.md)
-for the supported OS families, Cisco/WLC corrections, custom-script behavior and
-live-device acceptance checklist.
+At run level, `snapshotId`, UTC timestamps and `requestedTargets` identify the collection. Under `devices[].commands[]`, inspect `requestedCommand`, `outcome`, `completeness` and `attempts` to see what actually ran. In the same fixture, adding an unreachable router produces a device record with `status: "unreachable"` and a null `outputFile`. Its older backup stays out of the ZIP. [Assessment and export field guide](docs/ASSESSMENT_EXPORTS.md)
 
 ## Review changes before upgrading
 
-Open **About** and expand **Release Changelog & History** to read the installed
-release history without an internet connection. **Check for Updates** displays
-complete notes for the available version and adds it to the history. On Windows,
-choose **Review Update**, read the version and upgrade details, then select
-**Download & Install** to proceed or **Cancel** to stay on the current version.
-No package is downloaded or launched by checking updates or opening the changelog.
-Save completed backup exports before installing. On macOS/Linux, use **Open Release
-Downloads** and choose the matching package.
+Open **About & System → Release Changelog & History** to read installed release notes offline. Choose **Check for Updates** for the published version and its changes. On Windows, **Review Update** opens the confirmation step before **Download & Install** closes the app and launches setup. On macOS and Linux, use **Open Release Downloads** to get the matching package.
 
-## Command Results and partial diagnostics
+<a id="support"></a>
 
-After a run, **Command Results** lists failed command attempts, including device IP,
-hostname, command and the returned error. Filter the list and select a row to read
-its response, or export the failed-command list as JSON. A rejected attempt may
-appear even if its fallback syntax later succeeds.
+## Get help
 
-Working commands continue after CLI rejections. When required configuration output
-is unavailable, captured diagnostics are saved as `*.partial-diagnostics.txt` and
-can be exported with the other backup files. These files are incomplete diagnostics,
-not complete configuration backups; earlier complete backups remain untouched.
-A timeout with an incomplete prompt ends that device session to avoid mixing outputs,
-while retaining diagnostic commands captured before the failure.
+For a bug report, include the app version, collector OS, device model and firmware, selected profile, and the exact command and sanitized response from **Command Results**. **About & System → Open Application Logs Folder** opens the local logs. Review logs and redacted captures for internal network identifiers before posting. [Public issue tracker](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/issues)
 
-For wide result tables, use the wheel over the horizontal scrollbar, or hold
-**Shift** while wheeling over the table. Normal vertical scrolling is preserved.
+<a id="author"></a>
+<a id="distribution-model"></a>
+<a id="disclaimer"></a>
 
-## Windows code signing
+## Author, contributing, and license
 
-Version 3.3.0 is published with the owner-authorized self-signed certificate for Bulk Switch Backup Pro (Yash Nalawde). App author and installer publisher metadata are Yash Nalawde. Windows may still display Unknown publisher or SmartScreen warnings because this certificate is not publicly trusted. No trust-store changes are required or performed.
+Designed and engineered by **Yash Nalawde**, independent developer. Bulk Switch Backup Pro is distributed as closed-source freeware for personal and commercial use under its EULA. Redistribution of unmodified binary packages requires the accompanying EULA and attribution.
 
-By default, public Windows packaging requires a trusted code-signing certificate and a
-verified timestamp. Configure GitHub Actions secrets `WINDOWS_SIGNING_PFX_BASE64`
-and `WINDOWS_SIGNING_PFX_PASSWORD` for a CA-issued PFX whose private key is permitted
-to be used this way. Local production packaging accepts `CERT_PATH`/`CERT_PASS`,
-or `SIGNING_CERT_THUMBPRINT` for an existing CurrentUser signing identity.
-Keep private keys out of the repository; hardware-backed or managed signing
-identities need their provider integration rather than an exported PFX.
+> [!TIP]
+> **Want to contribute or access the source code?** Connect with Yash on [LinkedIn](https://www.linkedin.com/in/yash-nalawde) or [GitHub](https://github.com/Majordean0303) to request repository access or collaborator authorization.
 
-The application is signed before it is copied into the portable ZIP and installer.
-The setup executable is signed before the update manifest's checksum is generated.
-Missing credentials, self-signed production identities, or invalid/missing production
-timestamps stop publication. The release workflow removes its temporary PFX afterward.
+[License agreement](EULA.txt) · [Author on GitHub](https://github.com/Majordean0303) · [LinkedIn](https://www.linkedin.com/in/yash-nalawde)
 
-For a local beta only, run `./scripts/build-signed-beta-installer.ps1
--AllowDevelopmentCertificate` after building the portable beta. It reuses the
-existing Bulk Switch Backup development certificate and uses a separate install
-folder, application identity and shortcuts. It never imports a trusted root or
-changes SmartScreen settings. Its public `.cer` file is for inspection, not an
-instruction to trust it on other computers. Self-signed installers can still trigger
-warnings; publicly trusted signatures also need SmartScreen reputation.
-
-See [Microsoft's SmartScreen guidance](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation).
-
-
-### Assessment and private sharing
-
-Use the **Collection profile** selector to choose Configuration Backup or a read-only Assessment. Assessment can collect two timestamped interface-counter samples. **Private ZIP** retains raw configuration and secrets. **Sharing ZIP** redacts recognized secret patterns while preserving device/port relationships; custom formats may be missed, so review it before sharing. Neither ZIP is password-encrypted. Both carry the existing capture manifest with additive snapshot, identity, timing and completeness metadata. See [Assessment exports](ASSESSMENT_EXPORTS.md).
+Cisco product names are trademarks of Cisco Systems, Inc. This independent project has no affiliation with Cisco. Network administrators are responsible for reviewing command sets against their change-control policies before running them on production equipment.

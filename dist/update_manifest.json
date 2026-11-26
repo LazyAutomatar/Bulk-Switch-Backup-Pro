@@ -1,10 +1,10 @@
-{
-  "version": "3.3.0",
-  "title": "Bulk Switch Backup Pro 3.3.0",
-  "windowsSigning": "developmentCertificate",
-  "releaseNotes": "### Added\n- Align default Catalyst backups with the Network Health Reporter suite by adding full interface output, MAC address table counts, and stack port details on supported models. Include the supplied additional diagnostics in Catalyst Assessment.\n- Use a dedicated backup profile for recognized Cisco IOS/IOS-XE routers. Capture version, inventory, IPv4 interfaces, both CDP views, and configuration.\n- Accept CIDR and IP ranges in the target list. Add a subnet filter field, quick vault preset selector, per-device elapsed time, and a device context menu.\n\n### Changed\n- Reduce repeated transport work through per-run Telnet availability caching and reuse of credentials already verified during discovery. Batch UI log updates and move file logging off the UI thread.\n\n### Fixed\n- Keep the main navigation pane collapsed at startup and let the Logs action buttons wrap into consistent, larger controls on narrow layouts.\n- Clarify that Private ZIP retains raw secrets, Sharing ZIP only redacts recognized secret patterns, and neither ZIP is password-encrypted.\n- Make scrollbars available in the run view and keep the console following new output.\n- Align title bar controls and reserve space between the theme button and the Windows caption buttons.\n- Update About with the current profile count, collection modes, export options, and installed release history.",
-  "publishedAt": "2026-11-22T15:08:41.1505524Z",
-  "downloadUrl": "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro_Setup.exe",
-  "sha256": "35c13f9eadd38d8ff2800eb21ddb2997e7abd1c91f08d8a9ed9037430b91c267",
-  "fileSizeBytes": 47424768
+﻿{
+    "version":  "3.3.0",
+    "title":  "Bulk Switch Backup Pro 3.3.0",
+    "windowsSigning":  "developmentCertificate",
+    "releaseNotes":  "### Added\n- Align default Catalyst backups with the Network Health Reporter suite by adding full interface output, MAC address table counts, and stack port details on supported models. Include the supplied additional diagnostics in Catalyst Assessment.\n- Use a dedicated backup profile for recognized Cisco IOS/IOS-XE routers. Capture version, inventory, IPv4 interfaces, both CDP views, and configuration.\n- Accept CIDR and IP ranges in the target list. Add a subnet filter field, quick vault preset selector, per-device elapsed time, and a device context menu.\n\n### Changed\n- Replaced Windows DPAPI dependency with the native cross-platform AES-256-GCM / PBKDF2 (600,000 iterations) credential vault architecture from Network Health Reporter, removing System.Security.Cryptography.ProtectedData and machine-bound legacy vault imports.\n- Reduce repeated transport work through per-run Telnet availability caching and reuse of credentials already verified during discovery. Batch UI log updates and move file logging off the UI thread.\n\n### Fixed\n- Keep the main navigation pane collapsed at startup and let the Logs action buttons wrap into consistent, larger controls on narrow layouts.\n- Clarify that Private ZIP retains raw secrets, Sharing ZIP only redacts recognized secret patterns, and neither ZIP is password-encrypted.\n- Make scrollbars available in the run view and keep the console following new output.\n- Align title bar controls and reserve space between the theme button and the Windows caption buttons.\n- Update About with the current profile count, collection modes, export options, and installed release history.",
+    "publishedAt":  "2026-11-26T05:01:26.2366154Z",
+    "downloadUrl":  "https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.0/BulkSwitchBackupPro_Setup.exe",
+    "sha256":  "f9a07301c59f6bcc6097a727453c99eb244fdb73363ddbf57554423ab336f9b2",
+    "fileSizeBytes":  47406576
 }
