@@ -2,6 +2,28 @@
 
 Changes for Bulk Switch Backup Pro are tracked independently from the other network applications.
 
+## [3.3.2] - 2026-11-26
+
+### Added
+- Automatic background update check on startup with a clickable title-bar update pill (`Update vX.Y.Z`) that navigates straight to the update prompt when a new version is available.
+- Added a **Buy Me a Coffee** contribution button in **About & System**.
+
+## [3.3.1] - 2026-11-26
+
+### Added
+- Included EULA license acceptance in the Windows setup wizard, a **Report a Bug / Request Feature** button, and project repository details in **About & System**.
+- Added IL obfuscation and string encryption for release builds.
+
+### Changed
+- Made the Windows installer strictly per-user (`%LOCALAPPDATA%\Programs\Bulk Switch Backup Pro`) with no administrator elevation required.
+- Switched in-app updates to unattended silent installation (`/SILENT` with automatic relaunch) so upgrades complete without manual setup wizard clicks.
+
+### Removed
+- Removed Assessment mode from the desktop interface.
+
+### Fixed
+- Fixed navigation sidebar pill animation stutter when switching across non-adjacent tabs.
+
 ## [3.3.0] - 2026-11-22
 
 ### Added
