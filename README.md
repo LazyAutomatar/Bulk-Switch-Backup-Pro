@@ -2,7 +2,7 @@
 
 # Bulk Switch Backup Pro
 
-[![Release Version](https://img.shields.io/badge/version-3.3.2-blue.svg)](CHANGELOG.md)
+[![Release Version](https://img.shields.io/badge/version-3.4.0-blue.svg)](CHANGELOG.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20|%20macOS%20|%20Linux-lightgrey.svg)](#downloads)
 [![License](https://img.shields.io/badge/license-Freeware%20EULA-green.svg)](EULA.txt)
 [![Author](https://img.shields.io/badge/developer-Yash%20Nalawde-orange.svg)](#author)
@@ -15,15 +15,14 @@ Back up a managed switch, router, wireless controller, or access point from one 
 
 ![Run and Monitor with target input and profile settings on the left and three example device results on the right](Assets/readme/run-monitor.png)
 
-*Run & Monitor in v3.3.2, with synthetic device rows. The first switch reached 100% with two rejected commands. Read the Status column before treating a finished run as a complete capture.*
+*Run & Monitor in v3.4.0, with synthetic device rows. The first switch reached 100% with two rejected commands. Read the Status column before treating a finished run as a complete capture.*
 
 > [!NOTE]
-> **What's New in v3.3.2** (22 November 2026)
-> - **Dedicated Cisco Router Plan**: Automatic recognition of Cisco routers with a focused backup plan for version, hardware inventory, IPv4 interfaces, neighbor details, and running/startup configurations.
-> - **Expanded Catalyst Switch Backups**: Adds full interface status and transceiver details, MAC address table counts, stack-port details, power inline, and stackwise-virtual information on supported models.
-> - **Subnets & IP Ranges**: Enter entire subnets (e.g. `10.10.20.0/24`) and IP ranges (e.g. `192.168.1.10-50`) directly in the target box with automatic duplicate removal.
-> - **Cross-Platform Encrypted Credential Vault**: Save and reuse device logins across Windows, macOS, and Linux with quick presets, automatic login failover, and an easy vault reset option.
-> - **Smoother Desktop Workflow**: Filter discovery by subnet, track elapsed time per device, resize result columns, right-click any device to copy its IP/hostname or inspect failures, and follow live logs with auto-scroll.
+> **What's New in v3.4.0** (27 November 2026)
+> - **Automatic Background Update Check**: Checks for new releases automatically on startup and shows a clickable **Update** pill in the title bar when a newer version is available.
+> - **Hardened Silent Updater**: Verifies official download origin and SHA-256 checksums before upgrading silently in the background and relaunching automatically.
+> - **Dedicated Cisco Router & Expanded Catalyst Support**: Automatic recognition of Cisco routers plus full interface/transceiver, MAC count, and stack-port diagnostics.
+> - **Subnets, IP Ranges & Encrypted Vault**: Enter entire subnets and ranges directly in the target list, and reuse logins across Windows, macOS, and Linux.
 >
 > See the full [Changelog](CHANGELOG.md) for complete release details.
 
@@ -46,12 +45,12 @@ Back up a managed switch, router, wireless controller, or access point from one 
 
 Choose the package for the computer **running the backups**. Everything needed to run the app is included—no extra runtime installation is required. Your network devices just need to be reachable over SSH or Telnet with an account that can read configurations and diagnostics.
 
-| Collector | Package from the v3.3.2 release | How to start |
+| Collector | Package from the v3.4.0 release | How to start |
 | --- | --- | --- |
-| Windows x64 | [Setup wizard](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/BulkSwitchBackupPro_Setup.exe) | Run the installer, then open **Bulk Switch Backup Pro** from Start. |
-| Windows x64, portable | [Portable ZIP](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/BulkSwitchBackupPro-win-x64.zip) or [standalone EXE](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/BulkSwitchBackupPro.exe) | Extract the ZIP and run `BulkSwitchBackupPro.exe`, or run the standalone executable. |
-| macOS | [Apple Silicon](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/BulkSwitchBackupPro-osx-arm64.zip) · [Intel](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/BulkSwitchBackupPro-osx-x64.zip) | Extract the ZIP and move `BulkSwitchBackupPro.app` into Applications. |
-| Linux | [x64](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/BulkSwitchBackupPro-linux-x64.tar.gz) · [ARM64](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/BulkSwitchBackupPro-linux-arm64.tar.gz) | Extract the archive and run the included binary or install the application menu entry as shown below. |
+| Windows x64 | [Setup wizard](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/BulkSwitchBackupPro_Setup.exe) | Run the installer, then open **Bulk Switch Backup Pro** from Start. |
+| Windows x64, portable | [Portable ZIP](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/BulkSwitchBackupPro-win-x64.zip) or [standalone EXE](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/BulkSwitchBackupPro.exe) | Extract the ZIP and run `BulkSwitchBackupPro.exe`, or run the standalone executable. |
+| macOS | [Apple Silicon](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/BulkSwitchBackupPro-osx-arm64.zip) · [Intel](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/BulkSwitchBackupPro-osx-x64.zip) | Extract the ZIP and move `BulkSwitchBackupPro.app` into Applications. |
+| Linux | [x64](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/BulkSwitchBackupPro-linux-x64.tar.gz) · [ARM64](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/BulkSwitchBackupPro-linux-arm64.tar.gz) | Extract the archive and run the included binary or install the application menu entry as shown below. |
 
 <details>
 <summary>Linux launch and desktop installation</summary>
@@ -72,7 +71,7 @@ For a system-wide install, run `sudo bash ./install.sh` from the extracted direc
 <details>
 <summary>Silent installation and Windows signing</summary>
 
-Download the [silent installation launcher](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/BulkSwitchBackupPro_Install_Silent.cmd) into the same folder as `BulkSwitchBackupPro_Setup.exe`. Run the launcher from PowerShell.
+Download the [silent installation launcher](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/BulkSwitchBackupPro_Install_Silent.cmd) into the same folder as `BulkSwitchBackupPro_Setup.exe`. Run the launcher from PowerShell.
 
 ```powershell
 .\BulkSwitchBackupPro_Install_Silent.cmd
@@ -81,7 +80,7 @@ $LASTEXITCODE
 
 The launcher waits for setup, returns its exit code, and writes `%TEMP%\BulkSwitchBackupPro-Silent-Install.log`. Its optional arguments are the installer path, installation directory, and log path, in that order.
 
-The v3.3.2 Windows executable and installer carry Yash Nalawde publisher metadata and a timestamped self-signed signature. Windows may display SmartScreen or Unknown Publisher warnings. To check the installer download, compare `Get-FileHash .\BulkSwitchBackupPro_Setup.exe -Algorithm SHA256` with the `sha256` field in the [v3.3.2 update manifest](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.3.2/update_manifest.json).
+The v3.4.0 Windows executable and installer carry Yash Nalawde publisher metadata and a timestamped self-signed signature. Windows may display SmartScreen or Unknown Publisher warnings. To check the installer download, compare `Get-FileHash .\BulkSwitchBackupPro_Setup.exe -Algorithm SHA256` with the `sha256` field in the [v3.4.0 update manifest](https://github.com/LazyAutomatar/Bulk-Switch-Backup-Pro/releases/download/v3.4.0/update_manifest.json).
 
 </details>
 

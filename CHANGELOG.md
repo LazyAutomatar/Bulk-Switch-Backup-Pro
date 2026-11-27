@@ -2,6 +2,13 @@
 
 Changes for Bulk Switch Backup Pro are tracked independently from the other network applications.
 
+## [3.4.0] - 2026-11-27
+
+### Security & Reliability
+- Upgraded the in-app updater to fetch the release manifest directly from GitHub Releases without hitting REST API rate limits.
+- Enforced HTTPS origin-locking to official repository releases, mandatory 64-character SHA-256 digest verification, atomic `.part` download staging, and `"MZ"` executable header validation.
+- Added corporate proxy credentials and GZip/Deflate decompression support for update checks and downloads, plus full SemVer pre-release version ordering.
+
 ## [3.3.2] - 2026-11-26
 
 ### Added
